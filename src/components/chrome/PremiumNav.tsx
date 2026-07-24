@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * PremiumNav — floating glass pill (desktop) + bottom floating bar (mobile).
@@ -240,6 +241,7 @@ export function PremiumNav() {
             </li>
           ))}
         </ul>
+        <span className="mr-nav__theme"><ThemeToggle /></span>
       </nav>
 
       <LiveAnnouncer navItems={navItems} />

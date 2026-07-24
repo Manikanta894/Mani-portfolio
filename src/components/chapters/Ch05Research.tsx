@@ -73,36 +73,56 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
                       </div>
                     )}
                   </div>
-                  <aside className="col-span-12 md:col-span-4 space-y-4 border-l border-bone/10 md:pl-6">
-                    <div className="flex flex-wrap gap-2 text-mono text-eyebrow">
-                      {paper.url && (
-                        <a
-                          href={paper.url}
-                          target="_blank"
-                          rel="noreferrer"
+                    <aside className="col-span-12 md:col-span-4 space-y-4 border-l border-bone/10 md:pl-6">
+                      <div className="flex flex-wrap gap-2 text-mono text-eyebrow">
+                        {paper.url && (
+                          <a
+                            href={paper.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                          >
+                            ↗ Publication
+                          </a>
+                        )}
+                        {paper.doi && (
+                          <a
+                            href={`https://doi.org/${paper.doi}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                          >
+                            DOI
+                          </a>
+                        )}
+                        {paper.ssrn_url && (
+                          <a
+                            href={paper.ssrn_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                          >
+                            ⧉ SSRN
+                          </a>
+                        )}
+                        {paper.pdf_url && (
+                          <a
+                            href={paper.pdf_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                          >
+                            ⬇ PDF
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => copy(paper.citation?.apa || "")}
                           className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
                         >
-                          ↗ Publication
-                        </a>
-                      )}
-                      {paper.doi && (
-                        <a
-                          href={`https://doi.org/${paper.doi}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
-                        >
-                          DOI
-                        </a>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => copy(paper.citation?.apa || "")}
-                        className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
-                      >
-                        Copy APA
-                      </button>
-                    </div>
+                          Copy APA
+                        </button>
+                      </div>
                     <div className="flex flex-wrap gap-1.5">
                       {(paper.keywords || []).slice(0, 5).map((k: string) => (
                         <span
@@ -169,6 +189,19 @@ export function Ch05Research() {
               <p className="text-[1.05rem] leading-relaxed text-bone/85">
                 A working research lab, not a list. Featured studies below open in place — the full archive sits beneath, fully searchable.
               </p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <a
+                href="https://orcid.org/0009-0005-2576-8731"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-flex items-center gap-2 rounded border border-bone/25 px-3 py-1.5 text-mono text-eyebrow text-bone/70 hover:border-vermilion hover:text-vermilion"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden>
+                  <path fill="currentColor" d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-3.903-3.722h-2.416z"/>
+                </svg>
+                ORCID
+              </a>
             </Reveal>
           </div>
         </header>

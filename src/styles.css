@@ -89,6 +89,42 @@
 
 :root { --bg: var(--bone); }
 
+/* ─── Global Theme Override ─────────────────────────────────────────── */
+/* When user toggles to dark, force all sections dark regardless of data-mood.
+   Each section's data-mood still sets initial colors, but the toggle can
+   override the entire site. */
+[data-theme="dark"] {
+  --ink: #14110F;
+  --bone: #F5F1EB;
+  --rule: rgba(245, 241, 235, 0.12);
+  background-color: var(--ink);
+  color: var(--bone);
+}
+[data-theme="dark"] [data-mood="bone"],
+[data-theme="dark"] [data-mood="warm"] {
+  --ink: #14110F;
+  --bone: #F5F1EB;
+  --rule: rgba(245, 241, 235, 0.12);
+  background-color: var(--ink);
+  color: var(--bone);
+}
+/* When user toggles to light, force light colors */
+[data-theme="light"] {
+  --ink: #181818;
+  --bone: #F8F5EF;
+  --rule: rgba(24, 24, 24, 0.12);
+  background-color: var(--bone);
+  color: var(--ink);
+}
+[data-theme="light"] [data-mood="ink"],
+[data-theme="light"] [data-mood="graphite"] {
+  --ink: #181818;
+  --bone: #F8F5EF;
+  --rule: rgba(24, 24, 24, 0.12);
+  background-color: var(--bone);
+  color: var(--ink);
+}
+
 /* ─── Mood Mixins ───────────────────────────────────────────────────── */
 
 [data-mood="ink"],
