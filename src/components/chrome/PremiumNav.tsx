@@ -27,11 +27,13 @@ const FALLBACK_ITEMS: Item[] = [
 export function PremiumNav() {
   const { navigationItems } = usePortfolio();
   const navItems: Item[] = navigationItems?.length > 0
-    ? navigationItems.map((ni: any) => ({
-        id: ni.section_id,
-        label: ni.label,
-        n: ni.n || "00",
-      }))
+    ? navigationItems
+        .filter((ni: any) => ni.visible !== false)
+        .map((ni: any) => ({
+          id: ni.section_id,
+          label: ni.label,
+          n: ni.n || "00",
+        }))
     : FALLBACK_ITEMS;
 
   const [active, setActive] = useState<string>("cover");

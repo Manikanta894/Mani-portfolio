@@ -23,7 +23,7 @@ export function Ch00Cover() {
   const ctas = (profile?.ctas as any[]) || [
     { label: "Explore Journey", href: "#about", type: "primary" },
     { label: "Let's Connect", href: "#contact", type: "ghost" },
-    { label: "Download Resume", href: "https://manikantar.in/resume.pdf", type: "ghost", download: true },
+    { label: "Download Resume", href: profile?.resume_url || "https://manikantar.in/resume.pdf", type: "ghost", download: true },
   ];
   const location = profile?.location || "Bengaluru · India";
 
