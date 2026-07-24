@@ -324,13 +324,13 @@ export function Ch01About() {
           position: relative;
           background:
             radial-gradient(80% 60% at 80% 0%, color-mix(in oklab, var(--vermilion, #D46A2E) 7%, transparent), transparent 60%),
-            radial-gradient(60% 40% at 0% 100%, color-mix(in oklab, var(--ink) 6%, transparent), transparent 60%);
+            radial-gradient(60% 40% at 0% 100%, color-mix(in oklab, var(--bone) 6%, transparent), transparent 60%);
         }
         .about-wash {
           position: absolute; inset: 0; pointer-events: none;
           background:
             repeating-linear-gradient(0deg,
-              color-mix(in oklab, var(--ink) 4%, transparent) 0 1px,
+              color-mix(in oklab, var(--bone) 4%, transparent) 0 1px,
               transparent 1px 96px);
           mask-image: radial-gradient(60% 80% at 50% 30%, #000 60%, transparent 100%);
           opacity: .35;
@@ -343,7 +343,7 @@ export function Ch01About() {
           font-size: clamp(140px, 22vw, 360px);
           line-height: 1;
           letter-spacing: -0.02em;
-          color: color-mix(in oklab, var(--ink) 5%, transparent);
+          color: color-mix(in oklab, var(--bone) 5%, transparent);
           user-select: none; pointer-events: none;
           white-space: nowrap;
           transform: rotate(-4deg);
@@ -355,7 +355,7 @@ export function Ch01About() {
           display: inline-flex; align-items: center; gap: 14px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 55%, transparent);
+          color: color-mix(in oklab, var(--bone) 55%, transparent);
         }
         .about-eyebrow__dot {
           width: 4px; height: 4px; border-radius: 99px;
@@ -368,18 +368,18 @@ export function Ch01About() {
           font-size: clamp(48px, 8.4vw, 132px);
           line-height: 0.92;
           letter-spacing: -0.025em;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-title em {
           font-style: italic;
-          color: color-mix(in oklab, var(--ink) 92%, var(--vermilion, #D46A2E));
+          color: color-mix(in oklab, var(--bone) 92%, var(--vermilion, #D46A2E));
         }
         .about-deck {
           margin: 32px 0 0;
           max-width: 720px;
           font-size: clamp(18px, 1.6vw, 22px);
           line-height: 1.55;
-          color: color-mix(in oklab, var(--ink) 72%, transparent);
+          color: color-mix(in oklab, var(--bone) 72%, transparent);
         }
 
         /* ── Epigraph ───────────────────────────────────── */
@@ -403,13 +403,13 @@ export function Ch01About() {
           font-size: clamp(28px, 4.4vw, 64px);
           line-height: 1.08;
           letter-spacing: -0.012em;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-epigraph figcaption {
           margin-top: 18px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 55%, transparent);
+          color: color-mix(in oklab, var(--bone) 55%, transparent);
         }
 
         /* ── Two-column layout ──────────────────────────── */
@@ -433,7 +433,7 @@ export function Ch01About() {
         .about-rail__label {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 50%, transparent);
+          color: color-mix(in oklab, var(--bone) 50%, transparent);
         }
         .about-rail__list {
           list-style: none; padding: 0; margin: 0;
@@ -445,20 +445,20 @@ export function Ch01About() {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: 19px;
           letter-spacing: -0.005em;
-          color: color-mix(in oklab, var(--ink) 38%, transparent);
+          color: color-mix(in oklab, var(--bone) 38%, transparent);
           transition: color .45s ease, transform .45s ease;
         }
         .about-rail__dot {
           width: 8px; height: 8px; border-radius: 99px;
-          background: color-mix(in oklab, var(--ink) 22%, transparent);
+          background: color-mix(in oklab, var(--bone) 22%, transparent);
           transition: background .35s ease, transform .35s ease, box-shadow .35s ease;
         }
-        .about-rail__item.is-passed { color: color-mix(in oklab, var(--ink) 65%, transparent); }
+        .about-rail__item.is-passed { color: color-mix(in oklab, var(--bone) 65%, transparent); }
         .about-rail__item.is-passed .about-rail__dot {
-          background: color-mix(in oklab, var(--vermilion, #D46A2E) 60%, var(--ink));
+          background: color-mix(in oklab, var(--vermilion, #D46A2E) 60%, var(--bone));
         }
         .about-rail__item.is-active {
-          color: var(--ink); transform: translateX(2px);
+          color: var(--bone); transform: translateX(2px);
         }
         .about-rail__item.is-active .about-rail__dot {
           background: var(--vermilion, #D46A2E);
@@ -467,7 +467,7 @@ export function Ch01About() {
         }
         .about-rail__track {
           position: absolute; left: 3px; top: 38px; bottom: 0; width: 2px;
-          background: color-mix(in oklab, var(--ink) 12%, transparent);
+          background: color-mix(in oklab, var(--bone) 12%, transparent);
           overflow: hidden;
         }
         .about-rail__progress {
@@ -500,14 +500,14 @@ export function Ch01About() {
         }
         .about-para.is-lit {
           opacity: 1;
-          color: var(--ink);
+          color: var(--bone);
           transform: translateZ(0);
         }
         .about-beat__body.is-lit {
-          color: color-mix(in oklab, var(--ink) 96%, transparent);
+          color: color-mix(in oklab, var(--bone) 96%, transparent);
         }
         .about-beat__lede.is-lit {
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-beat__pull.is-lit {
           box-shadow: -2px 0 0 0 var(--vermilion, #D46A2E);
@@ -521,7 +521,7 @@ export function Ch01About() {
         .about-beat__head {
           display: flex; align-items: baseline; gap: 16px;
           padding-bottom: 14px;
-          border-bottom: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+          border-bottom: 1px solid color-mix(in oklab, var(--bone) 12%, transparent);
         }
         .about-beat__no {
           font-family: var(--font-serif, "Instrument Serif", serif);
@@ -532,7 +532,7 @@ export function Ch01About() {
         .about-beat__era {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 55%, transparent);
+          color: color-mix(in oklab, var(--bone) 55%, transparent);
         }
         .about-beat__title {
           margin: 26px 0 14px;
@@ -541,21 +541,21 @@ export function Ch01About() {
           font-size: clamp(40px, 5.2vw, 76px);
           line-height: 1.0;
           letter-spacing: -0.02em;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-beat__lede {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-style: italic;
           font-size: clamp(20px, 2vw, 26px);
           line-height: 1.35;
-          color: color-mix(in oklab, var(--ink) 80%, transparent);
+          color: color-mix(in oklab, var(--bone) 80%, transparent);
           margin: 0 0 22px;
         }
         .about-beat__body {
           font-family: var(--font-sans, system-ui, sans-serif);
           font-size: clamp(18px, 1.45vw, 21px);
           line-height: 1.7;
-          color: color-mix(in oklab, var(--ink) 78%, transparent);
+          color: color-mix(in oklab, var(--bone) 78%, transparent);
         }
         .about-beat__pull {
           margin: 28px 0 0;
@@ -565,7 +565,7 @@ export function Ch01About() {
           font-style: italic;
           font-size: clamp(22px, 2.4vw, 30px);
           line-height: 1.25;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-beat__pull span {
           font-size: 1.2em; color: var(--vermilion, #D46A2E);
@@ -578,11 +578,11 @@ export function Ch01About() {
         }
         .about-tags li {
           padding: 6px 12px;
-          border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+          border: 1px solid color-mix(in oklab, var(--bone) 22%, transparent);
           border-radius: 999px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 70%, transparent);
+          color: color-mix(in oklab, var(--bone) 70%, transparent);
         }
 
         /* ── Metrics ─────────────────────────────────────── */
@@ -591,8 +591,8 @@ export function Ch01About() {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 1px;
-          background: color-mix(in oklab, var(--ink) 14%, transparent);
-          border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+          background: color-mix(in oklab, var(--bone) 14%, transparent);
+          border: 1px solid color-mix(in oklab, var(--bone) 14%, transparent);
         }
         @media (min-width: 880px) {
           .about-metrics { grid-template-columns: repeat(4, 1fr); }
@@ -619,20 +619,20 @@ export function Ch01About() {
           font-size: clamp(56px, 6.4vw, 96px);
           line-height: 0.95;
           letter-spacing: -0.02em;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-metric__suffix { color: var(--vermilion, #D46A2E); margin-left: 2px; }
         .about-metric__label {
           position: relative; z-index: 1;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 65%, transparent);
+          color: color-mix(in oklab, var(--bone) 65%, transparent);
         }
         .about-metric__cue {
           position: relative; z-index: 1;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 45%, transparent);
+          color: color-mix(in oklab, var(--bone) 45%, transparent);
           opacity: 0; transform: translateY(4px);
           transition: opacity .3s ease, transform .3s ease;
         }
@@ -642,14 +642,14 @@ export function Ch01About() {
           margin-top: 18px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.18em;
-          color: color-mix(in oklab, var(--ink) 45%, transparent);
+          color: color-mix(in oklab, var(--bone) 45%, transparent);
         }
 
         /* ── Coda (Beyond Ed & Work) ─────────────────────── */
         .about-coda {
           margin-top: 160px;
           padding-top: 80px;
-          border-top: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+          border-top: 1px solid color-mix(in oklab, var(--bone) 12%, transparent);
         }
         .about-coda__head { max-width: 1100px; }
         .about-coda__title {
@@ -659,7 +659,7 @@ export function Ch01About() {
           font-size: clamp(36px, 6vw, 84px);
           line-height: 1.0;
           letter-spacing: -0.02em;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-coda__lede {
           margin: 28px 0 0;
@@ -668,7 +668,7 @@ export function Ch01About() {
           font-style: italic;
           font-size: clamp(20px, 2vw, 28px);
           line-height: 1.35;
-          color: color-mix(in oklab, var(--ink) 78%, transparent);
+          color: color-mix(in oklab, var(--bone) 78%, transparent);
         }
         .about-pillars {
           margin-top: 64px;
@@ -682,7 +682,7 @@ export function Ch01About() {
         .about-pillar {
           padding: 28px 28px 30px;
           background: color-mix(in oklab, var(--bone, #F8F5EF) 70%, transparent);
-          border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+          border: 1px solid color-mix(in oklab, var(--bone) 10%, transparent);
           border-radius: 4px;
         }
         .about-pillar__no {
@@ -695,13 +695,13 @@ export function Ch01About() {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: clamp(24px, 2.4vw, 32px);
           line-height: 1;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-pillar__body {
           margin-top: 14px;
           font-size: 17px;
           line-height: 1.6;
-          color: color-mix(in oklab, var(--ink) 75%, transparent);
+          color: color-mix(in oklab, var(--bone) 75%, transparent);
         }
         .about-values {
           list-style: none; padding: 0; margin: 72px 0 0;
@@ -716,7 +716,7 @@ export function Ch01About() {
           font-style: italic;
           font-size: clamp(20px, 2vw, 26px);
           line-height: 1.3;
-          color: var(--ink);
+          color: var(--bone);
         }
         .about-values__quote {
           position: absolute; left: 0; top: -8px;
@@ -731,14 +731,14 @@ export function Ch01About() {
         .about-horizon__era {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--ink) 55%, transparent);
+          color: color-mix(in oklab, var(--bone) 55%, transparent);
         }
         .about-horizon p {
           margin-top: 12px;
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: clamp(22px, 2.6vw, 36px);
           line-height: 1.2;
-          color: var(--ink);
+          color: var(--bone);
         }
 
         @media (prefers-reduced-motion: reduce) {

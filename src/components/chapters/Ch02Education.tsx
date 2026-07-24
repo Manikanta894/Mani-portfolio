@@ -119,17 +119,17 @@ export function Ch02Education() {
 const css = `
 .mr-edu {
   position: relative;
-  color: var(--ink);
+  color: var(--bone);
   background:
     radial-gradient(900px 600px at 12% -10%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 60%),
-    radial-gradient(700px 500px at 100% 110%, color-mix(in oklab, var(--ink) 7%, transparent), transparent 60%);
+    radial-gradient(700px 500px at 100% 110%, color-mix(in oklab, var(--bone) 7%, transparent), transparent 60%);
 }
 .mr-edu::before {
   content: "";
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--bone) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--bone) 5%, transparent) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
   mask-image: radial-gradient(ellipse at 50% 30%, #000 35%, transparent 80%);
@@ -225,7 +225,7 @@ const css = `
   border-color: color-mix(in oklab, var(--vermilion) 70%, transparent);
 }
 .mr-edu__rail-item.is-active {
-  color: var(--ink);
+  color: var(--bone);
   transform: translateX(2px);
 }
 .mr-edu__rail-item.is-active .mr-edu__rail-dot {

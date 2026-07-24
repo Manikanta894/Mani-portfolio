@@ -14,19 +14,19 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
 
   return (
     <Reveal delay={index * 0.04}>
-      <div className="border-b border-ink/12">
+      <div className="border-b border-bone/12">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="grid w-full grid-cols-12 items-baseline gap-4 py-5 text-left transition-colors hover:bg-ink/[0.03]"
+          className="grid w-full grid-cols-12 items-baseline gap-4 py-5 text-left transition-colors hover:bg-bone/[0.05]"
         >
-          <span className="col-span-2 md:col-span-1 text-mono text-meta tabular-nums text-graphite/65">
+          <span className="col-span-2 md:col-span-1 text-mono text-meta tabular-nums text-bone/65">
             {paper.year}
           </span>
           <span className="col-span-10 md:col-span-7 text-[1rem] leading-snug md:text-[1.05rem]">
             {paper.title}
           </span>
-          <span className="hidden md:col-span-3 md:block text-mono text-eyebrow text-graphite/55 truncate">
+          <span className="hidden md:col-span-3 md:block text-mono text-eyebrow text-bone/55 truncate">
             {paper.journal}
           </span>
           <span className="col-span-12 md:col-span-1 text-right md:text-right">
@@ -34,7 +34,7 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
               className={`inline-block border px-1.5 py-0.5 text-mono text-eyebrow ${
                 paper.status === "Published"
                   ? "border-vermilion/50 text-vermilion"
-                  : "border-ink/25 text-graphite"
+                  : "border-bone/25 text-bone/85"
               }`}
             >
               {paper.status}
@@ -54,12 +54,12 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
               <div className="pb-8 pt-2 md:pb-10">
                 <div className="grid grid-cols-12 gap-6">
                   <div className="col-span-12 md:col-span-8 space-y-4">
-                    <p className="text-[0.95rem] leading-relaxed text-graphite">
+                    <p className="text-[0.95rem] leading-relaxed text-bone/85">
                       {paper.abstract}
                     </p>
                     {paper.findings?.length > 0 && (
                       <div>
-                        <div className="text-mono text-eyebrow text-graphite/55 mb-2">
+                        <div className="text-mono text-eyebrow text-bone/55 mb-2">
                           KEY FINDINGS
                         </div>
                         <ul className="space-y-1.5">
@@ -73,14 +73,14 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
                       </div>
                     )}
                   </div>
-                  <aside className="col-span-12 md:col-span-4 space-y-4 border-l border-ink/10 md:pl-6">
+                  <aside className="col-span-12 md:col-span-4 space-y-4 border-l border-bone/10 md:pl-6">
                     <div className="flex flex-wrap gap-2 text-mono text-eyebrow">
                       {paper.url && (
                         <a
                           href={paper.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="border border-ink/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                          className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
                         >
                           ↗ Publication
                         </a>
@@ -90,7 +90,7 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
                           href={`https://doi.org/${paper.doi}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="border border-ink/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                          className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
                         >
                           DOI
                         </a>
@@ -98,7 +98,7 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
                       <button
                         type="button"
                         onClick={() => copy(paper.citation?.apa || "")}
-                        className="border border-ink/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
+                        className="border border-bone/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
                       >
                         Copy APA
                       </button>
@@ -107,13 +107,13 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
                       {(paper.keywords || []).slice(0, 5).map((k: string) => (
                         <span
                           key={k}
-                          className="border border-ink/20 px-2 py-0.5 text-mono text-eyebrow"
+                          className="border border-bone/20 px-2 py-0.5 text-mono text-eyebrow"
                         >
                           {k}
                         </span>
                       ))}
                     </div>
-                    <div className="text-mono text-eyebrow text-graphite/55 space-y-1">
+                    <div className="text-mono text-eyebrow text-bone/55 space-y-1">
                       <div className="flex justify-between gap-2">
                         <span>Read</span>
                         <span>{paper.readTime || paper.reading_time || ""}</span>
@@ -157,7 +157,7 @@ export function Ch05Research() {
       <div className="mx-auto max-w-6xl">
         <header className="mb-14 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
-            <div className="text-mono text-meta text-graphite/60">
+            <div className="text-mono text-meta text-bone/60">
               /06 — Working papers · Frontier topics
             </div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96]">
@@ -166,7 +166,7 @@ export function Ch05Research() {
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <Reveal>
-              <p className="text-[1.05rem] leading-relaxed text-graphite">
+              <p className="text-[1.05rem] leading-relaxed text-bone/85">
                 A working research lab, not a list. Featured studies below open in place — the full archive sits beneath, fully searchable.
               </p>
             </Reveal>
@@ -174,7 +174,7 @@ export function Ch05Research() {
         </header>
 
         {/* compact paper list */}
-        <div className="border-t border-ink/15">
+        <div className="border-t border-bone/15">
           {visible.map((p: any, i: number) => (
             <PaperRow key={p.id || i} paper={p} index={i} />
           ))}
@@ -186,7 +186,7 @@ export function Ch05Research() {
             <button
               type="button"
               onClick={() => setShowAll(true)}
-              className="text-mono inline-flex items-center gap-2 border border-ink/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-ink hover:border-vermilion hover:text-vermilion"
+              className="text-mono inline-flex items-center gap-2 border border-bone/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-bone hover:border-vermilion hover:text-vermilion"
             >
               Read more papers →
             </button>
@@ -194,12 +194,12 @@ export function Ch05Research() {
             <button
               type="button"
               onClick={() => setShowAll(false)}
-              className="text-mono inline-flex items-center gap-2 border border-ink/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-ink hover:border-vermilion hover:text-vermilion"
+              className="text-mono inline-flex items-center gap-2 border border-bone/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-bone hover:border-vermilion hover:text-vermilion"
             >
               Show less ↑
             </button>
           )}
-          <span className="text-mono text-eyebrow text-graphite/55">
+          <span className="text-mono text-eyebrow text-bone/55">
             {showAll
               ? `Showing all ${ordered.length} papers`
               : `Showing 5 of ${ordered.length} papers`}
