@@ -223,9 +223,9 @@ const css = `
 }
 
 .mr-footer__inner {
-  max-width: 1240px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: clamp(64px, 9vw, 120px) clamp(24px, 5vw, 64px) clamp(36px, 5vw, 56px);
+  padding: clamp(64px, 9vw, 120px) clamp(16px, 3vw, 40px) clamp(36px, 5vw, 56px);
 }
 
 .mr-footer__closing {
@@ -250,7 +250,7 @@ const css = `
 
 .mr-footer__grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
   gap: clamp(28px, 4vw, 56px);
   padding: clamp(40px, 5vw, 64px) 0;
 }
