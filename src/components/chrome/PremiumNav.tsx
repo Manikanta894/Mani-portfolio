@@ -316,7 +316,7 @@ const css = `
   align-items: center;
   gap: 22px;
   padding: 8px 20px 8px 22px;
-  min-height: 52px;
+  min-height: 42px;
   border-radius: 44px;
   color: var(--ink);
   background: color-mix(in oklab, var(--bone) 58%, transparent);
@@ -383,7 +383,7 @@ const css = `
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   margin: 0; padding: 0;
   list-style: none;
 }
@@ -417,11 +417,12 @@ const css = `
 .mr-nav__link {
   position: relative;
   display: inline-flex; align-items: baseline; gap: 8px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-size: 13.5px;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.015em;
-  color: color-mix(in oklab, currentColor 62%, transparent);
+  color: color-mix(in oklab, currentColor 72%, transparent);
   text-decoration: none;
   transition: color .35s ease, transform .35s ease;
   white-space: nowrap;
@@ -434,7 +435,7 @@ const css = `
   opacity: .75;
 }
 .mr-nav__link:hover { color: currentColor; transform: translateY(-1px); }
-.mr-nav__link.is-active { color: currentColor; font-weight: 500; }
+.mr-nav__link.is-active { color: currentColor; font-weight: 700; }
 .mr-nav__link.is-active .mr-nav__link-n { opacity: 1; }
 .mr-nav__link:focus-visible,
 .mr-nav-mobile__link:focus-visible {
