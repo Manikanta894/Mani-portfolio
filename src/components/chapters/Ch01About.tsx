@@ -322,7 +322,8 @@ export function Ch01About() {
       <style>{`
         .about-stage {
           position: relative;
-          background:
+          background-color: var(--ink);
+          background-image:
             radial-gradient(80% 60% at 80% 0%, color-mix(in oklab, var(--vermilion, #D46A2E) 7%, transparent), transparent 60%),
             radial-gradient(60% 40% at 0% 100%, color-mix(in oklab, var(--bone) 6%, transparent), transparent 60%);
         }
