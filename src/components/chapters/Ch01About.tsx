@@ -171,7 +171,7 @@ export function Ch01About() {
   return (
     <section
       id="about"
-      data-mood="warm"
+      data-mood="ink"
       className="about-stage relative chapter-pad grain"
     >
       {/* quiet editorial wash */}

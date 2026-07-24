@@ -153,7 +153,7 @@ export function Ch05Research() {
   const visible = showAll ? ordered : ordered.slice(0, 5);
 
   return (
-    <section id="research" data-mood="warm" className="relative chapter-pad">
+    <section id="research" data-mood="ink" className="relative chapter-pad">
       <div className="mx-auto max-w-6xl">
         <header className="mb-14 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">

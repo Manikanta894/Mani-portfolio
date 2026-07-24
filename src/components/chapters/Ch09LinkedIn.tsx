@@ -5,12 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import portrait from "@/assets/portrait.jpg";
 import { Reveal } from "@/components/motion/primitives";
 import usePortfolio from "@/hooks/usePortfolio";
-import { Linkedin, Github, Instagram, Facebook, Mail, Link as LinkIcon } from "lucide-react";
-
-const SOCIAL_ICON_MAP: Record<string, React.ComponentType<any>> = {
-  Linkedin, Github, Instagram, Facebook, Mail,
-};
-
 const BLOG_URL = "https://insights.manikantar.in";
 const JOURNAL_API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -82,29 +76,6 @@ function JournalBlock() {
         Visit insights.manikantar.in for the full archive <Arrow />
       </a>
     </>
-  );
-}
-
-function SocialBlock() {
-  const { socialLinks } = usePortfolio();
-  const icons = (socialLinks || []).filter((s: any) => s.category === "social" && s.visible !== false);
-
-  return (
-    <div className="li-social">
-      {icons.length ? icons.map((s: any) => {
-        const Icon = SOCIAL_ICON_MAP[s.icon] || LinkIcon;
-        return (
-          <a key={s.id || s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="li-social__icon" aria-label={s.label} title={s.label}>
-            <Icon aria-hidden size={18} />
-          </a>
-        );
-      }) : (
-        <>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="li-social__icon" aria-label="Instagram"><Instagram aria-hidden size={18} /></a>
-          <a href="https://www.threads.net/" target="_blank" rel="noopener noreferrer" className="li-social__icon" aria-label="Threads"><LinkIcon aria-hidden size={18} /></a>
-        </>
-      )}
-    </div>
   );
 }
 
@@ -274,50 +245,32 @@ export default function Ch09LinkedIn() {
         </article>
 
         <div className="li-block">
-          <BlockHead n="01" title="Professional Network" sub="Reach across the platform" />
-          <div className="li-grid-2">
-            <BigStat label="Followers" value={f.network.followers} />
-            <BigStat label="Connections" value={f.network.connections} />
-          </div>
-        </div>
-
-        <div className="li-block">
-          <BlockHead n="02" title="LinkedIn Impact" sub="Last twelve months of content" />
+          <BlockHead n="01" title="Network & Impact" sub="Reach across the platform, last twelve months" />
           <div className="li-grid-4">
+            <ImpactStat label="Followers" value={f.network.followers} />
+            <ImpactStat label="Connections" value={f.network.connections} />
             <ImpactStat label="Total Impressions" value={f.impact.impressions} suffix="+" />
-            <ImpactStat label="Members Reached" value={f.impact.membersReached} />
             <ImpactStat label="Total Engagements" value={f.impact.engagements} />
-            <ImpactStat label="Top Post Reach" value={f.impact.topPostReach} suffix="+" compact />
           </div>
         </div>
 
         <div className="li-block">
-          <BlockHead n="03" title="Featured Post" sub="The piece that travelled the furthest" />
+          <BlockHead n="02" title="Featured Post" sub="The piece that travelled the furthest" />
           <FeaturedHero post={f.featured} />
         </div>
 
         <div className="li-block">
-          <BlockHead n="04" title="Editor's Pick" sub="A pinned insight worth re-reading" />
-          <EditorsPick post={f.editorsPick} />
-        </div>
-
-        <div className="li-block">
-          <BlockHead n="05" title="Latest Posts" sub="Refreshes whenever I publish" />
+          <BlockHead n="03" title="Latest Posts" sub="Refreshes whenever I publish" />
           <div className="li-latest">
-            {(f.latest.length ? f.latest : [SEED.featured, SEED.editorsPick, SEED.featured]).slice(0, 3).map((p, i) => (
+            {(f.latest.length ? f.latest : [SEED.featured, SEED.editorsPick]).slice(0, 2).map((p, i) => (
               <PostRow key={p.urn + i} post={p} />
             ))}
           </div>
         </div>
 
         <div className="li-block">
-          <BlockHead n="06" title="Field Notes & Journal" sub="Long-form writing, off-platform" />
+          <BlockHead n="04" title="Field Notes & Journal" sub="Long-form writing, off-platform" />
           <JournalBlock />
-        </div>
-
-        <div className="li-block">
-          <BlockHead n="07" title="Elsewhere" sub="Other places I'm active" />
-          <SocialBlock />
         </div>
 
         <div className="li-finalCta">
@@ -390,23 +343,6 @@ function FeaturedHero({ post }: { post: FeedPost }) {
         </div>
         <span className="li-hero__read">Read on LinkedIn <Arrow /></span>
       </div>
-    </a>
-  );
-}
-
-function EditorsPick({ post }: { post: FeedPost }) {
-  return (
-    <a href={post.url} target="_blank" rel="noopener noreferrer" className="li-card li-pick">
-      <span className="li-pick__chip">Editor's pick</span>
-      <h4 className="li-pick__title">{post.title}</h4>
-      <p className="li-pick__excerpt">{post.excerpt}</p>
-      <div className="li-pick__metrics">
-        <MiniMetric label="Impressions" value={post.metrics.impressions} />
-        <MiniMetric label="Likes" value={post.metrics.likes} />
-        <MiniMetric label="Comments" value={post.metrics.comments} />
-        <MiniMetric label="Reposts" value={post.metrics.reposts} />
-      </div>
-      <span className="li-pick__read">Read on LinkedIn <Arrow /></span>
     </a>
   );
 }
@@ -576,14 +512,8 @@ const css = `
 .li-coverArt__grid { position: absolute; inset: 0; background-image: linear-gradient(color-mix(in oklab, currentColor 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, currentColor 8%, transparent) 1px, transparent 1px); background-size: 32px 32px; mask-image: radial-gradient(80% 60% at 30% 60%, #000, transparent 80%); }
 .li-coverArt__orb { position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--vermilion) 65%, transparent), transparent 70%); filter: blur(8px); }
 .li-coverArt__mono { position: absolute; left: 28px; bottom: 22px; font-family: var(--font-display); font-size: 72px; line-height: 1; color: color-mix(in oklab, currentColor 88%, transparent); letter-spacing: -0.04em; }
-.li-pick { padding: 24px 26px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 10px; }
-.li-pick__chip { align-self: flex-start; padding: 4px 10px; border-radius: 999px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; background: color-mix(in oklab, currentColor 10%, transparent); border: 1px solid color-mix(in oklab, currentColor 18%, transparent); }
-.li-pick__title { font-family: var(--font-display); font-size: clamp(1.3rem, 1.8vw, 1.6rem); line-height: 1.15; letter-spacing: -0.01em; }
-.li-pick__excerpt { font-size: 14.5px; line-height: 1.55; color: color-mix(in oklab, currentColor 75%, transparent); }
-.li-pick__metrics { display: flex; flex-wrap: wrap; gap: 16px; padding-top: 12px; border-top: 1px solid color-mix(in oklab, currentColor 12%, transparent); }
 .li-mini { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in oklab, currentColor 65%, transparent); }
 .li-mini .tabular-nums { font-family: var(--font-display); font-size: 14px; letter-spacing: 0; color: currentColor; margin-right: 4px; }
-.li-pick__read { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13.5px; color: color-mix(in oklab, var(--vermilion) 75%, currentColor 25%); }
 .li-latest { display: flex; flex-direction: column; gap: 14px; }
 .li-row { display: grid; grid-template-columns: 120px 1fr auto; gap: 22px; padding: 18px 22px; align-items: center; text-decoration: none; color: inherit; }
 @media (max-width: 720px) { .li-row { grid-template-columns: 1fr; gap: 12px; padding: 18px; } .li-row__read { justify-self: start; } }
@@ -599,7 +529,4 @@ const css = `
 .li-row--skeleton { height: 96px; background: color-mix(in oklab, currentColor 6%, transparent); animation: li-pulse 1.6s ease-in-out infinite; }
 @keyframes li-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 .li-journal__more { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.08em; color: color-mix(in oklab, var(--vermilion) 75%, currentColor 25%); text-decoration: none; }
-.li-social { display: flex; flex-wrap: wrap; gap: 12px; }
-.li-social__icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; color: inherit; background: color-mix(in oklab, var(--bone) 6%, transparent); border: 1px solid color-mix(in oklab, currentColor 16%, transparent); transition: transform .25s ease, border-color .25s ease, color .25s ease; }
-.li-social__icon:hover { transform: translateY(-2px); border-color: color-mix(in oklab, var(--vermilion) 45%, transparent); color: var(--vermilion); }
 `;

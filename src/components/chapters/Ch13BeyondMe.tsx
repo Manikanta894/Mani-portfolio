@@ -40,7 +40,7 @@ export function Ch13BeyondMe() {
   };
 
   return (
-    <section id="beyond-me" data-mood="bone" className="relative chapter-pad grain overflow-hidden" aria-labelledby="beyond-me-title">
+    <section id="beyond-me" data-mood="ink" className="relative chapter-pad grain overflow-hidden" aria-labelledby="beyond-me-title">
       <div aria-hidden className="mr-beyond__ambient" />
       <div className="relative mx-auto max-w-3xl">
         <div className="text-mono text-meta text-ink/55">/{beyondData.number} \u2014 {beyondData.kicker}</div>

@@ -32,7 +32,7 @@ export function Ch02Education() {
   const sectionKicker = "Academic Archive";
 
   return (
-    <section id="education" className="mr-edu chapter-pad">
+    <section id="education" data-mood="ink" className="mr-edu chapter-pad">
       <div className="mr-edu__shell">
         <header className="mr-edu__header">
           <div className="mr-edu__eyebrow">
