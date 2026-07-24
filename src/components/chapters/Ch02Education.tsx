@@ -120,7 +120,8 @@ const css = `
 .mr-edu {
   position: relative;
   color: var(--bone);
-  background:
+  background-color: var(--ink);
+  background-image:
     radial-gradient(900px 600px at 12% -10%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 60%),
     radial-gradient(700px 500px at 100% 110%, color-mix(in oklab, var(--bone) 7%, transparent), transparent 60%);
 }
