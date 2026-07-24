@@ -305,24 +305,61 @@ export function Ch07Ecosystem() {
           </div>
         </div>
 
-        {/* Expertise stages — horizontal */}
+        {/* Expertise stages — connected progression */}
         <div className="mt-20">
-          <header className="mb-6 flex items-end justify-between">
-            <h3 className="text-display text-[clamp(1.5rem,3vw,2.4rem)] text-bone">Expertise Stages</h3>
-            <div className="text-mono text-eyebrow text-bone/50">Learning → Leading · evolution, not progress bars</div>
+          <header className="mb-10 flex flex-col gap-1">
+            <h3 className="text-display text-[clamp(1.8rem,3.6vw,3rem)] text-bone">Expertise Stages</h3>
+            <p className="text-mono text-eyebrow tracking-[0.12em] text-bone/50">A progression, not a progress bar — each stage builds on the last</p>
           </header>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
-            {STAGES.map((s) => {
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
+            {STAGES.map((s, si) => {
               const items = effectiveCaps.filter((c: any) => c.stage === s);
+              const colors = ["#E0533D", "#D46A2E", "#F2B33D", "#3DA9FC", "#7C5CFF", "#E0533D"];
+              const color = colors[si % colors.length];
               return (
-                <div key={s} className="border border-bone/15 p-4">
-                  <div className="text-mono text-eyebrow uppercase tracking-[0.15em] text-bone/45">{String(stageIndex(s) + 1).padStart(2, "0")}</div>
-                  <div className="text-display mt-1 text-lg text-bone">{s}</div>
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {items.slice(0, 6).map((c: any) => (
-                      <button key={c.id} onClick={() => setActive(c as Capability)} className="border border-bone/15 px-1.5 py-0.5 text-eyebrow text-bone/75 transition-colors hover:border-bone/40 hover:text-bone">{c.name}</button>
-                    ))}
-                    {items.length > 6 && <span className="text-mono text-eyebrow text-bone/45">+{items.length - 6}</span>}
+                <div key={s} className="group relative">
+                  {/* Connector line */}
+                  {si < STAGES.length - 1 && (
+                    <div className="absolute -right-2 top-6 hidden h-px w-4 bg-gradient-to-r from-bone/30 to-transparent md:block" />
+                  )}
+                  <div className="relative rounded-sm border border-bone/12 bg-gradient-to-b from-bone/[0.03] to-transparent p-5 transition-all duration-300 hover:border-bone/30 hover:from-bone/[0.06]">
+                    {/* Stage badge */}
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-mono text-xs font-bold tabular-nums"
+                        style={{ background: `${color}22`, color }}
+                      >
+                        {String(si + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-display text-xl tracking-tight text-bone">{s}</span>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="my-3 h-px w-full bg-gradient-to-r from-bone/15 to-transparent" />
+
+                    {/* Skills */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {items.slice(0, 5).map((c: any) => (
+                        <button
+                          key={c.id}
+                          onClick={() => setActive(c as Capability)}
+                          className="rounded-sm border border-bone/15 px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-bone/70 transition-all duration-200 hover:border-vermilion/50 hover:text-vermilion hover:shadow-[0_0_12px_-4px_var(--vermilion)]"
+                        >
+                          {c.name}
+                        </button>
+                      ))}
+                      {items.length > 5 && (
+                        <span className="inline-flex items-center rounded-sm border border-dashed border-bone/20 px-2 py-1 text-[10px] text-bone/40">
+                          +{items.length - 5}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Empty state hint */}
+                    {items.length === 0 && (
+                      <p className="text-[10px] italic text-bone/30">no capabilities at this stage yet</p>
+                    )}
                   </div>
                 </div>
               );
