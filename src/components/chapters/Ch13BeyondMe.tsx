@@ -10,7 +10,7 @@ import usePortfolio from "@/hooks/usePortfolio";
 export function Ch13BeyondMe() {
   const { profile } = usePortfolio();
   const beyondData = profile?.beyond || {
-    number: "11",
+    number: "",
     kicker: "Final Chapter",
     title: "Beyond My Portfolio",
     lede: "If you've read this far, you already know what I've done. This chapter is the quieter one — about why I keep doing it, and the person who shows up when no one is watching.",
@@ -91,9 +91,9 @@ const css = `
 .mr-beyond__ambient { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(60% 40% at 22% 18%, color-mix(in oklab, var(--vermilion) 8%, transparent), transparent 70%), radial-gradient(50% 35% at 82% 78%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 72%), radial-gradient(70% 50% at 50% 100%, color-mix(in oklab, var(--bone) 10%, transparent), transparent 75%); mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%); }
 .mr-beyond__rule { height: 1px; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--bone) 26%, transparent) 50%, transparent 100%); }
 .mr-beyond__movement { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-.mr-beyond__heading { display: flex; align-items: baseline; gap: 18px; font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.15; color: var(--bone); }
-.mr-beyond__heading-num { font-family: var(--font-mono); font-style: normal; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--vermilion); padding-top: 0.4em; }
-.mr-beyond__prose p { font-family: var(--font-display); font-size: clamp(1.05rem, 1.45vw, 1.22rem); line-height: 1.7; color: color-mix(in oklab, var(--bone) 88%, transparent); margin: 0; }
+.mr-beyond__heading { display: flex; align-items: baseline; gap: 18px; font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.15; color: var(--bone); }
+.mr-beyond__heading-num { font-family: var(--font-mono); font-style: normal; font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--vermilion); padding-top: 0.4em; }
+.mr-beyond__prose p { font-family: var(--font-display); font-size: clamp(1.2rem, 1.6vw, 1.4rem); line-height: 1.7; color: color-mix(in oklab, var(--bone) 88%, transparent); margin: 0; }
 .mr-beyond__prose p + p { margin-top: 1.1em; }
 .mr-beyond__prose p::first-letter { font-family: var(--font-display); font-style: italic; }
 .mr-beyond__moment { display: grid; grid-template-columns: 1fr; gap: 4px; padding-bottom: 14px; border-bottom: 1px dashed color-mix(in oklab, var(--bone) 16%, transparent); }

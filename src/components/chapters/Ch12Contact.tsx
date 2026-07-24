@@ -11,7 +11,7 @@ const API_BASE =
 export function Ch12Contact() {
   const { profile } = usePortfolio();
   const contactInfo = profile?.contact_info || {
-    number: "10",
+    number: "",
     kicker: "Let's build",
     title: "Contact",
     prompt: "Tell me what you're building.",
