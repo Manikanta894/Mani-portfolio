@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
-import { ThemeToggle } from "./ThemeToggle";
-
 /**
  * PremiumNav — floating glass pill (desktop) + bottom floating bar (mobile).
  * Tracks the active chapter via IntersectionObserver and animates a soft
@@ -241,7 +239,6 @@ export function PremiumNav() {
             </li>
           ))}
         </ul>
-        <span className="mr-nav__theme"><ThemeToggle /></span>
       </nav>
 
       <LiveAnnouncer navItems={navItems} />
@@ -474,8 +471,6 @@ const css = `
   font-size: 11px !important;
   letter-spacing: 0.18em !important;
 }
-.mr-nav__theme .mr-theme-dial__label { min-width: 68px !important; }
-
 /* ───────────── MOBILE BOTTOM BAR ───────────── */
 .mr-nav-mobile {
   position: fixed;
