@@ -18,7 +18,6 @@ import { Ch07Ecosystem } from "@/components/chapters/Ch07Ecosystem";
 import { Ch08Credentials } from "@/components/chapters/Ch08Credentials";
 import Ch09LinkedIn from "@/components/chapters/Ch09LinkedIn";
 import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
-import { Ch13BeyondMe } from "@/components/chapters/Ch13BeyondMe";
 import { Ch12Contact } from "@/components/chapters/Ch12Contact";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 
@@ -113,10 +112,9 @@ function Index() {
       <Ch07Ecosystem />
       <Ch05Research />
       <Ch08Credentials />
-      <Ch11Philosophy />
       <Ch09LinkedIn />
+      <Ch11Philosophy />
       <Ch12Contact />
-      <Ch13BeyondMe />
 
       <SiteFooter />
 
