@@ -171,7 +171,12 @@ export function Ch14BeyondNotes() {
                 style={{ filter: "grayscale(85%) contrast(1.05)" }}
               />
             </div>
-            <div className="mt-6 font-hand text-[2rem] leading-none text-vermilion">Manikanta R.</div>
+            <div className="mr-notes__sig">
+              <span>Manikanta R.</span>
+              <svg viewBox="0 0 220 20" className="mr-notes__sig-underline" aria-hidden>
+                <path d="M2 12c30-10 50-10 60-2 8 6 14 6 22-2 10-10 20-10 30 0 8 8 16 8 26 0 8-7 18-9 30-4 10 4 20 4 28-2" />
+              </svg>
+            </div>
             <div className="mt-3 text-mono text-meta uppercase tracking-[0.2em] text-bone/55">
               Bangalore · India
               <br />
@@ -234,9 +239,16 @@ export function Ch14BeyondNotes() {
 }
 
 const css = `
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
+
 .mr-notes__ambient { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(55% 38% at 20% 12%, color-mix(in oklab, var(--vermilion) 7%, transparent), transparent 70%), radial-gradient(50% 35% at 85% 85%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 72%); mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%); }
 
-.font-hand { font-family: var(--font-hand); }
+.font-hand { font-family: "Caveat", "Segoe Script", cursive; }
+
+.mr-notes__sig { position: relative; display: inline-block; margin-top: 26px; }
+.mr-notes__sig span { font-family: "Caveat", "Segoe Script", cursive; font-weight: 600; font-size: 2.4rem; line-height: 1; color: var(--vermilion); }
+.mr-notes__sig-underline { display: block; width: 100%; height: 14px; margin-top: 2px; overflow: visible; }
+.mr-notes__sig-underline path { fill: none; stroke: var(--vermilion); stroke-width: 1.6; stroke-linecap: round; opacity: 0.75; }
 
 .mr-notes__stamp { position: absolute; top: 0; right: 0; width: 108px; height: 108px; color: color-mix(in oklab, var(--bone) 55%, transparent); opacity: 0.8; }
 .mr-notes__stamp-text { font-family: var(--font-mono); font-size: 6.6px; letter-spacing: 0.14em; fill: currentColor; text-transform: uppercase; }
