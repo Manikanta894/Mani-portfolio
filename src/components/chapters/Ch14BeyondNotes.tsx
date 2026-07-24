@@ -1,129 +1,208 @@
 "use client";
 /**
  * Ch14BeyondNotes — "Things My Resume Will Never Tell You."
- * A ten-line, hand-annotated field-note infographic. Sits at the very
- * end of the site, after Contact — the last word before the footer.
+ * A hand-annotated field-note infographic. Sits at the very end of the
+ * site, after Contact — the last word before the footer.
+ *
+ * Every piece of text here is editable from Supabase: it all comes from
+ * the `field_notes` JSONB column on the `profiles` table (see
+ * backend/db/migration_005_add_field_notes.sql for the shape + defaults).
+ * If that column is empty/missing, the component falls back to the same
+ * content locally so the section never breaks.
  */
-import { Reveal, MaskReveal } from "@/components/motion/primitives";
+import { useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { Reveal, SplitWords } from "@/components/motion/primitives";
+import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
 
-type Note = {
-  line: React.ReactNode;
-  body: string[];
-  icon: React.ReactNode;
+/* ── Icon set — keyed so Supabase only needs to store a short string ───── */
+const ICONS: Record<string, React.ReactNode> = {
+  compass: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="24" cy="10" r="4" />
+      <path d="M24 14v14M24 22l-8 10M24 22l8 10" />
+      <path d="M6 34c6-4 30-4 36 0" />
+    </svg>
+  ),
+  loneliness: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M17 10a9 9 0 1 1-3 17.5M17 10a9 9 0 1 0 0 12" />
+      <circle cx="17" cy="34" r="5" />
+      <path d="M12 44c1-6 4-9 5-9s4 3 5 9" />
+    </svg>
+  ),
+  betrayal: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M24 40C10 30 5 22 5 15a8 8 0 0 1 15-4l4 4 4-4a8 8 0 0 1 15 4c0 7-5 15-19 25z" />
+      <path d="M22 16l-4 6 5 4-4 8" />
+    </svg>
+  ),
+  everyone: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="14" cy="12" r="5" />
+      <path d="M6 30c1-7 5-11 8-11s7 4 8 11" />
+      <circle cx="36" cy="16" r="4" />
+      <path d="M28 32c1-6 4-9 8-9s6 3 7 9" />
+      <path d="M20 20l6 3" />
+    </svg>
+  ),
+  silence: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M4 24c6-9 14-13 20-13s14 4 20 13c-6 9-14 13-20 13S10 33 4 24z" />
+      <circle cx="24" cy="24" r="5" />
+      <path d="M6 6l36 36" />
+    </svg>
+  ),
+  mountain: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M4 40 18 14l7 10 6-8 13 24z" />
+      <path d="M32 14l10-6-2 11z" />
+    </svg>
+  ),
+  checkmark: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M6 14l16 20 20-26" />
+      <path d="M34 22l8 2" />
+    </svg>
+  ),
+  discipline: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <rect x="10" y="8" width="28" height="34" rx="2" />
+      <path d="M17 4h14v8H17z" />
+      <path d="M16 22l5 5 11-11M16 32l5 5 11-11" opacity="0.55" />
+    </svg>
+  ),
+  clock: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="24" cy="24" r="18" />
+      <path d="M24 14v10l7 5" />
+    </svg>
+  ),
+  stairs: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M4 40h8v-8h8v-8h8v-8h8v-8" />
+      <circle cx="38" cy="6" r="3" />
+    </svg>
+  ),
+  default: (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="24" cy="24" r="4" />
+    </svg>
+  ),
 };
 
-const NOTES: Note[] = [
-  {
-    line: <>No support since <u>10th grade</u>.</>,
-    body: ["No one stood behind me.", "I learned to stand for myself."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <circle cx="24" cy="10" r="4" />
-        <path d="M24 14v14M24 22l-8 10M24 22l8 10" />
-        <path d="M6 34c6-4 30-4 36 0" />
-      </svg>
-    ),
+/**
+ * Turns a plain CMS string into styled inline React nodes.
+ *   __word__  -> underlined
+ *   [[word]]  -> boxed
+ *   ((word))  -> circled
+ * Kept intentionally simple so anyone editing text in Supabase doesn't
+ * need to write HTML/JSX — just plain text with these three markers.
+ */
+function parseLine(text: string): React.ReactNode {
+  const pattern = /__([^_]+)__|\[\[([^\]]+)\]\]|\(\(([^)]+)\)\)/g;
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let key = 0;
+  while ((m = pattern.exec(text))) {
+    if (m.index > last) out.push(text.slice(last, m.index));
+    if (m[1] !== undefined) out.push(<u key={key++}>{m[1]}</u>);
+    else if (m[2] !== undefined) out.push(<span key={key++} className="mr-notes__box">{m[2]}</span>);
+    else if (m[3] !== undefined) out.push(<span key={key++} className="mr-notes__circle">{m[3]}</span>);
+    last = pattern.lastIndex;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+
+type NoteData = { line: string; body: string[]; icon?: string };
+
+const DEFAULT_DATA = {
+  kicker: "Beyond My Portfolio",
+  number: "14",
+  title: "Things My Resume Will Never Tell You.",
+  subtitle: "Not achievements. Not milestones. Just the thoughts, lessons, and beliefs that shaped me quietly.",
+  photo: {
+    name: "Manikanta R.",
+    location: "Bangalore · India",
+    tagline: "Still learning. Always building.",
+    lastUpdated: "July 2026",
+    note: "Grateful for every struggle.\nIt wrote the strongest chapters.",
   },
-  {
-    line: <>Felt <span className="mr-notes__circle">alone</span> when I needed <u>people</u> the most.</>,
-    body: ["Loneliness became my teacher.", "It made me self-aware."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <path d="M17 10a9 9 0 1 1-3 17.5M17 10a9 9 0 1 0 0 12" />
-        <circle cx="17" cy="34" r="5" />
-        <path d="M12 44c1-6 4-9 5-9s4 3 5 9" />
-      </svg>
-    ),
-  },
-  {
-    line: <>Betrayal taught me <u>brutal</u> lessons.</>,
-    body: ["I trusted the wrong people.", "But I stopped trusting blindly."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <path d="M24 40C10 30 5 22 5 15a8 8 0 0 1 15-4l4 4 4-4a8 8 0 0 1 15 4c0 7-5 15-19 25z" />
-        <path d="M22 16l-4 6 5 4-4 8" />
-      </svg>
-    ),
-  },
-  {
-    line: <>I was there for <span className="mr-notes__box">everyone</span>.</>,
-    body: ["Listened, helped, supported, cared.", "But when I needed someone, no one was there."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <circle cx="14" cy="12" r="5" />
-        <path d="M6 30c1-7 5-11 8-11s7 4 8 11" />
-        <circle cx="36" cy="16" r="4" />
-        <path d="M28 32c1-6 4-9 8-9s6 3 7 9" />
-        <path d="M20 20l6 3" />
-      </svg>
-    ),
-  },
-  {
-    line: <>I built in <u>silence</u>.</>,
-    body: ["No audience. No validation.", "Just me, my goals, and my time."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <path d="M4 24c6-9 14-13 20-13s14 4 20 13c-6 9-14 13-20 13S10 33 4 24z" />
-        <circle cx="24" cy="24" r="5" />
-        <path d="M6 6l36 36" />
-      </svg>
-    ),
-  },
-  {
-    line: <>Struggles became my <u>competitive advantage</u>.</>,
-    body: ["While others had shortcuts,", "I had long nights and hard choices."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <path d="M4 40 18 14l7 10 6-8 13 24z" />
-        <path d="M32 14l10-6-2 11z" />
-      </svg>
-    ),
-  },
-  {
-    line: <>Rejection became <u>normal</u>.</>,
-    body: ["It stopped hurting.", "It started guiding."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <path d="M6 14l16 20 20-26" />
-        <path d="M34 22l8 2" />
-      </svg>
-    ),
-  },
-  {
-    line: <>I chose <span className="mr-notes__box">discipline</span> over motivation.</>,
-    body: ["Motivation comes and goes.", "Discipline stays and builds."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <rect x="10" y="8" width="28" height="34" rx="2" />
-        <path d="M17 4h14v8H17z" />
-        <path d="M16 22l5 5 11-11M16 32l5 5 11-11" opacity="0.55" />
-      </svg>
-    ),
-  },
-  {
-    line: <>I stopped waiting for the <u>'right time'</u>.</>,
-    body: ["There is no perfect time.", "I started with what I had."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <circle cx="24" cy="24" r="18" />
-        <path d="M24 14v10l7 5" />
-      </svg>
-    ),
-  },
-  {
-    line: <>I'm still <u>becoming</u>.</>,
-    body: ["This is not the end.", "This is my beginning."],
-    icon: (
-      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
-        <path d="M4 40h8v-8h8v-8h8v-8h8v-8" />
-        <circle cx="38" cy="6" r="3" />
-      </svg>
-    ),
-  },
-];
+  notes: [
+    { line: "No support since __10th grade__.", body: ["No one stood behind me.", "I learned to stand for myself."], icon: "compass" },
+    { line: "Felt ((alone)) when I needed __people__ the most.", body: ["Loneliness became my teacher.", "It made me self-aware."], icon: "loneliness" },
+    { line: "Betrayal taught me __brutal__ lessons.", body: ["I trusted the wrong people.", "But I stopped trusting blindly."], icon: "betrayal" },
+    { line: "I was there for [[everyone]].", body: ["Listened, helped, supported, cared.", "But when I needed someone, no one was there."], icon: "everyone" },
+    { line: "I built in __silence__.", body: ["No audience. No validation.", "Just me, my goals, and my time."], icon: "silence" },
+    { line: "Struggles became my __competitive advantage__.", body: ["While others had shortcuts,", "I had long nights and hard choices."], icon: "mountain" },
+    { line: "Rejection became __normal__.", body: ["It stopped hurting.", "It started guiding."], icon: "checkmark" },
+    { line: "I chose [[discipline]] over motivation.", body: ["Motivation comes and goes.", "Discipline stays and builds."], icon: "discipline" },
+    { line: "I stopped waiting for the __'right time'__.", body: ["There is no perfect time.", "I started with what I had."], icon: "clock" },
+    { line: "I'm still __becoming__.", body: ["This is not the end.", "This is my beginning."], icon: "stairs" },
+  ] as NoteData[],
+  quote: "From 10th grade till now — no support, no one to lean on. I was alone. Betrayed. But I survived, I learned, I built. Today, I stand for the version of me that never gave up.",
+  signOff: "Still Learning.\nForever Curious.",
+};
+
+function TiltPhoto({ src, alt }: { src: string; alt: string }) {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rx = useTransform(my, [-0.5, 0.5], [8, -8]);
+  const ry = useTransform(mx, [-0.5, 0.5], [-10, 10]);
+  const srx = useSpring(rx, { stiffness: 120, damping: 14 });
+  const sry = useSpring(ry, { stiffness: 120, damping: 14 });
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - rect.left) / rect.width - 0.5);
+    my.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const onLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
+  return (
+    <div
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="mr-notes__photo"
+      style={{ perspective: 1000 }}
+    >
+      <span className="mr-notes__tape" aria-hidden />
+      <motion.div
+        style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}
+        className="relative h-full w-full"
+      >
+        <img
+          src={src}
+          alt={alt}
+          width={640}
+          height={800}
+          className="h-full w-full object-cover"
+          style={{ filter: "grayscale(85%) contrast(1.05)" }}
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/35 via-transparent to-bone/10" />
+      </motion.div>
+    </div>
+  );
+}
+
+const VISIBLE_BY_DEFAULT = 6;
 
 export function Ch14BeyondNotes() {
+  const { profile } = usePortfolio();
+  const d = { ...DEFAULT_DATA, ...(profile?.field_notes || {}) };
+  const photo = { ...DEFAULT_DATA.photo, ...(d.photo || {}) };
+  const notes: NoteData[] = Array.isArray(d.notes) && d.notes.length > 0 ? d.notes : DEFAULT_DATA.notes;
+
+  const [expanded, setExpanded] = useState(false);
+  const hasMore = notes.length > VISIBLE_BY_DEFAULT;
+  const visibleNotes = expanded ? notes : notes.slice(0, VISIBLE_BY_DEFAULT);
+
   return (
     <section
       id="beyond-me"
@@ -144,73 +223,76 @@ export function Ch14BeyondNotes() {
           </svg>
         </div>
 
-        <div className="text-mono text-meta text-bone/55">/14 — Beyond My Portfolio</div>
-        <h2 id="field-notes-title" className="text-display mt-5 leading-[0.95] text-[clamp(2.4rem,6vw,4.6rem)]">
-          <MaskReveal><span className="italic">Things</span></MaskReveal>{" "}
-          <MaskReveal><span>My Resume</span></MaskReveal>{" "}
-          <MaskReveal><span className="italic">Will Never Tell You.</span></MaskReveal>
+        <div className="text-mono text-meta text-bone/55">/{d.number} — {d.kicker}</div>
+        <h2 id="field-notes-title" className="text-display italic mt-5 leading-[1.05] text-[clamp(2.2rem,5.6vw,4.2rem)]">
+          <SplitWords text={d.title} />
         </h2>
         <Reveal>
           <p className="mt-6 max-w-xl text-display text-[clamp(1.05rem,1.6vw,1.25rem)] leading-[1.55] text-bone/75">
-            Not achievements. Not milestones. Just the thoughts, lessons, and beliefs
-            that shaped me quietly.
+            {d.subtitle}
           </p>
         </Reveal>
 
         <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-[300px_1fr]">
           {/* Left — taped portrait card */}
           <Reveal className="lg:sticky lg:top-24 lg:self-start">
-            <div className="mr-notes__photo">
-              <span className="mr-notes__tape" aria-hidden />
-              <img
-                src={portrait}
-                alt="Manikanta R."
-                width={640}
-                height={800}
-                className="h-full w-full object-cover"
-                style={{ filter: "grayscale(85%) contrast(1.05)" }}
-              />
-            </div>
+            <TiltPhoto src={portrait} alt={photo.name} />
             <div className="mr-notes__sig">
-              <span>Manikanta R.</span>
+              <span>{photo.name}</span>
               <svg viewBox="0 0 220 20" className="mr-notes__sig-underline" aria-hidden>
                 <path d="M2 12c30-10 50-10 60-2 8 6 14 6 22-2 10-10 20-10 30 0 8 8 16 8 26 0 8-7 18-9 30-4 10 4 20 4 28-2" />
               </svg>
             </div>
             <div className="mt-3 text-mono text-meta uppercase tracking-[0.2em] text-bone/55">
-              Bangalore · India
+              {photo.location}
               <br />
-              Still learning. Always building.
+              {photo.tagline}
             </div>
             <div className="mt-4 text-mono text-meta uppercase tracking-[0.2em] text-bone/35">
-              Last updated: July 2026
+              Last updated: {photo.lastUpdated}
             </div>
             <div className="mt-5 flex items-start gap-2 text-bone/70">
               <span className="mt-0.5">♡</span>
               <span className="font-hand text-[1.3rem] leading-snug text-bone/80">
-                Grateful for every struggle.
-                <br />
-                It wrote the strongest chapters.
+                {photo.note.split("\n").map((l: string, i: number) => (
+                  <span key={i}>
+                    {l}
+                    <br />
+                  </span>
+                ))}
               </span>
             </div>
           </Reveal>
 
           {/* Right — numbered field notes */}
           <div>
-            {NOTES.map((n, i) => (
-              <Reveal key={i} delay={i * 0.03}>
+            {visibleNotes.map((n, i) => (
+              <Reveal key={i} delay={Math.min(i, 8) * 0.03}>
                 <div className="mr-notes__row">
                   <div className="mr-notes__num tabular-nums">{String(i + 1).padStart(2, "0")}.</div>
                   <div className="mr-notes__text">
-                    <p className="mr-notes__line font-hand">{n.line}</p>
-                    {n.body.map((b, j) => (
+                    <p className="mr-notes__line font-hand">{parseLine(n.line)}</p>
+                    {(n.body || []).map((b, j) => (
                       <p key={j} className="mr-notes__sub">{b}</p>
                     ))}
                   </div>
-                  <div className="mr-notes__icon">{n.icon}</div>
+                  <div className="mr-notes__icon">{ICONS[n.icon || "default"] || ICONS.default}</div>
                 </div>
               </Reveal>
             ))}
+
+            {hasMore && (
+              <div className="mt-8 flex justify-start">
+                <button
+                  type="button"
+                  onClick={() => setExpanded((v) => !v)}
+                  className="mr-notes__more"
+                >
+                  {expanded ? "Show less" : `Read more · ${notes.length - VISIBLE_BY_DEFAULT} more`}
+                  <span className={`mr-notes__more-arrow ${expanded ? "is-open" : ""}`} aria-hidden>↓</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -219,16 +301,17 @@ export function Ch14BeyondNotes() {
         <Reveal>
           <div className="mt-16 flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
             <p className="max-w-2xl text-display italic text-[clamp(1.3rem,2.4vw,1.9rem)] leading-[1.4] text-bone/95">
-              <span className="mr-beyond__pull">“</span>
-              From 10th grade till now — no support, no one to lean on. I was alone.
-              Betrayed. But I survived, I learned, I built. Today, I stand for the
-              version of me that never gave up.
-              <span className="mr-beyond__pull">”</span>
+              <span className="mr-beyond__pull">"</span>
+              {d.quote}
+              <span className="mr-beyond__pull">"</span>
             </p>
             <div className="font-hand shrink-0 text-right text-[1.6rem] leading-tight text-bone/70">
-              Still Learning.
-              <br />
-              Forever Curious.
+              {d.signOff.split("\n").map((l: string, i: number) => (
+                <span key={i}>
+                  {l}
+                  <br />
+                </span>
+              ))}
             </div>
           </div>
         </Reveal>
@@ -266,6 +349,11 @@ const css = `
 .mr-notes__sub { margin: 0.35em 0 0; font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.01em; color: color-mix(in oklab, var(--bone) 62%, transparent); }
 .mr-notes__icon { color: color-mix(in oklab, var(--vermilion) 80%, var(--bone) 20%); opacity: 0.85; padding-top: 0.2em; }
 .mr-notes__icon svg { width: 34px; height: 34px; }
+
+.mr-notes__more { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bone); background: transparent; border: 1px solid color-mix(in oklab, var(--bone) 30%, transparent); border-radius: 999px; padding: 10px 18px; cursor: pointer; transition: border-color 200ms ease, color 200ms ease, background 200ms ease; }
+.mr-notes__more:hover { border-color: var(--vermilion); color: var(--vermilion); background: color-mix(in oklab, var(--vermilion) 8%, transparent); }
+.mr-notes__more-arrow { display: inline-block; transition: transform 250ms ease; }
+.mr-notes__more-arrow.is-open { transform: rotate(180deg); }
 
 @media (max-width: 640px) {
   .mr-notes__row { grid-template-columns: 34px 1fr; }
