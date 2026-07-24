@@ -147,13 +147,13 @@ const [entered] = useState(true);
 
 const css = `
 .hero-stage {
-  --hero-ink: #181818;
+  --hero-ink: var(--ink, #181818);
   --hero-ink-2: #555555;
-  --hero-paper: #F8F5EF;
+  --hero-paper: var(--bone, #F8F5EF);
   --hero-paper-2: #FFFFFF;
   --hero-mute: #777777;
   --hero-rule: rgba(24,24,24,0.12);
-  --hero-accent: #D46A2E;
+  --hero-accent: var(--vermilion, #D46A2E);
   background: linear-gradient(180deg, var(--hero-paper) 0%, var(--hero-paper-2) 100%);
   color: var(--hero-ink);
   font-family: var(--font-sans);
@@ -467,7 +467,7 @@ const css = `
   --hero-paper-2: #17171A;
   --hero-mute: #8F887F;
   --hero-rule: rgba(245,241,235,0.10);
-  --hero-accent: #D46A2E;
+  --hero-accent: var(--vermilion, #D46A2E);
 }
 .dark .hero-portrait img { filter: grayscale(0.15) contrast(1.05) brightness(1.05); }
 .dark .hero-watermark { mix-blend-mode: screen; }

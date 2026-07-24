@@ -124,7 +124,7 @@ export function Ch08Credentials() {
         <header className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-8">
             <div className="text-mono text-meta text-bone/55">
-              /08 — Curated · Verified · Continuous
+              /07 — Curated · Verified · Continuous
             </div>
             <h2 className="text-display mt-5 text-[clamp(2.8rem,7vw,5.8rem)] leading-[0.95] text-bone">
               <MaskReveal>Professional Certifications</MaskReveal>

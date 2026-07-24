@@ -136,7 +136,7 @@ export function Ch06Work() {
         <SectionWelcome text="Welcome to my portfolio." className="mb-10" />
         <header className="mb-12 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
-            <div className="text-mono text-meta text-bone/55">/06 — Featured · Library · Case-driven</div>
+            <div className="text-mono text-meta text-bone/55">/04 — Featured · Library · Case-driven</div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96] text-bone">
               <MaskReveal>Strategic Projects & Innovation</MaskReveal>
             </h2>

@@ -3,6 +3,110 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import portrait from "@/assets/portrait.jpg";
+import { Reveal } from "@/components/motion/primitives";
+import usePortfolio from "@/hooks/usePortfolio";
+import { Linkedin, Github, Instagram, Facebook, Mail, Link as LinkIcon } from "lucide-react";
+
+const SOCIAL_ICON_MAP: Record<string, React.ComponentType<any>> = {
+  Linkedin, Github, Instagram, Facebook, Mail,
+};
+
+const BLOG_URL = "https://insights.manikantar.in";
+const JOURNAL_API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+type JournalArticle = {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readingTime: string;
+  cover: string | null;
+  url: string;
+};
+
+async function fetchFeaturedArticles(): Promise<JournalArticle[]> {
+  try {
+    const res = await fetch(`${JOURNAL_API_BASE}/journal-articles`, { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error("journal_fetch_failed");
+    const data = await res.json();
+    if (data.success && data.data) {
+      return data.data.slice(0, 3).map((a: any) => ({
+        id: a.id,
+        title: a.title,
+        excerpt: a.excerpt || "",
+        category: a.category || "",
+        date: a.date || "",
+        readingTime: a.reading_time || "",
+        cover: a.cover || null,
+        url: a.url || BLOG_URL,
+      }));
+    }
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function JournalBlock() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["journal", "featured"],
+    queryFn: fetchFeaturedArticles,
+    staleTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+  const articles = data ?? [];
+
+  return (
+    <>
+      <div className="li-latest">
+        {isLoading
+          ? [0, 1].map((i) => <div key={i} className="li-card li-row li-row--skeleton" aria-hidden />)
+          : articles.map((a, i) => (
+              <Reveal key={a.id} delay={i * 0.08}>
+                <a href={a.url} target="_blank" rel="noreferrer noopener" className="li-card li-row">
+                  <div className="li-row__thumb" aria-hidden>
+                    {a.cover ? <img src={a.cover} alt="" loading="lazy" /> : <span className="li-row__thumbArt" />}
+                  </div>
+                  <div className="li-row__body">
+                    <span className="li-row__date">{a.category ? `${a.category} · ` : ""}{a.date}</span>
+                    <h5 className="li-row__title">{a.title}</h5>
+                    <p className="li-row__excerpt">{a.excerpt}</p>
+                  </div>
+                  <span className="li-row__read">Read <Arrow /></span>
+                </a>
+              </Reveal>
+            ))}
+      </div>
+      <a href={BLOG_URL} target="_blank" rel="noreferrer noopener" className="li-journal__more">
+        Visit insights.manikantar.in for the full archive <Arrow />
+      </a>
+    </>
+  );
+}
+
+function SocialBlock() {
+  const { socialLinks } = usePortfolio();
+  const icons = (socialLinks || []).filter((s: any) => s.category === "social" && s.visible !== false);
+
+  return (
+    <div className="li-social">
+      {icons.length ? icons.map((s: any) => {
+        const Icon = SOCIAL_ICON_MAP[s.icon] || LinkIcon;
+        return (
+          <a key={s.id || s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="li-social__icon" aria-label={s.label} title={s.label}>
+            <Icon aria-hidden size={18} />
+          </a>
+        );
+      }) : (
+        <>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="li-social__icon" aria-label="Instagram"><Instagram aria-hidden size={18} /></a>
+          <a href="https://www.threads.net/" target="_blank" rel="noopener noreferrer" className="li-social__icon" aria-label="Threads"><LinkIcon aria-hidden size={18} /></a>
+        </>
+      )}
+    </div>
+  );
+}
 
 type FeedPost = {
   urn: string;
@@ -136,12 +240,12 @@ export default function Ch09LinkedIn() {
       <div aria-hidden className="li-ambient" />
       <div className="relative mx-auto w-full max-w-6xl">
         <div className="li-eyebrow">
-          <span className="li-eyebrow__num">08</span>
+          <span className="li-eyebrow__num">09</span>
           <span className="li-eyebrow__sep" />
-          <span>Professional Presence · Live from LinkedIn</span>
+          <span>Connect · Live from LinkedIn, my journal & elsewhere</span>
         </div>
         <h2 className="li-title">A working public ledger of how I show up.</h2>
-        <p className="li-subtitle">Profile, network, and the work the algorithm decided to share — pulled from one live feed and refreshed automatically.</p>
+        <p className="li-subtitle">Profile, network, writing, and the places I'm active — pulled from live feeds and refreshed automatically.</p>
 
         <article className="li-card li-profile">
           <div className="li-profile__photo">
@@ -206,11 +310,21 @@ export default function Ch09LinkedIn() {
           </div>
         </div>
 
+        <div className="li-block">
+          <BlockHead n="06" title="Field Notes & Journal" sub="Long-form writing, off-platform" />
+          <JournalBlock />
+        </div>
+
+        <div className="li-block">
+          <BlockHead n="07" title="Elsewhere" sub="Other places I'm active" />
+          <SocialBlock />
+        </div>
+
         <div className="li-finalCta">
           <a className="li-cta li-cta--lg" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
             Connect with me on LinkedIn <Arrow />
           </a>
-          <p className="li-finalCta__hint">Updated {fmtUpdated(f.updatedAt)} · Synchronised from a single live feed.</p>
+          <p className="li-finalCta__hint">Updated {fmtUpdated(f.updatedAt)} · Synchronised from live feeds.</p>
         </div>
       </div>
       <style>{css}</style>
@@ -482,4 +596,10 @@ const css = `
 .li-row__read { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: color-mix(in oklab, var(--vermilion) 75%, currentColor 25%); }
 .li-finalCta { margin-top: 80px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
 .li-finalCta__hint { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: color-mix(in oklab, currentColor 50%, transparent); }
+.li-row--skeleton { height: 96px; background: color-mix(in oklab, currentColor 6%, transparent); animation: li-pulse 1.6s ease-in-out infinite; }
+@keyframes li-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+.li-journal__more { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.08em; color: color-mix(in oklab, var(--vermilion) 75%, currentColor 25%); text-decoration: none; }
+.li-social { display: flex; flex-wrap: wrap; gap: 12px; }
+.li-social__icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; color: inherit; background: color-mix(in oklab, var(--bone) 6%, transparent); border: 1px solid color-mix(in oklab, currentColor 16%, transparent); transition: transform .25s ease, border-color .25s ease, color .25s ease; }
+.li-social__icon:hover { transform: translateY(-2px); border-color: color-mix(in oklab, var(--vermilion) 45%, transparent); color: var(--vermilion); }
 `;

@@ -323,7 +323,7 @@ export function Ch01About() {
         .about-stage {
           position: relative;
           background:
-            radial-gradient(80% 60% at 80% 0%, color-mix(in oklab, var(--vermilion, #d24a2b) 7%, transparent), transparent 60%),
+            radial-gradient(80% 60% at 80% 0%, color-mix(in oklab, var(--vermilion, #D46A2E) 7%, transparent), transparent 60%),
             radial-gradient(60% 40% at 0% 100%, color-mix(in oklab, var(--ink) 6%, transparent), transparent 60%);
         }
         .about-wash {
@@ -359,7 +359,7 @@ export function Ch01About() {
         }
         .about-eyebrow__dot {
           width: 4px; height: 4px; border-radius: 99px;
-          background: var(--vermilion, #d24a2b);
+          background: var(--vermilion, #D46A2E);
         }
         .about-title {
           margin: 24px 0 0;
@@ -372,7 +372,7 @@ export function Ch01About() {
         }
         .about-title em {
           font-style: italic;
-          color: color-mix(in oklab, var(--ink) 92%, var(--vermilion, #d24a2b));
+          color: color-mix(in oklab, var(--ink) 92%, var(--vermilion, #D46A2E));
         }
         .about-deck {
           margin: 32px 0 0;
@@ -394,7 +394,7 @@ export function Ch01About() {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: clamp(160px, 18vw, 280px);
           line-height: 1;
-          color: color-mix(in oklab, var(--vermilion, #d24a2b) 24%, transparent);
+          color: color-mix(in oklab, var(--vermilion, #D46A2E) 24%, transparent);
           pointer-events: none;
         }
         .about-epigraph blockquote {
@@ -455,15 +455,15 @@ export function Ch01About() {
         }
         .about-rail__item.is-passed { color: color-mix(in oklab, var(--ink) 65%, transparent); }
         .about-rail__item.is-passed .about-rail__dot {
-          background: color-mix(in oklab, var(--vermilion, #d24a2b) 60%, var(--ink));
+          background: color-mix(in oklab, var(--vermilion, #D46A2E) 60%, var(--ink));
         }
         .about-rail__item.is-active {
           color: var(--ink); transform: translateX(2px);
         }
         .about-rail__item.is-active .about-rail__dot {
-          background: var(--vermilion, #d24a2b);
+          background: var(--vermilion, #D46A2E);
           transform: scale(1.45);
-          box-shadow: 0 0 0 6px color-mix(in oklab, var(--vermilion, #d24a2b) 18%, transparent);
+          box-shadow: 0 0 0 6px color-mix(in oklab, var(--vermilion, #D46A2E) 18%, transparent);
         }
         .about-rail__track {
           position: absolute; left: 3px; top: 38px; bottom: 0; width: 2px;
@@ -472,7 +472,7 @@ export function Ch01About() {
         }
         .about-rail__progress {
           display: block; width: 100%; height: 100%;
-          background: linear-gradient(180deg, var(--vermilion, #d24a2b), color-mix(in oklab, var(--vermilion, #d24a2b) 30%, transparent));
+          background: linear-gradient(180deg, var(--vermilion, #D46A2E), color-mix(in oklab, var(--vermilion, #D46A2E) 30%, transparent));
           transform-origin: top;
           transform: scaleY(0);
           transition: transform .25s linear;
@@ -510,7 +510,7 @@ export function Ch01About() {
           color: var(--ink);
         }
         .about-beat__pull.is-lit {
-          box-shadow: -2px 0 0 0 var(--vermilion, #d24a2b);
+          box-shadow: -2px 0 0 0 var(--vermilion, #D46A2E);
         }
         @media (prefers-reduced-motion: reduce) {
           .about-para, .about-para.is-shade, .about-para.is-lit {
@@ -527,7 +527,7 @@ export function Ch01About() {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-style: italic;
           font-size: 34px; line-height: 1;
-          color: var(--vermilion, #d24a2b);
+          color: var(--vermilion, #D46A2E);
         }
         .about-beat__era {
           font-family: var(--font-mono, ui-monospace, monospace);
@@ -560,7 +560,7 @@ export function Ch01About() {
         .about-beat__pull {
           margin: 28px 0 0;
           padding: 18px 0 18px 22px;
-          border-left: 2px solid var(--vermilion, #d24a2b);
+          border-left: 2px solid var(--vermilion, #D46A2E);
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-style: italic;
           font-size: clamp(22px, 2.4vw, 30px);
@@ -568,7 +568,7 @@ export function Ch01About() {
           color: var(--ink);
         }
         .about-beat__pull span {
-          font-size: 1.2em; color: var(--vermilion, #d24a2b);
+          font-size: 1.2em; color: var(--vermilion, #D46A2E);
           margin-right: 4px;
         }
 
@@ -601,17 +601,17 @@ export function Ch01About() {
           position: relative;
           display: flex; flex-direction: column; gap: 14px;
           padding: 32px 28px 28px;
-          background: color-mix(in oklab, var(--bone, #F5F1E8) 92%, transparent);
+          background: color-mix(in oklab, var(--bone, #F8F5EF) 92%, transparent);
           text-decoration: none; color: inherit;
           transition: background .35s ease, transform .35s ease;
           overflow: hidden;
         }
         .about-metric::before {
           content: ""; position: absolute; inset: 0;
-          background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--vermilion, #d24a2b) 10%, transparent));
+          background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--vermilion, #D46A2E) 10%, transparent));
           opacity: 0; transition: opacity .35s ease;
         }
-        .about-metric:hover { background: color-mix(in oklab, var(--bone, #F5F1E8) 100%, transparent); }
+        .about-metric:hover { background: color-mix(in oklab, var(--bone, #F8F5EF) 100%, transparent); }
         .about-metric:hover::before { opacity: 1; }
         .about-metric__value {
           position: relative; z-index: 1;
@@ -621,7 +621,7 @@ export function Ch01About() {
           letter-spacing: -0.02em;
           color: var(--ink);
         }
-        .about-metric__suffix { color: var(--vermilion, #d24a2b); margin-left: 2px; }
+        .about-metric__suffix { color: var(--vermilion, #D46A2E); margin-left: 2px; }
         .about-metric__label {
           position: relative; z-index: 1;
           font-family: var(--font-mono, ui-monospace, monospace);
@@ -681,14 +681,14 @@ export function Ch01About() {
         }
         .about-pillar {
           padding: 28px 28px 30px;
-          background: color-mix(in oklab, var(--bone, #F5F1E8) 70%, transparent);
+          background: color-mix(in oklab, var(--bone, #F8F5EF) 70%, transparent);
           border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
           border-radius: 4px;
         }
         .about-pillar__no {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10px; letter-spacing: 0.22em;
-          color: var(--vermilion, #d24a2b);
+          color: var(--vermilion, #D46A2E);
         }
         .about-pillar__label {
           margin-top: 6px;
@@ -721,12 +721,12 @@ export function Ch01About() {
         .about-values__quote {
           position: absolute; left: 0; top: -8px;
           font-size: 1.6em; line-height: 1;
-          color: var(--vermilion, #d24a2b);
+          color: var(--vermilion, #D46A2E);
         }
         .about-horizon {
           margin-top: 96px;
           padding: 28px 0 8px 28px;
-          border-left: 2px solid var(--vermilion, #d24a2b);
+          border-left: 2px solid var(--vermilion, #D46A2E);
         }
         .about-horizon__era {
           font-family: var(--font-mono, ui-monospace, monospace);

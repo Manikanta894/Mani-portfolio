@@ -158,7 +158,7 @@ export function Ch05Research() {
         <header className="mb-14 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
             <div className="text-mono text-meta text-graphite/60">
-              /05 — Working papers · Frontier topics
+              /06 — Working papers · Frontier topics
             </div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96]">
               <MaskReveal>Research & Innovation Lab</MaskReveal>
