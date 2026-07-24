@@ -64,7 +64,7 @@ function StatTile({ label, value, delay, onSelect }: { label: string; value: num
         }}
         className="group relative flex h-full w-full flex-col justify-between rounded-xl border border-bone/10 bg-bone/[0.02] p-6 text-left transition-all duration-500 hover:-translate-y-0.5 hover:border-vermilion/40 hover:bg-bone/[0.04]"
       >
-        <div className="text-mono text-eyebrow uppercase tracking-[0.24em] text-bone/50 transition-colors group-hover:text-bone/75">
+                <div className="text-mono text-eyebrow uppercase tracking-[0.24em] text-bone/75 transition-colors group-hover:text-bone">
           {label}
         </div>
         <div className="mt-8 flex items-end justify-between gap-2">

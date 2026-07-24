@@ -147,12 +147,12 @@ const [entered] = useState(true);
 
 const css = `
 .hero-stage {
-  --hero-ink: #181818;
-  --hero-ink-2: #2A2A2A;
-  --hero-paper: #F8F5EF;
-  --hero-paper-2: #FFFFFF;
-  --hero-mute: #555555;
-  --hero-rule: rgba(24,24,24,0.12);
+  --hero-ink: #F5F1EB;
+  --hero-ink-2: #C8C2B8;
+  --hero-paper: #0E0E10;
+  --hero-paper-2: #17171A;
+  --hero-mute: #8F887F;
+  --hero-rule: rgba(245,241,235,0.10);
   --hero-accent: var(--vermilion, #D46A2E);
   background: linear-gradient(180deg, var(--hero-paper) 0%, var(--hero-paper-2) 100%);
   color: var(--hero-ink);
@@ -162,8 +162,8 @@ const css = `
 .hero-bg {
   position: absolute; inset: 0;
   background:
-    radial-gradient(900px 600px at 22% 38%, rgba(20,17,15,0.06), transparent 70%),
-    radial-gradient(700px 500px at 88% 80%, rgba(20,17,15,0.04), transparent 70%);
+    radial-gradient(900px 600px at 22% 38%, rgba(245,241,235,0.06), transparent 70%),
+    radial-gradient(700px 500px at 88% 80%, rgba(245,241,235,0.04), transparent 70%);
   pointer-events: none;
 }
 
@@ -230,7 +230,7 @@ const css = `
   width: clamp(420px, 42vw, 620px);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(20,17,15,0.10), rgba(20,17,15,0) 70%);
+  background: radial-gradient(closest-side, rgba(245,241,235,0.08), rgba(245,241,235,0) 70%);
   filter: blur(20px);
   pointer-events: none;
   transform: translateY(-3%);
@@ -250,9 +250,9 @@ const css = `
     0 0 0 1px color-mix(in oklab, var(--hero-ink) 12%, transparent),
     0 0 0 6px color-mix(in oklab, var(--hero-paper) 88%, transparent),
     0 0 0 7px color-mix(in oklab, var(--hero-ink) 10%, transparent),
-    0 1px 0 rgba(255,255,255,0.6) inset,
-    0 30px 60px -20px rgba(20,17,15,0.35),
-    0 80px 120px -40px rgba(20,17,15,0.25);
+    0 1px 0 rgba(245,241,235,0.12) inset,
+    0 30px 60px -20px rgba(0,0,0,0.6),
+    0 80px 120px -40px rgba(0,0,0,0.45);
   clip-path: circle(0% at 50% 50%);
   transition:
     clip-path 1100ms cubic-bezier(.22,.7,.2,1) 120ms,
@@ -286,8 +286,8 @@ const css = `
   content: "";
   position: absolute; inset: 0;
   background:
-    radial-gradient(60% 50% at 50% 18%, rgba(255,245,230,0.22), transparent 70%),
-    linear-gradient(180deg, rgba(20,17,15,0) 60%, rgba(20,17,15,0.18) 100%);
+    radial-gradient(60% 50% at 50% 18%, rgba(245,241,235,0.12), transparent 70%),
+    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
   pointer-events: none;
 }
 
@@ -315,7 +315,7 @@ const css = `
 .hero-eyebrow-dot {
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--hero-accent);
-  box-shadow: 0 0 0 4px rgba(107,102,96,0.15);
+  box-shadow: 0 0 0 4px rgba(212,106,46,0.25);
 }
 .hero-eyebrow-sep { width: 22px; height: 1px; background: var(--hero-rule); }
 
