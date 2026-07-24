@@ -117,36 +117,6 @@
   background-color: #FFFFFF;
 }
 
-/* ─── Global Theme Override ─────────────────────────────────────────── */
-/* Must come AFTER mood mixins to win specificity.
-   Forces ALL sections to the chosen theme, overriding per-section data-mood.
-   Uses !important on both CSS vars (for child elements) and bg/color. */
-[data-theme="dark"] {
-  --ink: #14110F !important;
-  --bone: #F5F1EB !important;
-  --rule: rgba(245, 241, 235, 0.12) !important;
-}
-[data-theme="dark"] [data-mood="bone"],
-[data-theme="dark"] [data-mood="warm"] {
-  --ink: #14110F !important;
-  --bone: #F5F1EB !important;
-  background-color: #14110F !important;
-  color: #F5F1EB !important;
-}
-/* When user toggles to light, force all sections light */
-[data-theme="light"] {
-  --ink: #181818 !important;
-  --bone: #F8F5EF !important;
-  --rule: rgba(24, 24, 24, 0.12) !important;
-}
-[data-theme="light"] [data-mood="ink"],
-[data-theme="light"] [data-mood="graphite"] {
-  --ink: #181818 !important;
-  --bone: #F8F5EF !important;
-  background-color: #F8F5EF !important;
-  color: #181818 !important;
-}
-
 [data-mood] ::selection {
   background: var(--vermilion);
   color: #FFFFFF;
