@@ -126,7 +126,7 @@ const NOTES: Note[] = [
 export function Ch14BeyondNotes() {
   return (
     <section
-      id="field-notes"
+      id="beyond-me"
       data-mood="ink"
       className="relative chapter-pad grain overflow-hidden"
       aria-labelledby="field-notes-title"
