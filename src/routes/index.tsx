@@ -19,6 +19,7 @@ import { Ch08Credentials } from "@/components/chapters/Ch08Credentials";
 import Ch09LinkedIn from "@/components/chapters/Ch09LinkedIn";
 import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
 import { Ch12Contact } from "@/components/chapters/Ch12Contact";
+import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 
 
@@ -115,7 +116,8 @@ function Index() {
       <Ch09LinkedIn />
       <Ch11Philosophy />
       <Ch12Contact />
-
+      <Ch14BeyondNotes />
+      
       <SiteFooter />
 
       {/*
