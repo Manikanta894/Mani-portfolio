@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import portraitCutout from "@/assets/portrait-cutout.png";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -31,6 +32,22 @@ const [portraitAwake] = useState(true);
 const [awake] = useState(true);
 const [entered] = useState(true);
 
+const heroMx = useMotionValue(0);
+const heroMy = useMotionValue(0);
+const heroRx = useTransform(heroMy, [-0.5, 0.5], [9, -9]);
+const heroRy = useTransform(heroMx, [-0.5, 0.5], [-12, 12]);
+const heroSrx = useSpring(heroRx, { stiffness: 120, damping: 14 });
+const heroSry = useSpring(heroRy, { stiffness: 120, damping: 14 });
+const onHeroMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  heroMx.set((e.clientX - rect.left) / rect.width - 0.5);
+  heroMy.set((e.clientY - rect.top) / rect.height - 0.5);
+};
+const onHeroLeave = () => {
+  heroMx.set(0);
+  heroMy.set(0);
+};
+
   // Broadcast "hero ready" so global chrome (nav) can fade in only after the intro.
   useEffect(() => {
     if (!entered) return;
@@ -48,12 +65,19 @@ const [entered] = useState(true);
 
       <div className="relative mx-auto grid min-h-screen w-full max-w-[1480px] grid-cols-12 items-center gap-6 px-4 sm:px-6 md:px-8 lg:px-16 py-10 lg:py-0 lg:h-screen">
         {/* LEFT · PORTRAIT */}
-        <div className={`col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left ${portraitAwake ? "is-awake" : ""}`}>
+        <div
+          className={`col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left ${portraitAwake ? "is-awake" : ""}`}
+          onMouseMove={onHeroMove}
+          onMouseLeave={onHeroLeave}
+          style={{ perspective: 1000 }}
+        >
           <div aria-hidden className={`hero-watermark ${portraitAwake ? "is-awake" : ""}`}>MR</div>
           <div className="hero-halo" aria-hidden />
-          <div ref={portraitRef} className="hero-portrait">
-            <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
-          </div>
+          <motion.div style={{ rotateX: heroSrx, rotateY: heroSry, transformStyle: "preserve-3d" }}>
+            <div ref={portraitRef} className="hero-portrait">
+              <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
+            </div>
+          </motion.div>
         </div>
 
         {/* RIGHT · NAME + HIERARCHY */}
@@ -285,9 +309,7 @@ const css = `
 .hero-portrait::after {
   content: "";
   position: absolute; inset: 0;
-  background:
-    radial-gradient(60% 50% at 50% 18%, rgba(245,241,235,0.12), transparent 70%),
-    linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
   pointer-events: none;
 }
 
