@@ -138,7 +138,7 @@ export function Ch06Work() {
           <div className="col-span-12 md:col-span-7">
             <div className="text-mono text-meta text-bone/55">/06 — Featured · Library · Case-driven</div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96] text-bone">
-              <MaskReveal>Strategic Work & Innovation</MaskReveal>
+              <MaskReveal>Strategic Projects & Innovation</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">

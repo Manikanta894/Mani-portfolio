@@ -24,7 +24,7 @@ const FALLBACK_STATS: any[] = [
 ];
 
 const SECTION = {
-  number: "07",
+  number: "05",
   kicker: "Capabilities · Connected · Live",
   title: "Professional Operating System",
   intro:

@@ -109,16 +109,16 @@ function Index() {
       <Ch01About />
       <Ch02Education />
       <Ch03Experience />
-      
-      <Ch05Research />
+
       <Ch06Work />
       <Ch07Ecosystem />
+      <Ch05Research />
       <Ch08Credentials />
+      <Ch11Philosophy />
       <Ch09LinkedIn />
       <Ch10Journal />
-      <Ch11Philosophy />
-      <Ch13BeyondMe />
       <Ch12Contact />
+      <Ch13BeyondMe />
 
       <SiteFooter />
 

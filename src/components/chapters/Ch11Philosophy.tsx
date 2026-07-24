@@ -7,7 +7,7 @@ import { MaskReveal, Reveal } from "@/components/motion/primitives";
 export function Ch11Philosophy() {
   const { profile } = usePortfolio();
   const philosophyData = profile?.philosophy || {
-    number: "11",
+    number: "08",
     title: "Personal Philosophy",
     quote: "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions. The analytics came later. The discipline came from necessity. The direction came from paying attention.",
     pillars: [

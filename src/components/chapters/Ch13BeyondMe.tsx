@@ -10,7 +10,7 @@ import usePortfolio from "@/hooks/usePortfolio";
 export function Ch13BeyondMe() {
   const { profile } = usePortfolio();
   const beyondData = profile?.beyond || {
-    number: "12",
+    number: "11",
     kicker: "Final Chapter",
     title: "Beyond My Portfolio",
     lede: "If you've read this far, you already know what I've done. This chapter is the quieter one — about why I keep doing it, and the person who shows up when no one is watching.",
