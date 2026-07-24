@@ -4,20 +4,32 @@ import { useEffect, useState } from "react";
 type Theme = "light" | "dark";
 const KEY = "mr-theme";
 
-function apply(t: Theme) {
+function apply(t: Theme | null) {
   const r = document.documentElement;
-  r.classList.toggle("dark", t === "dark");
-  r.dataset.theme = t;
+  if (t === null) {
+    // No theme set — use per-section moods (original default behavior)
+    r.classList.remove("dark");
+    delete r.dataset.theme;
+  } else {
+    r.classList.toggle("dark", t === "dark");
+    r.dataset.theme = t;
+  }
 }
 
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme | null>(null);
 
   useEffect(() => {
-    const stored = (localStorage.getItem(KEY) as Theme | null) ?? "light";
-    setTheme(stored);
-    apply(stored);
+    const stored = localStorage.getItem(KEY);
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+      apply(stored);
+    } else {
+      // No stored preference — leave at per-section mood default
+      setTheme(null);
+      apply(null);
+    }
     setMounted(true);
   }, []);
 
