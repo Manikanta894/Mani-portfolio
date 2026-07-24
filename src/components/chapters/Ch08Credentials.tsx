@@ -265,7 +265,7 @@ export function Ch08Credentials() {
         </AnimatePresence>
       </div>
 
-      {/* Cert Modal */}
+      {/* Cert Modal — clean, image-forward */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -284,82 +284,71 @@ export function Ch08Credentials() {
               exit={{ opacity: 0, y: 18, scale: 0.98 }}
               transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative z-10 grid max-h-[88vh] w-full max-w-3xl grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-bone/15 bg-graphite shadow-[0_30px_80px_-20px_oklch(0_0_0/0.6)]"
+              className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-bone/15 bg-graphite shadow-[0_30px_80px_-20px_oklch(0_0_0/0.6)]"
             >
-              <div className="flex items-center justify-between gap-4 border-b border-bone/12 bg-bone/[0.03] px-6 py-4">
+              {/* Header */}
+              <div className="flex shrink-0 items-center justify-between gap-4 border-b border-bone/12 px-6 py-4">
                 <div className="text-mono flex items-center gap-3 text-eyebrow uppercase tracking-[0.18em] text-bone/65">
-                  <span className="text-vermilion">{open.tag}</span>
+                  <span className="text-vermilion">{open.issuer || open.tag}</span>
                   <span className="text-bone/35">·</span>
-                  <span>{open.year}</span>
-                  <span className="text-bone/35">·</span>
-                  <span>{open.level}</span>
+                  <span>{open.date || open.year}</span>
+                  {open.verified && (
+                    <>
+                      <span className="text-bone/35">·</span>
+                      <span className="text-emerald-300/95">Verified</span>
+                    </>
+                  )}
                 </div>
                 <button type="button" aria-label="Close" onClick={() => setOpen(null)} className="text-mono rounded-full border border-bone/20 px-3 py-1 text-eyebrow uppercase tracking-[0.18em] text-bone/75 transition-colors hover:border-bone hover:text-bone">Close · esc</button>
               </div>
-              <div className="overflow-y-auto px-6 py-7 sm:px-9 sm:py-10">
-                <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">{open.issuer}</div>
-                <h3 className="text-display mt-3 text-[clamp(1.7rem,3vw,2.3rem)] leading-[1.1] text-bone">{open.name}</h3>
-                <div className="text-mono mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-eyebrow uppercase tracking-[0.16em] text-bone/65">
-                  <span className="inline-flex items-center gap-1.5 text-emerald-300/95">
-                    <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400/95" />
-                    {open.verified ? "Verified credential" : "Pending verification"}
-                  </span>
-                  <span>ID · {open.credentialId}</span>
-                  <span>{open.hours} learning hours</span>
-                </div>
-                <p className="text-serif mt-7 text-[clamp(1.02rem,1.35vw,1.18rem)] leading-[1.6] text-bone/82">{open.description}</p>
-                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-bone/15 bg-gradient-to-br from-bone/[0.04] to-transparent p-5">
-                    <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">Certificate preview</div>
-                    <div className="mt-3 flex h-[calc(100%-1.5rem)] flex-col items-center justify-center text-center">
+
+              {/* Body */}
+              <div className="overflow-y-auto px-6 py-7 sm:px-10 sm:py-10">
+                <h3 className="text-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.1] text-bone">{open.title || open.name}</h3>
+
+                {/* Certificate image - auto-sizing */}
+                {(open.image_url || open.logo) && (
+                  <div className="mt-6 overflow-hidden rounded-xl border border-bone/15 bg-gradient-to-b from-bone/[0.03] to-transparent">
+                    <img
+                      src={open.image_url || open.logo}
+                      alt={`${open.title || open.name} certificate`}
+                      className="h-auto w-full cursor-pointer object-contain transition-transform duration-300 hover:scale-[1.02]"
+                      onClick={() => window.open(open.image_url || open.logo, "_blank")}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+
+                {/* No image placeholder */}
+                {!open.image_url && !open.logo && (
+                  <div className="mt-6 flex aspect-[4/3] items-center justify-center rounded-xl border border-dashed border-bone/20 bg-bone/[0.02]">
+                    <div className="text-center">
                       <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">{open.issuer}</div>
-                      <div className="text-display mt-3 text-[1.3rem] leading-[1.1] text-bone/90">{open.name}</div>
-                      <div className="text-mono mt-3 text-eyebrow uppercase tracking-[0.18em] text-bone/45">{open.credentialId}</div>
+                      <div className="text-display mt-2 text-[1.2rem] leading-[1.1] text-bone/60">{open.title || open.name}</div>
+                      <div className="text-mono mt-2 text-eyebrow uppercase tracking-[0.18em] text-bone/35">{open.credentialId || "credential"}</div>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-3">
-                    <a href={open.verifyHref} target="_blank" rel="noreferrer noopener" className="text-mono flex items-center justify-between rounded-lg border border-vermilion/60 bg-vermilion/10 px-4 py-3 text-eyebrow uppercase tracking-[0.18em] text-bone transition-colors hover:bg-vermilion/20">
-                      Official verification ↗ <span className="text-bone/65">external</span>
+                )}
+
+                {/* Action row */}
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {(open.url || open.verifyHref) && (
+                    <a
+                      href={open.url || open.verifyHref}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-mono inline-flex items-center gap-2 rounded-lg border border-vermilion/60 bg-vermilion/10 px-5 py-3 text-eyebrow uppercase tracking-[0.18em] text-bone transition-colors hover:bg-vermilion/20"
+                    >
+                      Verify ↗
                     </a>
-                    <div className="rounded-lg border border-bone/12 bg-bone/[0.02] p-4">
-                      <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">Technology stack</div>
-                      <ul className="mt-3 flex flex-wrap gap-1.5">
-                        {(open.stack || []).map((s: string) => (
-                          <li key={s} className="text-mono border border-bone/20 px-2 py-1 text-eyebrow uppercase tracking-[0.14em] text-bone/85">{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2">
-                  <div className="rounded-lg border border-bone/12 bg-bone/[0.02] p-5">
-                    <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">Learning outcomes</div>
-                    <ul className="mt-3 space-y-2 text-[0.92rem] leading-[1.55] text-bone/82">
-                      {(open.outcomes || []).map((o: string) => (
-                        <li key={o} className="flex gap-2"><span className="mt-2 inline-block h-1 w-1 rounded-full bg-vermilion" /><span>{o}</span></li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="rounded-lg border border-bone/12 bg-bone/[0.02] p-5">
-                    <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">Skills developed</div>
-                    <ul className="mt-3 flex flex-wrap gap-1.5">
-                      {(open.skills || []).map((s: string) => (
-                        <li key={s} className="text-mono border border-bone/20 px-2.5 py-1 text-eyebrow uppercase tracking-[0.14em] text-bone/85">{s}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="mt-7 grid grid-cols-1 gap-2 border-t border-bone/12 pt-5 sm:grid-cols-3">
-                  {[
-                    { label: "Projects", items: open.related?.projects ?? [], href: "#work" },
-                    { label: "Research", items: open.related?.research ?? [], href: "#research" },
-                    { label: "Experience", items: open.related?.experience ?? [], href: "#experience" },
-                  ].map((g) => (
-                    <a key={g.label} href={g.href} onClick={() => setOpen(null)} className="block rounded-lg border border-bone/12 bg-bone/[0.02] p-4 transition-colors hover:border-vermilion/60">
-                      <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">Related {g.label}</div>
-                      <div className="mt-2 text-[0.85rem] leading-[1.4] text-bone/85">{g.items.length ? g.items.join(" · ") : "Explore section →"}</div>
-                    </a>
-                  ))}
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setOpen(null)}
+                    className="text-mono inline-flex items-center gap-2 rounded-lg border border-bone/20 px-5 py-3 text-eyebrow uppercase tracking-[0.18em] text-bone/70 transition-colors hover:border-bone/50 hover:text-bone"
+                  >
+                      Back to list
+                  </button>
                 </div>
               </div>
             </motion.div>
