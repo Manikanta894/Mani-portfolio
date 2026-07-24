@@ -80,7 +80,7 @@ export function Ch01About() {
   ]);
 
   const aboutData = {
-    number: "01",
+    number: "",
     kicker: "Origin / Position",
     epigraph: profile?.about_epigraph || "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions.",
     footnote: profile?.about_footnote || "signal over noise",

@@ -210,8 +210,8 @@ export function Ch08Credentials() {
                       onClick={() => setOpen(c)}
                       className="group grid w-full grid-cols-12 items-baseline gap-4 py-4 text-left transition-colors hover:bg-bone/[0.04]"
                     >
-                      <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{c.year}</span>
-                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">{c.name}</span>
+                      <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{c.date || c.year}</span>
+                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">{c.title || c.name}</span>
                       <span className="hidden md:col-span-3 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{c.issuer}</span>
                       <span className="hidden md:col-span-1 md:block text-mono text-right text-eyebrow uppercase tracking-[0.16em] text-bone/45 group-hover:text-vermilion">open →</span>
                     </button>
