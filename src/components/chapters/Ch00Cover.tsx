@@ -147,11 +147,11 @@ const [entered] = useState(true);
 
 const css = `
 .hero-stage {
-  --hero-ink: var(--ink, #181818);
-  --hero-ink-2: #555555;
-  --hero-paper: var(--bone, #F8F5EF);
+  --hero-ink: #181818;
+  --hero-ink-2: #2A2A2A;
+  --hero-paper: #F8F5EF;
   --hero-paper-2: #FFFFFF;
-  --hero-mute: #777777;
+  --hero-mute: #555555;
   --hero-rule: rgba(24,24,24,0.12);
   --hero-accent: var(--vermilion, #D46A2E);
   background: linear-gradient(180deg, var(--hero-paper) 0%, var(--hero-paper-2) 100%);
