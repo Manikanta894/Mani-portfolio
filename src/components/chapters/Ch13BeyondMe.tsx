@@ -53,7 +53,7 @@ export function Ch13BeyondMe() {
         </Reveal>
         <div className="mr-beyond__rule mt-14" aria-hidden />
         <div className="mt-14 space-y-20">
-          {beyondData.movements.map((m: any, i: number) => (
+          {(beyondData.movements || []).map((m: any, i: number) => (
             <Reveal key={m.heading} delay={i * 0.04}>
               <article className="mr-beyond__movement">
                 <h3 className="mr-beyond__heading"><span className="mr-beyond__heading-num tabular-nums">{String(i + 1).padStart(2, "0")}</span><span>{m.heading}</span></h3>
@@ -67,7 +67,7 @@ export function Ch13BeyondMe() {
           <div className="mt-16">
             <div className="text-mono text-meta uppercase tracking-[0.22em] text-ink/55">Marginalia \u00B7 small personal moments</div>
             <dl className="mt-8 grid grid-cols-1 gap-x-10 gap-y-5 sm:grid-cols-2">
-              {beyondData.moments.map((m: any) => (
+              {(beyondData.moments || []).map((m: any) => (
                 <div key={m.k} className="mr-beyond__moment"><dt>{m.k}</dt><dd>{m.v}</dd></div>
               ))}
             </dl>
