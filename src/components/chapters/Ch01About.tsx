@@ -601,17 +601,17 @@ export function Ch01About() {
           position: relative;
           display: flex; flex-direction: column; gap: 14px;
           padding: 32px 28px 28px;
-          background: color-mix(in oklab, var(--bone, #F8F5EF) 92%, transparent);
+          background: color-mix(in oklab, var(--ink, #14110F) 50%, transparent);
           text-decoration: none; color: inherit;
           transition: background .35s ease, transform .35s ease;
           overflow: hidden;
         }
         .about-metric::before {
           content: ""; position: absolute; inset: 0;
-          background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--vermilion, #D46A2E) 10%, transparent));
+          background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--vermilion, #D46A2E) 12%, transparent));
           opacity: 0; transition: opacity .35s ease;
         }
-        .about-metric:hover { background: color-mix(in oklab, var(--bone, #F8F5EF) 100%, transparent); }
+        .about-metric:hover { background: color-mix(in oklab, var(--ink, #14110F) 70%, transparent); }
         .about-metric:hover::before { opacity: 1; }
         .about-metric__value {
           position: relative; z-index: 1;
