@@ -85,11 +85,13 @@ export default function usePortfolio() {
   const siteSettings = resource("siteSettings", () => api.getSiteSettings(), [] as any[]);
   const sectionContent = resource("sectionContent", () => api.getSectionContent(), [] as any[]);
 
+  // sectionContent is optional — if the table doesn't exist or the API fails,
+  // the site should still render with hardcoded fallbacks.
   const all = [
     profile, education, experience, projects, research, publications, certifications, seo,
     aboutBeats, aboutMilestones, aboutMetrics, awards, capabilityDomains, capabilities,
     ecosystemStats, linkedInFeed, journalArticles, researchThemes, navigationItems,
-    socialLinks, siteSections, pageSeo, media, siteSettings, sectionContent,
+    socialLinks, siteSections, pageSeo, media, siteSettings,
   ];
 
   const loading = all.some((q) => q.isLoading);
