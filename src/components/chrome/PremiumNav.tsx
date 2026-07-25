@@ -421,7 +421,7 @@ const css = `
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.015em;
-  color: color-mix(in oklab, currentColor 72%, transparent);
+  color: color-mix(in oklab, currentColor 90%, transparent);
   text-decoration: none;
   transition: color .35s ease, transform .35s ease;
   white-space: nowrap;

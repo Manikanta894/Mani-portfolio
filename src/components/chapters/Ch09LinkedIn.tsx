@@ -218,49 +218,51 @@ export default function Ch09LinkedIn() {
         <h2 className="li-title">A working public ledger of how I show up.</h2>
         <p className="li-subtitle">Profile, network, writing, and the places I'm active — pulled from live feeds and refreshed automatically.</p>
 
-        <article className="li-card li-profile">
-          <div className="li-profile__photo">
-            <img src={portrait} alt={f.profile.name} loading="lazy" />
-            <span className="li-profile__ring" aria-hidden />
-          </div>
-          <div className="li-profile__body">
-            <div className="li-profile__nameRow">
-              <h3 className="li-profile__name">{f.profile.name}</h3>
-              {f.profile.verified && (
-                <span className="li-verified" title="LinkedIn verified profile">
-                  <VerifiedTick /> Verified
-                </span>
-              )}
+        <div className="li-topRow">
+          <article className="li-card li-profile">
+            <div className="li-profile__photo">
+              <img src={portrait} alt={f.profile.name} loading="lazy" />
+              <span className="li-profile__ring" aria-hidden />
             </div>
-            <p className="li-profile__headline">{f.profile.headline}</p>
-            <dl className="li-profile__meta">
-              <Meta label="Currently" value={f.profile.company} />
-              <Meta label="Based in" value={f.profile.location} />
-              <Meta label="Open to" value="Research collaborations · Analytics roles" />
-            </dl>
-            <a className="li-cta" href={f.profile.profileUrl} target="_blank" rel="noopener noreferrer">
-              View verified profile <Arrow />
-            </a>
-          </div>
-        </article>
+            <div className="li-profile__body">
+              <div className="li-profile__nameRow">
+                <h3 className="li-profile__name">{f.profile.name}</h3>
+                {f.profile.verified && (
+                  <span className="li-verified" title="LinkedIn verified profile">
+                    <VerifiedTick /> Verified
+                  </span>
+                )}
+              </div>
+              <p className="li-profile__headline">{f.profile.headline}</p>
+              <dl className="li-profile__meta">
+                <Meta label="Currently" value={f.profile.company} />
+                <Meta label="Based in" value={f.profile.location} />
+                <Meta label="Open to" value="Research collaborations · Analytics roles" />
+              </dl>
+              <a className="li-cta" href={f.profile.profileUrl} target="_blank" rel="noopener noreferrer">
+                View verified profile <Arrow />
+              </a>
+            </div>
+          </article>
 
-        <div className="li-block">
-          <BlockHead n="01" title="Network & Impact" sub="Reach across the platform, last twelve months" />
-          <div className="li-grid-4">
-            <ImpactStat label="Followers" value={f.network.followers} />
-            <ImpactStat label="Connections" value={f.network.connections} />
-            <ImpactStat label="Total Impressions" value={f.impact.impressions} suffix="+" />
-            <ImpactStat label="Total Engagements" value={f.impact.engagements} />
+          <div className="li-statsCol">
+            <div className="li-statsCol__head">Network & Impact — last 12 months</div>
+            <div className="li-grid-2x2">
+              <ImpactStat label="Followers" value={f.network.followers} />
+              <ImpactStat label="Connections" value={f.network.connections} />
+              <ImpactStat label="Total Impressions" value={f.impact.impressions} suffix="+" />
+              <ImpactStat label="Total Engagements" value={f.impact.engagements} />
+            </div>
           </div>
         </div>
 
         <div className="li-block">
-          <BlockHead n="02" title="Featured Post" sub="The piece that travelled the furthest" />
+          <BlockHead n="01" title="Featured Post" sub="The piece that travelled the furthest" />
           <FeaturedHero post={f.featured} />
         </div>
 
         <div className="li-block">
-          <BlockHead n="03" title="Latest Posts" sub="Refreshes whenever I publish" />
+          <BlockHead n="02" title="Latest Posts" sub="Refreshes whenever I publish" />
           <div className="li-latest">
             {(f.latest.length ? f.latest : [SEED.editorsPick]).slice(0, 2).map((p, i) => (
               <PostRow key={p.urn + i} post={p} />
@@ -269,7 +271,7 @@ export default function Ch09LinkedIn() {
         </div>
 
         <div className="li-block">
-          <BlockHead n="04" title="Field Notes & Journal" sub="Long-form writing, off-platform" />
+          <BlockHead n="03" title="Field Notes & Journal" sub="Long-form writing, off-platform" />
           <JournalBlock />
         </div>
 
@@ -459,9 +461,16 @@ const css = `
 .li-subtitle { margin-top: 14px; max-width: 60ch; font-size: clamp(1rem, 1.15vw, 1.125rem); color: color-mix(in oklab, currentColor 72%, transparent); }
 .li-card { position: relative; border-radius: 22px; background: color-mix(in oklab, var(--bone) 6%, transparent); border: 1px solid color-mix(in oklab, currentColor 14%, transparent); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 1px 0 color-mix(in oklab, #ffffff 8%, transparent) inset, 0 24px 60px -32px color-mix(in oklab, #000 70%, transparent); transition: transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s ease, background .3s ease; }
 .li-card:hover { border-color: color-mix(in oklab, currentColor 24%, transparent); transform: translateY(-2px); }
-.li-profile { margin-top: 56px; display: grid; grid-template-columns: 220px 1fr; gap: 36px; padding: 28px; align-items: center; }
-@media (max-width: 760px) { .li-profile { grid-template-columns: 1fr; gap: 22px; padding: 22px; } }
-.li-profile__photo { position: relative; width: 200px; height: 200px; border-radius: 50%; overflow: hidden; isolation: isolate; }
+.li-topRow { margin-top: 56px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: stretch; }
+@media (max-width: 900px) { .li-topRow { grid-template-columns: 1fr; } }
+.li-profile { margin-top: 0; display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 22px; align-items: center; }
+@media (max-width: 760px) { .li-profile { grid-template-columns: 1fr; gap: 22px; } }
+.li-statsCol { display: flex; flex-direction: column; gap: 12px; }
+.li-statsCol__head { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in oklab, currentColor 55%, transparent); }
+.li-grid-2x2 { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; }
+.li-grid-2x2 .li-impact { padding: 16px 16px 14px; }
+.li-grid-2x2 .li-impact__num { font-size: clamp(1.4rem, 2.2vw, 1.9rem); }
+.li-profile__photo { position: relative; width: 96px; height: 96px; border-radius: 50%; overflow: hidden; isolation: isolate; }
 .li-profile__photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.05) contrast(1.02); }
 .li-profile__ring { position: absolute; inset: -4px; border-radius: 50%; background: conic-gradient(from 220deg, color-mix(in oklab, var(--vermilion) 80%, transparent), color-mix(in oklab, currentColor 30%, transparent), color-mix(in oklab, var(--vermilion) 80%, transparent)); z-index: -1; filter: blur(2px); opacity: .8; }
 .li-profile__nameRow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }

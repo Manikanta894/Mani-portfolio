@@ -208,13 +208,12 @@ const css = `
 
 .mr-footer__grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
-  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: clamp(28px, 5vw, 72px);
   padding: clamp(40px, 5vw, 64px) 0;
 }
 @media (max-width: 960px) {
   .mr-footer__grid { grid-template-columns: 1fr 1fr; }
-  .mr-footer__news { grid-column: 1 / -1; }
 }
 @media (max-width: 560px) {
   .mr-footer__grid { grid-template-columns: 1fr; gap: 36px; }
