@@ -11,10 +11,10 @@ const API_BASE =
 
 /**
  * Ch12Contact — editorial, asymmetric redesign.
- * Indigo accent, bold scale contrast, no terminal gimmicks.
+ * Uses the site's existing vermilion accent, white text for readability.
  */
 
-const ACCENT = "#7C5CFF"; // deep indigo — cooler alternative to vermilion
+const ACCENT = "var(--vermilion)";
 
 export function Ch12Contact() {
   const { profile } = usePortfolio();
@@ -75,14 +75,7 @@ export function Ch12Contact() {
   return (
     <section id="contact" data-mood="ink" className="relative chapter-pad overflow-hidden">
       {/* Editorial ambient wash */}
-      <div aria-hidden className="pointer-events-none absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(900px 600px at 8% 12%, ${ACCENT}0A, transparent 60%),
-            radial-gradient(600px 400px at 92% 88%, ${ACCENT}08, transparent 55%)
-          `,
-        }}
-      />
+      <div aria-hidden className="pointer-events-none absolute inset-0 contact-ambient" />
 
       <div className="relative mx-auto max-w-6xl">
         {/* ── Masthead ───────────────────────────── */}
@@ -210,6 +203,16 @@ export function Ch12Contact() {
       </div>
 
       <style>{`
+        :root {
+          --contact-accent: var(--vermilion, #D46A2E);
+        }
+
+        .contact-ambient {
+          background:
+            radial-gradient(900px 600px at 8% 12%, color-mix(in oklab, var(--contact-accent) 6%, transparent), transparent 60%),
+            radial-gradient(600px 400px at 92% 88%, color-mix(in oklab, var(--contact-accent) 5%, transparent), transparent 55%);
+        }
+
         .contact-form {
           width: 100%;
         }
@@ -221,7 +224,7 @@ export function Ch12Contact() {
           font-size: 0.7rem;
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          color: ${ACCENT};
+          color: var(--contact-accent);
           transition: color .3s ease;
         }
         .contact-label::before {
@@ -247,7 +250,7 @@ export function Ch12Contact() {
           font-style: italic;
         }
         .contact-input:focus {
-          border-bottom-color: ${ACCENT};
+          border-bottom-color: var(--contact-accent);
           padding-left: 4px;
         }
         .contact-textarea {
@@ -265,18 +268,18 @@ export function Ch12Contact() {
           font-size: 0.75rem;
           letter-spacing: 0.24em;
           text-transform: uppercase;
-          color: #fff;
-          background: ${ACCENT};
+          color: var(--ink);
+          background: var(--bone);
           border: none;
           border-radius: 0;
           cursor: pointer;
           overflow: hidden;
           transition: transform .35s ease, box-shadow .35s ease;
-          box-shadow: 0 8px 24px -8px ${ACCENT}66;
+          box-shadow: 0 8px 24px -8px rgba(0,0,0,0.4);
         }
         .contact-submit:hover {
           transform: translateY(-2px);
-          box-shadow: 0 14px 32px -10px ${ACCENT}99;
+          box-shadow: 0 14px 32px -10px rgba(0,0,0,0.5);
         }
         .contact-submit:active {
           transform: translateY(0);
@@ -290,7 +293,7 @@ export function Ch12Contact() {
           content: "";
           position: absolute;
           inset: 0;
-          background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+          background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
           transform: translateX(-100%);
           transition: transform .6s cubic-bezier(.2,.8,.2,1);
         }
@@ -310,9 +313,9 @@ export function Ch12Contact() {
           font-size: 0.65rem;
           letter-spacing: 0.28em;
           text-transform: uppercase;
-          color: ${ACCENT};
-          border: 1px solid ${ACCENT}44;
-          background: ${ACCENT}0D;
+          color: var(--contact-accent);
+          border: 1px solid color-mix(in oklab, var(--contact-accent) 27%, transparent);
+          background: color-mix(in oklab, var(--contact-accent) 5%, transparent);
           margin-bottom: 20px;
         }
 
@@ -333,7 +336,7 @@ export function Ch12Contact() {
         .contact-divider {
           height: 1px;
           width: 48px;
-          background: ${ACCENT}66;
+          background: color-mix(in oklab, var(--contact-accent) 40%, transparent);
           margin: 28px 0;
         }
 
@@ -347,8 +350,8 @@ export function Ch12Contact() {
           transition: border-color .3s ease, background .3s ease, transform .3s ease;
         }
         .contact-channel:hover {
-          border-color: ${ACCENT}44;
-          background: ${ACCENT}08;
+          border-color: color-mix(in oklab, var(--contact-accent) 27%, transparent);
+          background: color-mix(in oklab, var(--contact-accent) 3%, transparent);
           transform: translateX(4px);
         }
         .contact-channel__label {
@@ -368,7 +371,7 @@ export function Ch12Contact() {
         .contact-channel__arrow {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 0.8rem;
-          color: ${ACCENT};
+          color: var(--contact-accent);
           opacity: 0;
           transform: translateX(-6px);
           transition: opacity .3s ease, transform .3s ease;
