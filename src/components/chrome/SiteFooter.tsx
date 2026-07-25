@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ArrowUp, Mail, Linkedin, Github, Instagram, Facebook } from "lucide-react";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -33,8 +33,6 @@ export function SiteFooter() {
 
   const rootRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const [sub, setSub] = useState<"idle" | "ok">("idle");
-  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const el = rootRef.current;
@@ -46,14 +44,6 @@ export function SiteFooter() {
     io.observe(el);
     return () => io.disconnect();
   }, []);
-
-  const onSubscribe = (e: FormEvent) => {
-    e.preventDefault();
-    if (!email.includes("@")) return;
-    setSub("ok");
-    setEmail("");
-    window.setTimeout(() => setSub("idle"), 3200);
-  };
 
   const onTop = () => {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -142,38 +132,6 @@ export function SiteFooter() {
             </nav>
           )}
 
-          {/* Newsletter */}
-          <section className="mr-footer__col mr-footer__news" aria-labelledby="news-h">
-            <div id="news-h" className="mr-footer__kicker">The dispatch</div>
-            <p className="mr-footer__news-copy">
-              Occasional notes on research, analytics and the work in progress.
-            </p>
-            <form className="mr-footer__form" onSubmit={onSubscribe} noValidate>
-              <label htmlFor="footer-email" className="sr-only">Email address</label>
-              <div className="mr-footer__field">
-                <Mail aria-hidden className="mr-footer__field-icon" />
-                <input
-                  id="footer-email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="you@domain.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mr-footer__input"
-                />
-                <button type="submit" className="mr-footer__submit" aria-label="Subscribe">
-                  Subscribe
-                </button>
-              </div>
-              <div
-                aria-live="polite"
-                className={`mr-footer__hint ${sub === "ok" ? "is-ok" : ""}`}
-              >
-                {sub === "ok" ? "Thank you — you're on the list." : "No spam. Unsubscribe anytime."}
-              </div>
-            </form>
-          </section>
         </div>
 
         <div className="mr-footer__rule" aria-hidden />

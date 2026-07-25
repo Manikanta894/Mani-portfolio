@@ -73,7 +73,7 @@ export function AvailabilityPill() {
   const location = profile?.location || "Bengaluru";
   const status = profile?.availability_status || "Available";
   return (
-    <div className="fixed right-4 top-4 z-40 flex items-center gap-2 text-mono text-bone mix-blend-difference">
+    <div className="fixed right-4 top-20 z-30 flex items-center gap-2 rounded-full border border-bone/15 bg-ink/70 px-3 py-1.5 text-mono text-bone backdrop-blur-md">
       <span className="relative flex h-1.5 w-1.5">
         <span className="absolute inline-flex h-full w-full rounded-full bg-vermilion opacity-75 pulse-dot" />
         <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-vermilion" />

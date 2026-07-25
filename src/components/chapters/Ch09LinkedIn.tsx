@@ -262,7 +262,7 @@ export default function Ch09LinkedIn() {
         <div className="li-block">
           <BlockHead n="03" title="Latest Posts" sub="Refreshes whenever I publish" />
           <div className="li-latest">
-            {(f.latest.length ? f.latest : [SEED.featured, SEED.editorsPick]).slice(0, 2).map((p, i) => (
+            {(f.latest.length ? f.latest : [SEED.editorsPick]).slice(0, 2).map((p, i) => (
               <PostRow key={p.urn + i} post={p} />
             ))}
           </div>
