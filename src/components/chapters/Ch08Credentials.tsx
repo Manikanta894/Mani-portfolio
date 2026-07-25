@@ -82,7 +82,8 @@ function StatTile({ label, value, delay, onSelect }: { label: string; value: num
 }
 
 export function Ch08Credentials() {
-  const { certifications, awards } = usePortfolio();
+  const { certifications, awards, sectionContent } = usePortfolio();
+  const sc = sectionContent.credentials || {};
   const [open, setOpen] = useState<any>(null);
   const [openAward, setOpenAward] = useState<any>(null);
   const [tab, setTab] = useState<"certs" | "honors">("certs");
@@ -107,7 +108,10 @@ export function Ch08Credentials() {
     };
   }, [open]);
 
-  const stats = [
+  const sectionNumber = sc.number || "07";
+  const sectionLabel = sc.label || "Curated · Verified · Continuous";
+  const sectionTitle = sc.title || "Professional Certifications";
+  const stats = sc.stats || [
     { label: "Awards", value: awardsList.length || 6 },
     { label: "Certifications", value: list.length || 14 },
     { label: "Research Papers", value: 10 },
@@ -124,10 +128,10 @@ export function Ch08Credentials() {
         <header className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-8">
             <div className="text-mono text-meta text-bone/55">
-              /07 — Curated · Verified · Continuous
+              /{sectionNumber} — {sectionLabel}
             </div>
             <h2 className="text-display mt-5 text-[clamp(2.8rem,7vw,5.8rem)] leading-[0.95] text-bone">
-              <MaskReveal>Professional Certifications</MaskReveal>
+              <MaskReveal>{sectionTitle}</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 flex items-end justify-start md:col-span-4 md:justify-end">
@@ -141,7 +145,7 @@ export function Ch08Credentials() {
 
         {/* Achievement Dashboard */}
         <div className="mt-24 grid grid-cols-2 gap-3 md:mt-32 md:grid-cols-4">
-          {stats.map((s, i) => (
+          {(stats as any[]).map((s: any, i: number) => (
             <StatTile
               key={s.label}
               label={s.label}

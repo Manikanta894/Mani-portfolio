@@ -118,8 +118,9 @@ function Mini({ k, v }: { k: string; v: string }) {
 
 /* ---------- main ---------- */
 export function Ch06Work() {
-  const { projects } = usePortfolio();
+  const { projects, sectionContent } = usePortfolio();
   const [showAll, setShowAll] = useState(false);
+  const sc = sectionContent.work || {};
 
   // featured first, then rest by year desc
   const ordered = [...(projects || [])].sort((a: any, b: any) => {
@@ -129,6 +130,13 @@ export function Ch06Work() {
 
   const visible = showAll ? ordered : ordered.slice(0, 4);
   const hiddenCount = ordered.length - visible.length;
+  const sectionNumber = sc.number || "04";
+  const sectionLabel = sc.label || "Featured · Library · Case-driven";
+  const sectionTitle = sc.title || "Strategic Projects & Innovation";
+  const sectionLede = sc.lede || "Three case studies upfront — the full project library sits beneath, fully searchable. Built to scale from six projects to sixty without a redesign.";
+  const sectionHint = sc.hint || "projects · tap any row to expand";
+  const readMoreLabel = sc.read_more_label || "Read more →";
+  const showLessLabel = sc.show_less_label || "Show less ←";
 
   return (
     <section id="work" data-mood="ink" className="relative chapter-pad">
@@ -136,16 +144,16 @@ export function Ch06Work() {
         <SectionWelcome text="Welcome to my portfolio." className="mb-10" />
         <header className="mb-12 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
-            <div className="text-mono text-meta text-bone/55">/04 — Featured · Library · Case-driven</div>
+            <div className="text-mono text-meta text-bone/55">/{sectionNumber} — {sectionLabel}</div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96] text-bone">
-              <MaskReveal>Strategic Projects & Innovation</MaskReveal>
+              <MaskReveal>{sectionTitle}</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <Reveal>
-              <p className="text-[1.05rem] leading-relaxed text-bone/75">Three case studies upfront — the full project library sits beneath, fully searchable. Built to scale from six projects to sixty without a redesign.</p>
+              <p className="text-[1.05rem] leading-relaxed text-bone/75">{sectionLede}</p>
               <div className="text-mono mt-4 text-eyebrow text-bone/45">
-                {ordered.length} projects · tap any row to expand
+                {ordered.length} {sectionHint}
               </div>
             </Reveal>
           </div>
@@ -179,7 +187,7 @@ export function Ch06Work() {
             onClick={() => setShowAll((v) => !v)}
             className="text-mono inline-flex items-center gap-2 border border-bone/30 px-5 py-2.5 text-meta uppercase tracking-[0.16em] text-bone transition-colors hover:border-vermilion hover:text-vermilion"
           >
-            {showAll ? "Show less ←" : `Read more →`}
+            {showAll ? showLessLabel : readMoreLabel}
           </button>
           <span className="text-mono text-eyebrow text-bone/45">
             {showAll

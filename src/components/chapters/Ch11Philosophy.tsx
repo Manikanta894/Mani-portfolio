@@ -6,12 +6,14 @@ import { MaskReveal, Reveal } from "@/components/motion/primitives";
 import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 
 export function Ch11Philosophy() {
-  const { profile } = usePortfolio();
-  const philosophyData = profile?.philosophy || {
-    number: "08",
-    title: "Personal Philosophy",
-    quote: "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions. The analytics came later. The discipline came from necessity. The direction came from paying attention.",
-    pillars: [
+  const { profile, sectionContent } = usePortfolio();
+  const sc = sectionContent.philosophy || {};
+  const philosophyFromProfile = profile?.philosophy;
+  const philosophyData = philosophyFromProfile || sc || {
+    number: sc.number || "08",
+    title: sc.title || "Personal Philosophy",
+    quote: sc.quote || "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions. The analytics came later. The discipline came from necessity. The direction came from paying attention.",
+    pillars: sc.pillars || [
       { n: "01", name: "Self-Built", body: "Balanced full-time work alongside every academic and research milestone — no shortcuts, no inheritance of access." },
       { n: "02", name: "Disciplined", body: "Studied after shifts. Researched on weekends. Built the habit before the credentials caught up." },
       { n: "03", name: "Long-Term", body: "Building a five-year foundation, not chasing a quarter. Compounding over performing." },

@@ -36,6 +36,9 @@ router.use("/page-seo", buildPublicRouter("page_seo", { orderBy: "page_slug" }))
 router.use("/media", buildPublicRouter("media", { orderBy: "created_at" }));
 router.use("/site-settings", buildPublicRouter("site_settings", { orderBy: "key" }));
 
+// Section content — single JSONB table for all hardcoded section text
+router.use("/section-content", buildPublicRouter("section_content", { orderBy: "section_key" }));
+
 router.post("/analytics/track", track);
 router.post("/contact", submitContact);
 

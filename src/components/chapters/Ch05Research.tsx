@@ -158,8 +158,9 @@ function PaperRow({ paper, index }: { paper: any; index: number }) {
 
 /* ---------- main ---------- */
 export function Ch05Research() {
-  const { research, researchThemes } = usePortfolio();
+  const { research, researchThemes, sectionContent } = usePortfolio();
   const [showAll, setShowAll] = useState(false);
+  const sc = sectionContent.research || {};
 
   const ordered = useMemo(
     () =>
@@ -171,6 +172,16 @@ export function Ch05Research() {
   );
 
   const visible = showAll ? ordered : ordered.slice(0, 5);
+  const sectionNumber = sc.number || "06";
+  const sectionLabel = sc.label || "Working papers · Frontier topics";
+  const sectionTitle = sc.title || "Research & Innovation Lab";
+  const sectionLede = sc.lede || "A working research lab, not a list. Featured studies below open in place — the full archive sits beneath, fully searchable.";
+  const orcidUrl = sc.orcid_url || "https://orcid.org/0009-0005-2576-8731";
+  const orcidLabel = sc.orcid_label || "ORCID";
+  const readMoreLabel = sc.read_more_label || "Read more papers →";
+  const showLessLabel = sc.show_less_label || "Show less ↑";
+  const archivePrefix = sc.archive_prefix || "full archive on";
+  const archiveLabel = sc.archive_label || "ORCID";
 
   return (
     <section id="research" data-mood="ink" className="relative chapter-pad">
@@ -178,21 +189,21 @@ export function Ch05Research() {
         <header className="mb-14 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
             <div className="text-mono text-meta text-bone/60">
-              /06 — Working papers · Frontier topics
+              /{sectionNumber} — {sectionLabel}
             </div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96]">
-              <MaskReveal>Research & Innovation Lab</MaskReveal>
+              <MaskReveal>{sectionTitle}</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <Reveal>
               <p className="text-[1.05rem] leading-relaxed text-bone/85">
-                A working research lab, not a list. Featured studies below open in place — the full archive sits beneath, fully searchable.
+                {sectionLede}
               </p>
             </Reveal>
             <Reveal delay={0.1}>
               <a
-                href="https://orcid.org/0009-0005-2576-8731"
+                href={orcidUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-4 inline-flex items-center gap-2 rounded border border-bone/25 px-3 py-1.5 text-mono text-eyebrow text-bone/70 hover:border-vermilion hover:text-vermilion"
@@ -200,7 +211,7 @@ export function Ch05Research() {
                 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden>
                   <path fill="currentColor" d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-3.903-3.722h-2.416z"/>
                 </svg>
-                ORCID
+                {orcidLabel}
               </a>
             </Reveal>
           </div>
@@ -221,7 +232,7 @@ export function Ch05Research() {
               onClick={() => setShowAll(true)}
               className="text-mono inline-flex items-center gap-2 border border-bone/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-bone hover:border-vermilion hover:text-vermilion"
             >
-              Read more papers →
+              {readMoreLabel}
             </button>
           ) : (
             <button
@@ -229,21 +240,21 @@ export function Ch05Research() {
               onClick={() => setShowAll(false)}
               className="text-mono inline-flex items-center gap-2 border border-bone/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-bone hover:border-vermilion hover:text-vermilion"
             >
-              Show less ↑
+              {showLessLabel}
             </button>
           )}
           <span className="text-mono text-eyebrow text-bone/55">
             {showAll
               ? `Showing all ${ordered.length} papers`
               : `Showing 5 of ${ordered.length} papers`}
-            {" "}· full archive on{" "}
+            {" "}· {archivePrefix}{" "}
             <a
-              href="https://orcid.org/0009-0005-2576-8731"
+              href={orcidUrl}
               target="_blank"
               rel="noreferrer"
               className="underline hover:text-vermilion"
             >
-              ORCID
+              {archiveLabel}
             </a>
           </span>
         </div>

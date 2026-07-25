@@ -32,6 +32,8 @@ const SECTION = {
   source: "Mirrored from LinkedIn · single source of truth",
 };
 
+// SECTION will be overridden by sectionContent.ecosystem if available
+
 // Cross-link anchors to other chapters
 const LINKS: Record<string, string> = {
   projects: "#work",
@@ -46,13 +48,24 @@ function stageIndex(s: string) {
 }
 
 export function Ch07Ecosystem() {
-  const { capabilities: apiCaps, capabilityDomains: apiDomains, ecosystemStats: apiStats } = usePortfolio();
+  const { capabilities: apiCaps, capabilityDomains: apiDomains, ecosystemStats: apiStats, sectionContent } = usePortfolio();
+  const sc = sectionContent.ecosystem || {};
 
   // Use API data if available, fall back to hardcoded fallbacks
   const effectiveCaps: Capability[] = (apiCaps?.length ? apiCaps : []) as Capability[];
   const effectiveDomains = apiDomains?.length ? apiDomains : FALLBACK_DOMAINS;
   const effectiveStats = apiStats?.length ? apiStats : FALLBACK_STATS;
   const STAGES = FALLBACK_STAGES;
+
+  // Merge sectionContent overrides into SECTION
+  const section = {
+    ...SECTION,
+    ...(sc.number ? { number: sc.number } : {}),
+    ...(sc.kicker ? { kicker: sc.kicker } : {}),
+    ...(sc.title ? { title: sc.title } : {}),
+    ...(sc.intro ? { intro: sc.intro } : {}),
+    ...(sc.source ? { source: sc.source } : {}),
+  };
 
   const [active, setActive] = useState<Capability | null>(null);
   const [hoverDomain, setHoverDomain] = useState<Domain | null>(null);
@@ -91,17 +104,17 @@ export function Ch07Ecosystem() {
         <header className="mb-14 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
             <div className="text-mono text-meta text-bone/55">
-              /{SECTION.number} — {SECTION.kicker}
+              /{section.number} — {section.kicker}
             </div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.95] text-bone">
-              <MaskReveal>{SECTION.title}</MaskReveal>
+              <MaskReveal>{section.title}</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <Reveal>
-              <p className="text-bone/75">{SECTION.intro}</p>
+              <p className="text-bone/75">{section.intro}</p>
               <p className="mt-4 text-mono text-eyebrow uppercase tracking-[0.15em] text-bone/45">
-                {SECTION.source}
+                {section.source}
               </p>
             </Reveal>
           </div>

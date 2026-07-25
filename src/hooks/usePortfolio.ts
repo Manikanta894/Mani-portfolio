@@ -26,6 +26,7 @@ export interface PortfolioData {
   pageSeo: any[];
   media: any[];
   siteSettings: any[];
+  sectionContent: Record<string, any>;
 }
 
 // Every chapter/chrome component calls usePortfolio() independently (15+ call
@@ -82,12 +83,13 @@ export default function usePortfolio() {
   const pageSeo = resource("pageSeo", () => api.getPageSeo(), [] as any[]);
   const media = resource("media", () => api.getMedia(), [] as any[]);
   const siteSettings = resource("siteSettings", () => api.getSiteSettings(), [] as any[]);
+  const sectionContent = resource("sectionContent", () => api.getSectionContent(), [] as any[]);
 
   const all = [
     profile, education, experience, projects, research, publications, certifications, seo,
     aboutBeats, aboutMilestones, aboutMetrics, awards, capabilityDomains, capabilities,
     ecosystemStats, linkedInFeed, journalArticles, researchThemes, navigationItems,
-    socialLinks, siteSections, pageSeo, media, siteSettings,
+    socialLinks, siteSections, pageSeo, media, siteSettings, sectionContent,
   ];
 
   const loading = all.some((q) => q.isLoading);
@@ -118,6 +120,16 @@ export default function usePortfolio() {
     pageSeo: pluck(pageSeo, []),
     media: pluck(media, []),
     siteSettings: pluck(siteSettings, []),
+    sectionContent: (() => {
+      const rows = pluck(sectionContent, []);
+      const map: Record<string, any> = {};
+      for (const row of rows) {
+        if (row.section_key && row.content) {
+          map[row.section_key] = row.content;
+        }
+      }
+      return map;
+    })(),
   };
 
   return {

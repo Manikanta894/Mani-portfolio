@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 
 export function Ch02Education() {
-  const { education } = usePortfolio();
+  const { education, sectionContent } = usePortfolio();
   const entries = education?.length ? education : [];
+  const sc = sectionContent.education || {};
 
   const [activeIdx, setActiveIdx] = useState(0);
   const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
@@ -28,8 +29,10 @@ export function Ch02Education() {
     return () => io.disconnect();
   }, []);
 
-  const sectionNumber = "02";
-  const sectionKicker = "Academic Archive";
+  const sectionNumber = sc.number || "02";
+  const sectionKicker = sc.kicker || "Academic Archive";
+  const sectionTitle = sc.title || "The Academic Archive.";
+  const sectionIntro = sc.intro || "An analytics-meets-people thesis, built one degree at a time.";
 
   return (
     <section id="education" data-mood="ink" className="mr-edu chapter-pad">
@@ -38,8 +41,8 @@ export function Ch02Education() {
           <div className="mr-edu__eyebrow">
             /{sectionNumber} — {sectionKicker}
           </div>
-          <h2 className="mr-edu__title">The Academic Archive.</h2>
-          <p className="mr-edu__intro">An analytics-meets-people thesis, built one degree at a time.</p>
+          <h2 className="mr-edu__title">{sectionTitle}</h2>
+          <p className="mr-edu__intro">{sectionIntro}</p>
         </header>
 
         <div className="mr-edu__grid">

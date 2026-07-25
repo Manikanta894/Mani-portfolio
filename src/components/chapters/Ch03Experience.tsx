@@ -126,12 +126,19 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
 }
 
 export function Ch03Experience() {
-  const { experience } = usePortfolio();
+  const { experience, sectionContent } = usePortfolio();
   const roles = experience?.length ? experience : [];
-  const evolution: string[] = [
+  const sc = sectionContent.experience || {};
+  const evolution: string[] = sc.evolution || [
     "Operations", "Customer Experience", "Leadership", "Business Thinking",
     "Analytics", "Research", "AI & Business Strategy",
   ];
+  const sectionNumber = sc.number || "03";
+  const sectionLabel = sc.label || "From the retail floor to research";
+  const sectionTitle = sc.title || "The Journey That Built Me";
+  const sectionLede = sc.lede || "Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.";
+  const closingQuote = sc.closing_quote || "The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.";
+  const closingLink = sc.closing_link || "Continue to research ↓";
 
   return (
     <section id="experience" data-mood="ink" className="relative chapter-pad grain">
@@ -139,16 +146,16 @@ export function Ch03Experience() {
         <header className="mb-16 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">
             <div className="text-mono text-[0.85rem] text-bone/55">
-              /03 — From the retail floor to research
+              /{sectionNumber} — {sectionLabel}
             </div>
             <h2 className="text-display mt-4 text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.96] text-bone">
-              <MaskReveal>The Journey That Built Me</MaskReveal>
+              <MaskReveal>{sectionTitle}</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 md:col-span-7">
             <Reveal>
               <p className="text-display text-balance text-[clamp(1.25rem,2vw,1.75rem)] italic leading-snug text-bone/85">
-                Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.
+                {sectionLede}
               </p>
             </Reveal>
           </div>
@@ -171,13 +178,13 @@ export function Ch03Experience() {
         <div className="mt-24 border-t border-bone/15 pt-12">
           <Reveal>
             <p className="text-display text-balance text-[clamp(1.5rem,2.8vw,2.6rem)] italic leading-snug text-bone">
-              {"\u201C"}The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.{"\u201D"}
+              {"\u201C"}{closingQuote}{"\u201D"}
             </p>
             <a
               href="#research"
               className="text-mono mt-8 inline-flex items-center gap-2 border-b border-bone/40 pb-1 text-[0.8rem] uppercase tracking-[0.22em] text-bone hover:text-vermilion"
             >
-              Continue to research ↓
+              {closingLink}
             </a>
           </Reveal>
         </div>
