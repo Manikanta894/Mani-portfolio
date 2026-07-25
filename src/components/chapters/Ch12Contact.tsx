@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
+import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 
 const API_BASE =
   typeof window !== "undefined"
@@ -79,7 +80,7 @@ export function Ch12Contact() {
         <header className="mb-12 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
             <div className="text-mono text-meta text-bone/55">
-              /{contactInfo.number} — {contactInfo.kicker}
+              /{CHAPTER_NUMBERS.contact} — {contactInfo.kicker}
             </div>
             <h2 className="text-display mt-4 text-[clamp(3rem,7vw,6rem)] text-bone">
               <MaskReveal>{contactInfo.title}</MaskReveal>

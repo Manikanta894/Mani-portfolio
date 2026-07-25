@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useScroll, useTransform, motion } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
+import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 
 export function Ch11Philosophy() {
   const { profile } = usePortfolio();
@@ -25,7 +26,7 @@ export function Ch11Philosophy() {
     <section id="philosophy" data-mood="ink" className="relative chapter-pad grain" ref={ref}>
       <div className="mx-auto max-w-6xl">
         <div className="text-mono text-meta text-bone/55">
-          /{philosophyData.number} · Personal Philosophy
+          /{CHAPTER_NUMBERS.philosophy} · Personal Philosophy
         </div>
         <h2 className="sr-only">Personal Philosophy</h2>
 

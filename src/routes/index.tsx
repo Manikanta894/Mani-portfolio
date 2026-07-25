@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { useLenis } from "@/lib/hooks";
-import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Chrome";
+import { LiveClock, CornerStamp } from "@/components/chrome/Chrome";
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
@@ -100,7 +100,6 @@ function Index() {
       <ReadingProgress />
       <PremiumNav />
       
-      <AvailabilityPill />
       <LiveClock />
       <CornerStamp />
 

@@ -96,39 +96,29 @@ export function SiteFooter() {
             </div>
           </section>
 
-          {/* Quick links */}
-          {quickLinks.length > 0 && (
-            <nav className="mr-footer__col" aria-label="Quick links">
-              <div className="mr-footer__kicker">Quick links</div>
-              <ul className="mr-footer__list">
+          {/* Links — merged into one compact inline row */}
+          {(quickLinks.length > 0 || professionalLinks.length > 0) && (
+            <nav className="mr-footer__col mr-footer__linksCol" aria-label="Links">
+              <div className="mr-footer__kicker">Links</div>
+              <div className="mr-footer__inlineLinks">
                 {quickLinks.map((l: any) => (
-                  <li key={l.id || l.platform}>
-                    <a href={l.url} className="mr-footer__link">{l.label}</a>
-                  </li>
+                  <a key={l.id || l.platform} href={l.url} className="mr-footer__link">
+                    {l.label}
+                  </a>
                 ))}
-              </ul>
-            </nav>
-          )}
-
-          {/* Professional links */}
-          {professionalLinks.length > 0 && (
-            <nav className="mr-footer__col" aria-label="Professional links">
-              <div className="mr-footer__kicker">Elsewhere</div>
-              <ul className="mr-footer__list">
                 {professionalLinks.map((l: any) => (
-                  <li key={l.id || l.platform}>
-                    <a
-                      href={l.url}
-                      className="mr-footer__link mr-footer__link--ext"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span>{l.label}</span>
-                      <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
-                    </a>
-                  </li>
+                  <a
+                    key={l.id || l.platform}
+                    href={l.url}
+                    className="mr-footer__link mr-footer__link--ext"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>{l.label}</span>
+                    <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
+                  </a>
                 ))}
-              </ul>
+              </div>
             </nav>
           )}
 
@@ -208,16 +198,16 @@ const css = `
 
 .mr-footer__grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
-  gap: clamp(28px, 5vw, 72px);
-  padding: clamp(40px, 5vw, 64px) 0;
+  grid-template-columns: 1fr 1.4fr;
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(28px, 4vw, 44px) 0;
 }
-@media (max-width: 960px) {
-  .mr-footer__grid { grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px) {
+  .mr-footer__grid { grid-template-columns: 1fr; gap: 28px; }
 }
-@media (max-width: 560px) {
-  .mr-footer__grid { grid-template-columns: 1fr; gap: 36px; }
-}
+.mr-footer__linksCol { align-self: start; }
+.mr-footer__inlineLinks { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 6px; }
+.mr-footer__inlineLinks .mr-footer__link { display: inline-flex; }
 
 .mr-footer__col { min-width: 0; }
 

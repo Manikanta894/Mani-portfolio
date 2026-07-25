@@ -13,6 +13,7 @@
 import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { Reveal, SplitWords } from "@/components/motion/primitives";
+import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
 
@@ -223,7 +224,7 @@ export function Ch14BeyondNotes() {
           </svg>
         </div>
 
-        <div className="text-mono text-meta text-bone/55">/{d.number} — {d.kicker}</div>
+        <div className="text-mono text-meta text-bone/55">/{CHAPTER_NUMBERS["beyond-me"]} — {d.kicker}</div>
         <h2 id="field-notes-title" className="text-display italic mt-5 leading-[1.05] text-[clamp(2.2rem,5.6vw,4.2rem)]">
           <SplitWords text={d.title} />
         </h2>

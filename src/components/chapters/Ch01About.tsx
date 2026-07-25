@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal, SplitWords } from "@/components/motion/primitives";
+import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 
 /* ─────────────────────────────────────────────────────────────
    Ch01 — "The Story Behind the Work"
@@ -80,7 +81,7 @@ export function Ch01About() {
   ]);
 
   const aboutData = {
-    number: "",
+    number: CHAPTER_NUMBERS.about,
     kicker: "Origin / Position",
     epigraph: profile?.about_epigraph || "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions.",
     footnote: profile?.about_footnote || "signal over noise",
