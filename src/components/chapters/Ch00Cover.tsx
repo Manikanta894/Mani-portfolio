@@ -27,6 +27,7 @@ export function Ch00Cover() {
     { label: "Download Resume", href: profile?.resume_url || "https://manikantar.in/resume.pdf", type: "ghost", download: true },
   ];
   const location = profile?.location || "Bengaluru · India";
+  const targetRoles = (profile?.target_roles as string[]) || ["HR Analyst", "Talent Acquisition Analyst", "People Analytics"];
 
 const [portraitAwake] = useState(true);
 const [awake] = useState(true);
@@ -87,6 +88,16 @@ const onHeroLeave = () => {
             {location}
             <span className="hero-eyebrow-sep" />
             Edition · 2026
+          </div>
+
+          <div className="hero-target" style={{ transitionDelay: entered ? "160ms" : "0ms" }}>
+            <span className="hero-target-label">Open to</span>
+            {targetRoles.map((r: string, i: number) => (
+              <span key={r} className="hero-target-pill">
+                {r}
+                {i < targetRoles.length - 1 && <span className="hero-target-dot" aria-hidden>·</span>}
+              </span>
+            ))}
           </div>
 
           <h1 className="hero-name" aria-label="Manikanta R">
@@ -207,6 +218,7 @@ const css = `
 
 /* Hide secondary UI until visitor "enters" */
 .hero-right .hero-eyebrow,
+.hero-right .hero-target,
 .hero-right .hero-welcome,
 .hero-right .hero-rule,
 .hero-right .hero-skills li,
@@ -218,6 +230,7 @@ const css = `
   transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
 }
 .hero-right.is-entered .hero-eyebrow,
+.hero-right.is-entered .hero-target,
 .hero-right.is-entered .hero-welcome,
 .hero-right.is-entered .hero-rule,
 .hero-right.is-entered .hero-skills li,
@@ -340,6 +353,39 @@ const css = `
   box-shadow: 0 0 0 4px rgba(212,106,46,0.25);
 }
 .hero-eyebrow-sep { width: 22px; height: 1px; background: var(--hero-rule); }
+
+.hero-target {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.hero-target-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--hero-mute);
+  margin-right: 2px;
+}
+.hero-target-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--hero-ink);
+  font-weight: 500;
+}
+.hero-target-pill::before {
+  content: "";
+  display: inline-block;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--hero-accent);
+  margin-right: 2px;
+}
+.hero-target-dot { color: var(--hero-mute); margin-left: 8px; font-weight: 400; }
 
 .hero-name {
   font-family: var(--font-display);
