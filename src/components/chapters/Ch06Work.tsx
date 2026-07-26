@@ -53,6 +53,23 @@ function getTechColor(tech: string): string {
   return TECH_COLORS[tech?.toLowerCase()?.trim()] || "var(--vermilion)";
 }
 
+/* ---------- field normalizer ----------
+   Your live "projects" table uses title/role/tech/highlights — not
+   name/client/stack/insights. This maps the real columns onto what the
+   UI reads, so existing rows render without you renaming anything in
+   Supabase. If a row already has name/stack/etc. set directly, that
+   takes priority. */
+function normalizeProject(p: any) {
+  return {
+    ...p,
+    name: p.name || p.title,
+    client: p.client || p.role || p.category,
+    lede: p.lede || p.description,
+    stack: p.stack && p.stack.length ? p.stack : p.tech,
+    insights: p.insights && p.insights.length ? p.insights : p.highlights,
+  };
+}
+
 /* ---------- library row (expandable) ---------- */
 function LibraryRow({ project, index }: { project: any; index: number }) {
   const [open, setOpen] = useState(false);
@@ -220,7 +237,7 @@ export function Ch06Work() {
   const trackOf = (p: any) => p.project_type || p.track || "case_study";
 
   // featured first, then rest by year desc
-  const allOrdered = [...(projects || [])].sort((a: any, b: any) => {
+  const allOrdered = [...(projects || [])].map(normalizeProject).sort((a: any, b: any) => {
     if (!!b.featured !== !!a.featured) return Number(!!b.featured) - Number(!!a.featured);
     return Number(b.year) - Number(a.year);
   });
