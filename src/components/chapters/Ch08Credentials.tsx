@@ -8,10 +8,6 @@ const STAT_TARGETS: Record<string, string> = {
   "Awards": "#awards",
   "Certifications": "#credentials",
   "Research Papers": "#research",
-  "Conference Presentations": "#awards",
-  "Journal Publications": "#publications",
-  "Programs Completed": "#credentials",
-  "Learning Hours": "#credentials",
   "Skills Acquired": "#ecosystem",
 };
 
@@ -62,9 +58,10 @@ function StatTile({ label, value, delay, onSelect }: { label: string; value: num
           onSelect?.(label);
           if (target) scrollToHash(target);
         }}
-        className="group relative flex h-full w-full flex-col justify-between rounded-xl border border-bone/10 bg-bone/[0.02] p-6 text-left transition-all duration-500 hover:-translate-y-0.5 hover:border-vermilion/40 hover:bg-bone/[0.04]"
+        className="group relative flex h-full w-full flex-col justify-between border border-bone/12 bg-bone/[0.03] p-6 text-left transition-all duration-500 hover:border-vermilion/50 hover:bg-bone/[0.05]"
       >
-                <div className="text-mono text-eyebrow uppercase tracking-[0.24em] text-bone/75 transition-colors group-hover:text-bone">
+        <span aria-hidden className="absolute left-0 top-0 h-[2px] w-0 bg-vermilion transition-all duration-500 group-hover:w-full" />
+        <div className="text-mono text-eyebrow uppercase tracking-[0.24em] text-bone/75 transition-colors group-hover:text-bone">
           {label}
         </div>
         <div className="mt-8 flex items-end justify-between gap-2">
@@ -112,13 +109,9 @@ export function Ch08Credentials() {
   const sectionLabel = sc.label || "Curated · Verified · Continuous";
   const sectionTitle = sc.title || "Professional Certifications";
   const stats = sc.stats || [
-    { label: "Awards", value: awardsList.length || 6 },
-    { label: "Certifications", value: list.length || 14 },
+    { label: "Awards", value: awardsList.length || 4 },
+    { label: "Certifications", value: list.length || 10 },
     { label: "Research Papers", value: 10 },
-    { label: "Conference Presentations", value: 3 },
-    { label: "Journal Publications", value: 4 },
-    { label: "Programs Completed", value: 8 },
-    { label: "Learning Hours", value: 420 },
     { label: "Skills Acquired", value: 38 },
   ];
 
