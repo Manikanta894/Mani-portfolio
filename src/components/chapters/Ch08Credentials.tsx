@@ -116,7 +116,7 @@ export function Ch08Credentials() {
   ];
 
   return (
-    <section id="credentials" data-mood="graphite" className="relative chapter-pad grain">
+    <section id="credentials" data-mood="ink" className="relative chapter-pad grain">
       <div className="mx-auto max-w-6xl">
         <header className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-8">
