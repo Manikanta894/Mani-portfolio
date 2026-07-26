@@ -34,6 +34,25 @@ function getLiveDemoUrl(project: any): string | null {
   );
 }
 
+/* ---------- tech-stack colors ----------
+   Small curated palette so stack tags aren't just flat mono text — each
+   known tool/language gets its own accent dot. Unrecognized ones fall
+   back to the site's vermilion accent so nothing ever looks broken. */
+const TECH_COLORS: Record<string, string> = {
+  "python": "#3776AB", "javascript": "#F0DB4F", "typescript": "#3178C6",
+  "react": "#61DAFB", "node": "#3C873A", "node.js": "#3C873A",
+  "sql": "#F29111", "postgresql": "#336791", "mysql": "#4479A1",
+  "power bi": "#F2C811", "excel": "#217346", "tableau": "#E97627",
+  "figma": "#A259FF", "aws": "#FF9900", "docker": "#2496ED",
+  "git": "#F05032", "github": "#8B8B8B", "html": "#E34F26", "css": "#264DE4",
+  "java": "#E76F00", "c++": "#00599C", "mongodb": "#47A248",
+  "claude": "#D97757", "vlookup": "#217346", "pivot tables": "#217346",
+  "strategic frameworks": "#BF91F3", "research methodology": "#38BDAE",
+};
+function getTechColor(tech: string): string {
+  return TECH_COLORS[tech?.toLowerCase()?.trim()] || "var(--vermilion)";
+}
+
 /* ---------- library row (expandable) ---------- */
 function LibraryRow({ project, index }: { project: any; index: number }) {
   const [open, setOpen] = useState(false);
@@ -104,7 +123,17 @@ function LibraryRow({ project, index }: { project: any; index: number }) {
               <aside className="col-span-12 space-y-5 border-l-0 border-bone/10 md:col-span-4 md:border-l md:pl-6">
                 <div>
                   <div className="text-mono text-eyebrow text-bone/45">STACK</div>
-                  <div className="text-mono mt-2 text-eyebrow text-bone/75">{(project.stack || []).join(" · ")}</div>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {(project.stack || []).map((t: string) => (
+                      <span
+                        key={t}
+                        className="text-mono inline-flex items-center gap-1.5 border border-bone/20 px-2 py-1 text-eyebrow text-bone/85"
+                      >
+                        <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: getTechColor(t) }} />
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 <div>
                   <div className="text-mono text-eyebrow text-bone/45">SKILLS</div>
@@ -183,13 +212,22 @@ function Mini({ k, v }: { k: string; v: string }) {
 export function Ch06Work() {
   const { projects, sectionContent } = usePortfolio();
   const [showAll, setShowAll] = useState(false);
+  const [tab, setTab] = useState<"case_study" | "practice">("case_study");
   const sc = sectionContent.work || {};
 
+  // Which track a project belongs to. Anything without project_type/track
+  // set defaults to "case_study" so existing data keeps working untouched.
+  const trackOf = (p: any) => p.project_type || p.track || "case_study";
+
   // featured first, then rest by year desc
-  const ordered = [...(projects || [])].sort((a: any, b: any) => {
+  const allOrdered = [...(projects || [])].sort((a: any, b: any) => {
     if (!!b.featured !== !!a.featured) return Number(!!b.featured) - Number(!!a.featured);
     return Number(b.year) - Number(a.year);
   });
+
+  const caseStudies = allOrdered.filter((p: any) => trackOf(p) === "case_study");
+  const practice = allOrdered.filter((p: any) => trackOf(p) === "practice");
+  const ordered = tab === "case_study" ? caseStudies : practice;
 
   const visible = showAll ? ordered : ordered.slice(0, 4);
   const hiddenCount = ordered.length - visible.length;
@@ -216,11 +254,38 @@ export function Ch06Work() {
             <Reveal>
               <p className="text-[1.05rem] leading-relaxed text-bone/75">{sectionLede}</p>
               <div className="text-mono mt-4 text-eyebrow text-bone/45">
-                {ordered.length} {sectionHint}
+                {allOrdered.length} {sectionHint}
               </div>
             </Reveal>
           </div>
         </header>
+
+        {practice.length > 0 && (
+          <div className="mb-8 flex flex-wrap items-center gap-3">
+            <div role="tablist" aria-label="Project track" className="inline-flex border border-bone/15 bg-bone/[0.03] p-1">
+              {([
+                { id: "case_study" as const, label: `Case Studies · ${caseStudies.length}` },
+                { id: "practice" as const, label: `Practice & Learning · ${practice.length}` },
+              ]).map((t) => {
+                const active = tab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    role="tab"
+                    aria-selected={active}
+                    type="button"
+                    onClick={() => { setTab(t.id); setShowAll(false); }}
+                    className={`text-mono relative px-4 py-2 text-eyebrow uppercase tracking-[0.18em] transition-colors ${
+                      active ? "bg-bone text-ink" : "text-bone/65 hover:text-bone"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="border-t border-bone/20">
           {visible.map((p: any, i: number) => (
@@ -255,7 +320,7 @@ export function Ch06Work() {
           <span className="text-mono text-eyebrow text-bone/45">
             {showAll
               ? `Showing all ${ordered.length} projects`
-              : `Showing 4 of ${ordered.length} · tap Read more to view all`}
+              : `Showing ${Math.min(4, ordered.length)} of ${ordered.length} · tap Read more to view all`}
           </span>
         </div>
       </div>
