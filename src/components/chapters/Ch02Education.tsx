@@ -2,9 +2,23 @@
 import { useEffect, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 
+/* Your live "education" table uses institution/field/start_date/end_date/
+   status/highlights — not school/span/state/points. This maps the real
+   columns onto what this component reads, same fix as the Projects section. */
+function normalizeEducation(e: any) {
+  return {
+    ...e,
+    school: e.school || e.institution,
+    span: e.span || (e.start_date || e.end_date ? `${e.start_date || ""} — ${e.end_date || ""}` : e.era),
+    state: e.state || e.status,
+    points: e.points && e.points.length ? e.points : e.highlights,
+    degree: e.field ? `${e.degree}${e.degree ? ", " : ""}${e.field}` : e.degree,
+  };
+}
+
 export function Ch02Education() {
   const { education, sectionContent } = usePortfolio();
-  const entries = education?.length ? education : [];
+  const entries = (education?.length ? education : []).map(normalizeEducation);
   const sc = sectionContent.education || {};
 
   const [activeIdx, setActiveIdx] = useState(0);
