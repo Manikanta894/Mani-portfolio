@@ -4,6 +4,22 @@ import { motion, useScroll, useTransform } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
 
+/* Your live "experience" table uses location/description/highlights/
+   start_date/end_date/current — not city/context/achievements/span.
+   Same mapping fix as Projects and Education. */
+function normalizeRole(r: any) {
+  const span =
+    r.span ||
+    (r.start_date ? `${r.start_date} – ${r.current ? "Present" : r.end_date || ""}` : r.duration);
+  return {
+    ...r,
+    city: r.city || r.location,
+    context: r.context || r.description,
+    achievements: r.achievements && r.achievements.length ? r.achievements : r.highlights,
+    span,
+  };
+}
+
 function EvolutionStep({
   scrollYProgress,
   i,
@@ -127,7 +143,7 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
 
 export function Ch03Experience() {
   const { experience, sectionContent } = usePortfolio();
-  const roles = experience?.length ? experience : [];
+  const roles = (experience?.length ? experience : []).map(normalizeRole);
   const sc = sectionContent.experience || {};
   const evolution: string[] = sc.evolution || [
     "Operations", "Customer Experience", "Leadership", "Business Thinking",
