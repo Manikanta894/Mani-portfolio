@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { useLenis } from "@/lib/hooks";
 import { LiveClock, CornerStamp } from "@/components/chrome/Chrome";
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
+import { CinematicIntro } from "@/components/intro/CinematicIntro";
 
 
 import { Ch00Cover } from "@/components/chapters/Ch00Cover";
@@ -28,6 +30,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [introDone, setIntroDone] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("mr-intro-seen") === "true";
+    }
+    return false;
+  });
+
   useLenis();
 
   const {
@@ -79,6 +88,15 @@ function Index() {
           "https://orcid.org/0009-0005-2576-8731",
         ],
       };
+
+  const handleIntroComplete = () => {
+    sessionStorage.setItem("mr-intro-seen", "true");
+    setIntroDone(true);
+  };
+
+  if (!introDone) {
+    return <CinematicIntro onComplete={handleIntroComplete} />;
+  }
 
   if (loading) {
     return (
