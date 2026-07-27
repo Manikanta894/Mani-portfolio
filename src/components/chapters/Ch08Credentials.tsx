@@ -78,6 +78,21 @@ function StatTile({ label, value, delay, onSelect }: { label: string; value: num
   );
 }
 
+/* Same palette as Research/Skills sections, so a cert's category ties
+   back visually to where that skill lives elsewhere on the site. */
+const CRED_CATEGORY_COLORS: Record<string, string> = {
+  "analytics": "#E0533D",
+  "ai": "#7C5CFF",
+  "artificial intelligence": "#7C5CFF",
+  "people & hr": "#3DA9FC",
+  "hr": "#3DA9FC",
+  "business": "#F2B33D",
+  "research": "#7C5CFF",
+};
+function credCategoryColor(cat?: string) {
+  return CRED_CATEGORY_COLORS[(cat || "").toLowerCase().trim()] || "var(--vermilion)";
+}
+
 export function Ch08Credentials() {
   const { certifications, awards, sectionContent } = usePortfolio();
   const sc = sectionContent.credentials || {};
@@ -200,20 +215,28 @@ export function Ch08Credentials() {
               transition={{ duration: 0.3 }}
             >
               <ul className="divide-y divide-bone/15 border-y border-bone/15">
-                {(showAllCerts ? list : list.slice(0, 6)).map((c: any) => (
-                  <li key={c.credential_id || c.id}>
+                {(showAllCerts ? list : list.slice(0, 6)).map((c: any) => {
+                  const accent = credCategoryColor(c.category);
+                  return (
+                  <li key={c.credential_id || c.id} className="group relative">
+                    <span aria-hidden className="absolute left-0 top-0 h-full w-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: accent }} />
                     <button
                       type="button"
                       onClick={() => setOpen(c)}
-                      className="group grid w-full grid-cols-12 items-baseline gap-4 py-4 text-left transition-colors hover:bg-bone/[0.04]"
+                      className="grid w-full grid-cols-12 items-baseline gap-4 py-4 pl-4 text-left transition-colors hover:bg-bone/[0.04]"
                     >
                       <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{c.date || c.year}</span>
-                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">{c.title || c.name}</span>
-                      <span className="hidden md:col-span-3 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{c.issuer}</span>
+                      <span className="col-span-10 md:col-span-6 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">
+                        <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: accent }} />
+                        {c.title || c.name}
+                      </span>
+                      <span className="hidden md:col-span-2 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{c.issuer}</span>
+                      <span className="hidden md:col-span-2 md:block text-mono text-eyebrow uppercase tracking-[0.14em] text-bone/35 truncate">{c.category}</span>
                       <span className="hidden md:col-span-1 md:block text-mono text-right text-eyebrow uppercase tracking-[0.16em] text-bone/45 group-hover:text-vermilion">open →</span>
                     </button>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 {list.length > 6 && (
@@ -239,20 +262,27 @@ export function Ch08Credentials() {
               transition={{ duration: 0.3 }}
             >
               <ul className="divide-y divide-bone/15 border-y border-bone/15">
-                {awardsList.map((a: any) => (
-                  <li key={a.title || a.id}>
+                {awardsList.map((a: any) => {
+                  const accent = credCategoryColor(a.category);
+                  return (
+                  <li key={a.title || a.id} className="group relative">
+                    <span aria-hidden className="absolute left-0 top-0 h-full w-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: accent }} />
                     <button
                       type="button"
                       onClick={() => setOpenAward(a)}
-                      className="group grid w-full grid-cols-12 items-baseline gap-4 py-4 text-left transition-colors hover:bg-bone/[0.04]"
+                      className="grid w-full grid-cols-12 items-baseline gap-4 py-4 pl-4 text-left transition-colors hover:bg-bone/[0.04]"
                     >
                       <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{a.year}</span>
-                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">{a.title}</span>
+                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">
+                        <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: accent }} />
+                        {a.title}
+                      </span>
                       <span className="hidden md:col-span-3 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{a.org}</span>
                       <span className="hidden md:col-span-1 md:block text-mono text-right text-eyebrow uppercase tracking-[0.16em] text-bone/45 group-hover:text-vermilion">open →</span>
                     </button>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
               <div className="mt-8 text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/45">
                 // curated · selective · the milestones worth pinning
