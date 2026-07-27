@@ -207,18 +207,18 @@ export default function Ch09LinkedIn() {
   const f = data ?? SEED;
 
   return (
-    <section id="linkedin" data-mood="graphite" className="relative chapter-pad overflow-hidden">
+    <section id="linkedin" data-mood="ink" className="relative chapter-pad overflow-hidden">
       <div aria-hidden className="li-ambient" />
       <div className="relative mx-auto w-full max-w-6xl">
         <div className="li-eyebrow">
           <span className="li-eyebrow__num">09</span>
           <span className="li-eyebrow__sep" />
-          <span>Connect · Live from LinkedIn, my journal & elsewhere</span>
+          <span>Connect · Long-form writing & where to find me</span>
         </div>
         <h2 className="li-title">A working public ledger of how I show up.</h2>
-        <p className="li-subtitle">Profile, network, writing, and the places I'm active — pulled from live feeds and refreshed automatically.</p>
+        <p className="li-subtitle">My writing lives here and on my journal — everything else about my work and network is on LinkedIn itself.</p>
 
-        <div className="li-topRow">
+        <div className="li-topRow li-topRow--solo">
           <article className="li-card li-profile">
             <div className="li-profile__photo">
               <img src={portrait} alt={f.profile.name} loading="lazy" />
@@ -244,34 +244,10 @@ export default function Ch09LinkedIn() {
               </a>
             </div>
           </article>
-
-          <div className="li-statsCol">
-            <div className="li-statsCol__head">Network & Impact — last 12 months</div>
-            <div className="li-grid-2x2">
-              <ImpactStat label="Followers" value={f.network.followers} />
-              <ImpactStat label="Connections" value={f.network.connections} />
-              <ImpactStat label="Total Impressions" value={f.impact.impressions} suffix="+" />
-              <ImpactStat label="Total Engagements" value={f.impact.engagements} />
-            </div>
-          </div>
         </div>
 
         <div className="li-block">
-          <BlockHead n="01" title="Featured Post" sub="The piece that travelled the furthest" />
-          <FeaturedHero post={f.featured} />
-        </div>
-
-        <div className="li-block">
-          <BlockHead n="02" title="Latest Posts" sub="Refreshes whenever I publish" />
-          <div className="li-latest">
-            {(f.latest.length ? f.latest : [SEED.editorsPick]).slice(0, 2).map((p, i) => (
-              <PostRow key={p.urn + i} post={p} />
-            ))}
-          </div>
-        </div>
-
-        <div className="li-block">
-          <BlockHead n="03" title="Field Notes & Journal" sub="Long-form writing, off-platform" />
+          <BlockHead n="01" title="Field Notes & Journal" sub="Long-form writing, published on my own journal" />
           <JournalBlock />
         </div>
 
@@ -279,7 +255,7 @@ export default function Ch09LinkedIn() {
           <a className="li-cta li-cta--lg" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
             Connect with me on LinkedIn <Arrow />
           </a>
-          <p className="li-finalCta__hint">Updated {fmtUpdated(f.updatedAt)} · Synchronised from live feeds.</p>
+          <p className="li-finalCta__hint">Let's connect and keep the conversation going.</p>
         </div>
       </div>
       <style>{css}</style>
@@ -462,6 +438,7 @@ const css = `
 .li-card { position: relative; border-radius: 22px; background: color-mix(in oklab, var(--bone) 6%, transparent); border: 1px solid color-mix(in oklab, currentColor 14%, transparent); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 1px 0 color-mix(in oklab, #ffffff 8%, transparent) inset, 0 24px 60px -32px color-mix(in oklab, #000 70%, transparent); transition: transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s ease, background .3s ease; }
 .li-card:hover { border-color: color-mix(in oklab, currentColor 24%, transparent); transform: translateY(-2px); }
 .li-topRow { margin-top: 56px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: stretch; }
+.li-topRow--solo { grid-template-columns: 1fr; max-width: 640px; }
 @media (max-width: 900px) { .li-topRow { grid-template-columns: 1fr; } }
 .li-profile { margin-top: 0; display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 22px; align-items: center; }
 @media (max-width: 760px) { .li-profile { grid-template-columns: 1fr; gap: 22px; } }
