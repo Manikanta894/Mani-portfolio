@@ -21,22 +21,28 @@ export function FloatingLetters({ onRReady }: Props) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    const startX = -(name.length * 45) / 2;
-    name.split("").forEach((_, i) => finalPositions.push({ x: startX + i * 45, y: 0 }));
+    // Center the full name
+    const totalWidth = name.length * 50;
+    const startX = -totalWidth / 2;
 
-    // Create letters — all white, no neon
+    name.split("").forEach((_, i) => {
+      finalPositions.push({ x: startX + i * 50, y: 0 });
+    });
+
+    // Create all letters
     name.split("").forEach((char, i) => {
       if (char === " ") return;
       const span = document.createElement("span");
       span.textContent = char;
+      // Use Instrument Serif like the hero section
       span.style.cssText = `
         position: absolute;
-        font-family: "Fraunces Variable", ui-serif, Georgia, serif;
+        font-family: "Instrument Serif", "Fraunces Variable", ui-serif, Georgia, serif;
         font-style: italic;
-        font-weight: 500;
+        font-weight: 400;
         font-size: clamp(3.5rem, 9vw, 7.5rem);
         line-height: 1;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         color: #FFFFFF;
         opacity: 0;
         will-change: transform, opacity;
@@ -44,45 +50,95 @@ export function FloatingLetters({ onRReady }: Props) {
       `;
       container.appendChild(span);
 
+      // Random starting position far off screen
       const angle = Math.random() * Math.PI * 2;
-      const dist = 400 + Math.random() * 600;
-      gsap.set(span, { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, rotation: (Math.random() - 0.5) * 120, scale: 0.1, opacity: 0 });
+      const dist = 500 + Math.random() * 700;
+      gsap.set(span, {
+        x: Math.cos(angle) * dist,
+        y: Math.sin(angle) * dist,
+        rotation: (Math.random() - 0.5) * 180,
+        scale: 0.05,
+        opacity: 0,
+      });
       letters.push(span);
 
+      // Fly IN to random scattered positions (not assembled yet)
+      const scatterX = (Math.random() - 0.5) * vw * 0.6;
+      const scatterY = (Math.random() - 0.5) * vh * 0.5;
       tl.to(span, {
-        x: (Math.random() - 0.5) * vw * 0.5,
-        y: (Math.random() - 0.5) * vh * 0.4,
-        rotation: 0, scale: 1.1, opacity: 1,
-        duration: 0.3, ease: "back.out(1.5)", delay: i * 0.02,
+        x: scatterX,
+        y: scatterY,
+        rotation: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 0.35,
+        ease: "power3.out",
+        delay: i * 0.015,
       });
     });
 
-    tl.to({}, { duration: 0.15 });
+    // Brief pause with scattered letters
+    tl.to({}, { duration: 0.2 });
 
-    // R comes to center
-    const rSpan = letters[9];
+    // R comes to center FIRST — big and prominent
+    const rSpan = letters[9]; // last R
     if (rSpan) {
-      tl.to(rSpan, { x: 0, y: 0, scale: 2.5, opacity: 1, duration: 0.35, ease: "power3.out" });
+      tl.to(rSpan, {
+        x: 0,
+        y: 0,
+        scale: 2.5,
+        opacity: 1,
+        duration: 0.3,
+        ease: "power3.out",
+      });
     }
 
+    // ALL letters rush from their scattered positions to form the name around R
     letters.forEach((span, i) => {
-      if (i === 9) return;
-      tl.to(span, { x: finalPositions[i].x, y: finalPositions[i].y, scale: 1, rotation: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, "-=0.25");
+      if (i === 9) return; // R already in center
+      tl.to(span, {
+        x: finalPositions[i].x,
+        y: finalPositions[i].y,
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        duration: 0.35,
+        ease: "power3.out",
+      }, "-=0.25");
     });
 
+    // R settles into its final position in the name
     if (rSpan) {
-      tl.to(rSpan, { x: finalPositions[9].x, y: finalPositions[9].y, scale: 1.15, duration: 0.2, ease: "back.out(2)" }, "-=0.12");
+      tl.to(rSpan, {
+        x: finalPositions[9].x,
+        y: finalPositions[9].y,
+        scale: 1.1,
+        duration: 0.2,
+        ease: "back.out(2)",
+      }, "-=0.12");
     }
 
-    tl.to({}, { duration: 0.5 });
+    // Pause — full name visible in center
+    tl.to({}, { duration: 0.6 });
 
-    // R becomes a gateway — expands, other letters fade
+    // R expands to become a gateway portal
     if (rSpan) {
-      tl.to(rSpan, { scale: 20, opacity: 0.4, duration: 0.5, ease: "power2.in" });
+      tl.to(rSpan, {
+        scale: 20,
+        opacity: 0.3,
+        duration: 0.5,
+        ease: "power2.in",
+      });
 
+      // All other letters dissolve
       letters.forEach((span, i) => {
         if (i === 9) return;
-        tl.to(span, { opacity: 0, scale: 0.1, duration: 0.3, ease: "power2.in" }, "-=0.25");
+        tl.to(span, {
+          opacity: 0,
+          scale: 0.1,
+          duration: 0.3,
+          ease: "power2.in",
+        }, "-=0.25");
       });
 
       // Galaxy starfield
@@ -111,7 +167,6 @@ export function FloatingLetters({ onRReady }: Props) {
           const drawGalaxy = () => {
             if (!ctx || !canvas) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             stars.forEach(s => {
               s.z -= s.speed;
               if (s.z <= 0) s.z = 1000;
@@ -134,7 +189,6 @@ export function FloatingLetters({ onRReady }: Props) {
 
           tl.call(() => { cancelAnimationFrame(galaxyAnim); }, [], "-=0.1");
 
-          // Gentle white flash
           const flash = document.createElement("div");
           flash.style.cssText = `position:fixed;inset:0;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3), transparent 60%);pointer-events:none;z-index:10003;opacity:0;`;
           document.body.appendChild(flash);
