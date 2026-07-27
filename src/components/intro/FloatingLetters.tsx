@@ -47,12 +47,8 @@ export function FloatingLetters({ onRReady }: Props) {
       const idx = i > 8 ? i - 1 : i; // adjust for space at index 8
       const posX = startX + idx * letterSpacing;
 
-      // Mark the R letter (last char, index 9)
-      const isR = i === 9;
-
       tl.to(span, {
-        x: isR ? posX + 30 : posX, // R sits slightly right
-        y: 0, scale: 1, opacity: 1,
+        x: posX, y: 0, scale: 1, opacity: 1,
         duration: 0.25, ease: "back.out(2)", delay: i * 0.02,
       });
       letters.push(span);
