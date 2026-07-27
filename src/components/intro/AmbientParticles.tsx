@@ -1,16 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  life: number;
-  maxLife: number;
-  size: number;
-  opacity: number;
-}
+const COLORS = ["#3B82F6", "#8B5CF6", "#22D3EE", "#60A5FA", "#A78BFA"];
 
 export function AmbientParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,8 +14,8 @@ export function AmbientParticles() {
     if (!ctx) return;
 
     let animId = 0;
-    let particles: Particle[] = [];
-    const PARTICLE_COUNT = 60;
+    interface P { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; size: number; color: string; }
+    let particles: P[] = [];
 
     const resize = () => {
       if (!canvas) return;
@@ -34,20 +25,18 @@ export function AmbientParticles() {
     resize();
     window.addEventListener("resize", resize);
 
-    const createParticle = (): Particle => ({
+    const create = (): P => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.15,
-      vy: (Math.random() - 0.5) * 0.15 - 0.05,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3 - 0.08,
       life: 0,
-      maxLife: 600 + Math.random() * 400,
-      size: 0.5 + Math.random() * 1.2,
-      opacity: 0.15 + Math.random() * 0.3,
+      maxLife: 400 + Math.random() * 600,
+      size: 1 + Math.random() * 2.5,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
     });
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(createParticle());
-    }
+    for (let i = 0; i < 50; i++) particles.push(create());
 
     const draw = () => {
       if (!canvas || !ctx) return;
@@ -58,27 +47,29 @@ export function AmbientParticles() {
         p.x += p.vx;
         p.y += p.vy;
         p.life++;
-
         const lifeRatio = p.life / p.maxLife;
-        const fadeIn = Math.min(p.life / 120, 1);
+        const fadeIn = Math.min(p.life / 60, 1);
         const fadeOut = lifeRatio > 0.7 ? 1 - (lifeRatio - 0.7) / 0.3 : 1;
-        const currentOpacity = p.opacity * fadeIn * fadeOut;
+        const opacity = 0.2 * fadeIn * fadeOut;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = opacity;
         ctx.fill();
 
-        // Subtle glow
-        if (p.size > 1) {
+        if (p.size > 1.5) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity * 0.12})`;
+          ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = opacity * 0.08;
           ctx.fill();
         }
 
+        ctx.globalAlpha = 1;
+
         if (p.life >= p.maxLife) {
-          particles[i] = createParticle();
+          particles[i] = create();
           particles[i].life = 0;
         }
       }
@@ -87,18 +78,8 @@ export function AmbientParticles() {
     };
 
     animId = requestAnimationFrame(draw);
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
+    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize); };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[9998]"
-      style={{ opacity: 0.6 }}
-    />
-  );
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[9998]" />;
 }
