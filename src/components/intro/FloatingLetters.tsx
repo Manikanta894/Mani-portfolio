@@ -17,8 +17,9 @@ export function FloatingLetters({ onRReady }: Props) {
     const tl = gsap.timeline();
     const letters: HTMLSpanElement[] = [];
 
-    // ─── FAST: "MANIKANTA" bursts from center ────────
+    // ─── FAST: "MANIKANTA" bursts from left area ─────
     const first = "MANIKANTA";
+    const rOffset = 300; // space for R at center
     first.split("").forEach((char, i) => {
       const span = document.createElement("span");
       span.textContent = char;
@@ -37,7 +38,8 @@ export function FloatingLetters({ onRReady }: Props) {
       `;
       container.appendChild(span);
       gsap.set(span, { x: 0, y: 0, scale: 0, opacity: 0 });
-      const posX = -(first.length * 45) / 2 + i * 45;
+      // MANIKANTA on the left side, centered around x = -250
+      const posX = -rOffset - (first.length * 35) / 2 + i * 35;
       tl.to(span, {
         x: posX, y: 0, scale: 1, opacity: 1,
         duration: 0.25, ease: "back.out(2)", delay: i * 0.02,
@@ -45,7 +47,7 @@ export function FloatingLetters({ onRReady }: Props) {
       letters.push(span);
     });
 
-    // ─── "R" comes to CENTER ──────────────────────────
+    // ─── R appears at EXACT CENTER (x: 0, y: 0) ────
     const rSpan = document.createElement("span");
     rSpan.textContent = "R";
     rSpan.style.cssText = `
@@ -64,18 +66,18 @@ export function FloatingLetters({ onRReady }: Props) {
     container.appendChild(rSpan);
     gsap.set(rSpan, { x: 0, y: 0, scale: 0, opacity: 0 });
 
-    // R appears at CENTER, grows big
+    // R appears at EXACT CENTER, grows big
     tl.to(rSpan, {
-      scale: 2.5, opacity: 1,
+      scale: 2.8, opacity: 1,
       duration: 0.2, ease: "power2.out",
     }, "+=0.05");
     letters.push(rSpan);
 
-    // Brief flash — name is formed with R prominent at center
-    tl.to({}, { duration: 0.3 });
+    // Brief pause
+    tl.to({}, { duration: 0.2 });
 
-    // ─── R EXPANDS FROM CENTER, BREAKS EVERYTHING ────
-    // MANIKANTA letters shatter outward instantly
+    // ─── R EXPANDS FROM CENTER, BREAKS NAME ────────
+    // MANIKANTA shatters outward
     first.split("").forEach((_, i) => {
       const span = letters[i];
       const angle = (i / first.length) * Math.PI * 2;
@@ -85,16 +87,16 @@ export function FloatingLetters({ onRReady }: Props) {
         y: Math.sin(angle) * dist - 40,
         rotation: Math.random() * 600 - 300,
         scale: 0.1, opacity: 0,
-        duration: 0.25 + Math.random() * 0.15,
+        duration: 0.2 + Math.random() * 0.1,
         ease: "power3.in",
       }, "-=0.1");
     });
 
-    // R expands from CENTER into massive portal
+    // R expands from CENTER into portal
     tl.to(rSpan, {
-      scale: 22, opacity: 0.3,
-      duration: 0.4, ease: "power2.in",
-    }, "-=0.2");
+      scale: 25, opacity: 0.3,
+      duration: 0.35, ease: "power2.in",
+    }, "-=0.15");
 
     // Galaxy starfield
     if (galaxyRef.current) {
@@ -116,7 +118,7 @@ export function FloatingLetters({ onRReady }: Props) {
         }
 
         gsap.set(canvas, { opacity: 0 });
-        tl.to(canvas, { opacity: 0.7, duration: 0.2, ease: "power2.out" }, "-=0.25");
+        tl.to(canvas, { opacity: 0.7, duration: 0.2, ease: "power2.out" }, "-=0.2");
 
         let galaxyAnim = 0;
         const drawGalaxy = () => {
@@ -150,8 +152,8 @@ export function FloatingLetters({ onRReady }: Props) {
         gsap.to(flash, { opacity: 1, duration: 0.04, ease: "none" });
         gsap.to(flash, { opacity: 0, duration: 0.2, ease: "power2.out", delay: 0.04 });
 
-        tl.to(rSpan, { opacity: 0, scale: 28, duration: 0.15, ease: "power2.in" }, "-=0.1");
-        tl.to(canvas, { opacity: 0, duration: 0.15, ease: "power2.in" }, "-=0.05");
+        tl.to(rSpan, { opacity: 0, scale: 28, duration: 0.12, ease: "power2.in" }, "-=0.1");
+        tl.to(canvas, { opacity: 0, duration: 0.12, ease: "power2.in" }, "-=0.05");
         tl.call(() => { onRReady?.(); gsap.delayedCall(0.2, () => flash.remove()); }, [], "-=0.05");
       }
     }
