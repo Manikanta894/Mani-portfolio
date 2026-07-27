@@ -294,29 +294,6 @@ export function Ch01About() {
           </div>
         </div>
 
-        {/* ── Animated counters (clickable → jump) ─────────── */}
-        <div className="about-metrics" role="list">
-          {METRICS.map((m: any) => (
-            <a
-              key={m.label}
-              role="listitem"
-              href={`#${m.target || m.target_anchor || ""}`}
-              onClick={onJump(m.target || m.target_anchor)}
-              className="about-metric"
-            >
-              <span className="about-metric__value">
-                <Counter to={m.value} suffix={m.suffix || ""} />
-              </span>
-              <span className="about-metric__label">{m.label}</span>
-              <span className="about-metric__cue" aria-hidden>↗ view</span>
-            </a>
-          ))}
-        </div>
-
-        <div className="about-footnote">// {aboutData.footnote}</div>
-
-
-
       </div>
 
       <style>{`
