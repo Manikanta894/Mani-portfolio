@@ -8,37 +8,58 @@ function copy(text: string) {
   if (typeof navigator !== "undefined" && navigator.clipboard) navigator.clipboard.writeText(text);
 }
 
+/* Same palette as the Ecosystem domain wheel, so a paper's category
+   ties visually back to where that skill lives on the site. */
+const CATEGORY_COLORS: Record<string, string> = {
+  "analytics": "#E0533D",
+  "ai": "#7C5CFF",
+  "artificial intelligence": "#7C5CFF",
+  "people & hr": "#3DA9FC",
+  "hr": "#3DA9FC",
+  "business": "#F2B33D",
+  "research": "#7C5CFF",
+};
+function categoryColor(cat?: string) {
+  return CATEGORY_COLORS[(cat || "").toLowerCase().trim()] || "var(--vermilion)";
+}
+
 /* ---------- compact paper row ---------- */
 function PaperRow({ paper, index }: { paper: any; index: number }) {
   const [open, setOpen] = useState(false);
+  const accent = categoryColor(paper.category);
 
   return (
     <Reveal delay={index * 0.04}>
-      <div className="border-b border-bone/12">
+      <div className="group relative border-b border-bone/12 transition-colors" style={{ "--row-accent": accent } as any}>
+        <span aria-hidden className="absolute left-0 top-0 h-full w-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: accent }} />
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="grid w-full grid-cols-12 items-baseline gap-4 py-5 text-left transition-colors hover:bg-bone/[0.05]"
+          className="grid w-full grid-cols-12 items-baseline gap-4 py-5 pl-4 text-left transition-colors hover:bg-bone/[0.05]"
         >
           <span className="col-span-2 md:col-span-1 text-mono text-meta tabular-nums text-bone/65">
             {paper.year}
           </span>
-          <span className="col-span-10 md:col-span-7 text-[1rem] leading-snug md:text-[1.05rem]">
+          <span className="col-span-10 md:col-span-6 text-[1rem] leading-snug md:text-[1.05rem]">
+            <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: accent }} />
             {paper.title}
           </span>
-          <span className="hidden md:col-span-3 md:block text-mono text-eyebrow text-bone/55 truncate">
+          <span className="hidden md:col-span-2 md:block text-mono text-eyebrow text-bone/55 truncate">
             {paper.journal}
           </span>
-          <span className="col-span-12 md:col-span-1 text-right md:text-right">
-            <span
-              className={`inline-block border px-1.5 py-0.5 text-mono text-eyebrow ${
-                paper.status === "Published"
-                  ? "border-vermilion/50 text-vermilion"
-                  : "border-bone/25 text-bone/85"
-              }`}
-            >
-              {paper.status}
-            </span>
+          <span className="col-span-8 md:col-span-2 text-mono text-eyebrow text-bone/40 truncate">
+            {paper.category}
+          </span>
+          <span className="col-span-4 md:col-span-1 text-right md:text-right">
+            {paper.status === "Published" ? (
+              <span className="inline-block border border-vermilion bg-vermilion/15 px-1.5 py-0.5 text-mono text-eyebrow text-vermilion shadow-[0_0_12px_-4px_var(--vermilion)]">
+                Published
+              </span>
+            ) : (
+              <span className="inline-block border border-dashed border-bone/30 px-1.5 py-0.5 text-mono text-eyebrow text-bone/60">
+                Pending
+              </span>
+            )}
           </span>
         </button>
 
@@ -201,7 +222,21 @@ export function Ch05Research() {
                 {sectionLede}
               </p>
             </Reveal>
-            <Reveal delay={0.1}>
+            <Reveal delay={0.08}>
+              <div className="mt-5 flex gap-px overflow-hidden border border-bone/15 bg-bone/10">
+                {[
+                  { label: "Published", value: ordered.filter((p: any) => p.status === "Published").length, color: "#D46A2E" },
+                  { label: "Pending", value: ordered.filter((p: any) => p.status !== "Published").length, color: "#8F887F" },
+                  { label: "Total", value: ordered.length, color: "var(--vermilion)" },
+                ].map((s) => (
+                  <div key={s.label} className="flex-1 bg-ink px-4 py-3">
+                    <div className="text-display text-2xl leading-none" style={{ color: s.color }}>{s.value}</div>
+                    <div className="text-mono mt-1 text-eyebrow uppercase tracking-[0.12em] text-bone/50">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+            <Reveal delay={0.14}>
               <a
                 href={orcidUrl}
                 target="_blank"
