@@ -1,28 +1,22 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
-import MRMonogram, { type MRMonogramHandle } from "./MRMonogram";
 import { AmbientParticles } from "./AmbientParticles";
+import portraitCutout from "@/assets/portrait-cutout.png";
 
 /**
- * CinematicIntro — LIGHT THEME VERSION.
- * Matches website light theme:
- *   - bg: #F8F5EF (bone)
- *   - text: #181818 (ink)
- *   - accent: #D46A2E (vermilion)
- *   - secondary: #555555 (graphite)
- *
- * Fast ~4s intro. Skip with Space/Esc/Enter.
+ * CinematicIntro — PORTRAIT REVEAL.
+ * Black background. Portrait emerges from a circle.
+ * "Manikanta" + "R." reveals like the hero section.
+ * Smooth transition to homepage.
  */
 export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const monogramRef = useRef<MRMonogramHandle>(null);
-  const welcomeRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLDivElement>(null);
+  const portraitWrapRef = useRef<HTMLDivElement>(null);
+  const nameRow1Ref = useRef<HTMLDivElement>(null);
+  const nameRow2Ref = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLDivElement>(null);
   const skipRef = useRef<HTMLButtonElement>(null);
-  const logoSmallRef = useRef<HTMLDivElement>(null);
-  const flashOverlayRef = useRef<HTMLDivElement>(null);
   const [skipped, setSkipped] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
   const animRef = useRef<gsap.core.Timeline | null>(null);
@@ -43,68 +37,77 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
 
     animRef.current = tl;
 
-    // 1. Quick fade in
+    // 1. Quick fade in from black
     tl.set(containerRef.current, { autoAlpha: 1 });
-    tl.fromTo(containerRef.current, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "power2.out" });
+    tl.fromTo(containerRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" });
 
-    // 2. M drops from above
-    tl.add(monogramRef.current?.dominateM() || gsap.timeline(), "+=0.15");
-
-    // 3. R bursts from right
-    tl.add(monogramRef.current?.burstR() || gsap.timeline(), "-=0.1");
-
-    // 4. Quick vermilion flash
-    if (flashOverlayRef.current) {
-      tl.set(flashOverlayRef.current, { opacity: 0 });
-      tl.to(flashOverlayRef.current, { opacity: 0.2, duration: 0.08, ease: "none" });
-      tl.to(flashOverlayRef.current, { opacity: 0, duration: 0.2, ease: "power2.out" });
+    // 2. Portrait — starts as tiny circle, expands
+    if (portraitWrapRef.current) {
+      gsap.set(portraitWrapRef.current, {
+        scale: 0,
+        opacity: 0,
+        filter: "blur(8px)",
+      });
+      tl.to(portraitWrapRef.current, {
+        scale: 1,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 0.8,
+        ease: "power3.out",
+      });
     }
 
-    // 5. Lock monogram
-    tl.add(monogramRef.current?.lockMonogram() || gsap.timeline(), "-=0.05");
-
-    // 6. Brief pause
-    tl.to({}, { duration: 0.4 });
-
-    // 7. "Welcome to My Portfolio"
-    if (welcomeRef.current) {
-      tl.fromTo(
-        welcomeRef.current,
-        { opacity: 0, y: 20, filter: "blur(6px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }
-      );
+    // 3. "Manikanta" — drops in from above, Fraunces italic
+    if (nameRow1Ref.current) {
+      gsap.set(nameRow1Ref.current, {
+        opacity: 0,
+        y: -40,
+        scale: 0.8,
+      });
+      tl.to(nameRow1Ref.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.5,
+        ease: "power3.out",
+      }, "-=0.3");
     }
 
-    // 8. "MANIKANTA R" — letters drop in
-    if (nameRef.current) {
-      const chars = nameRef.current.querySelectorAll(".intro-char");
-      tl.to(chars, {
-        opacity: 1, y: 0, scale: 1, rotation: 0,
-        duration: 0.35, stagger: 0.04, ease: "back.out(2)",
-      }, "-=0.15");
+    // 4. "R." — drops in from right with vermilion flash
+    if (nameRow2Ref.current) {
+      gsap.set(nameRow2Ref.current, {
+        opacity: 0,
+        x: 40,
+        scale: 0.6,
+      });
+      tl.to(nameRow2Ref.current, {
+        opacity: 1,
+        x: 0,
+        scale: 1,
+        duration: 0.4,
+        ease: "back.out(2)",
+      }, "-=0.2");
     }
 
-    // 9. Tagline
+    // 5. Tagline
     if (taglineRef.current) {
-      tl.fromTo(
-        taglineRef.current,
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
-        "+=0.05"
-      );
+      gsap.set(taglineRef.current, { opacity: 0, y: 15 });
+      tl.to(taglineRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.4,
+        ease: "power2.out",
+      }, "+=0.1");
     }
 
-    // 10. Logo shrinks
-    if (logoSmallRef.current) {
-      tl.to(logoSmallRef.current, {
-        scale: 0.2, opacity: 0,
-        duration: 0.5, ease: "power2.inOut",
-      }, "+=0.2");
-    }
+    // 6. Brief pause to breathe
+    tl.to({}, { duration: 0.5 });
 
-    // 11. Fade out
+    // 7. Fade out entire intro
     tl.to(containerRef.current, {
-      opacity: 0, duration: 0.4, ease: "power2.inOut",
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.inOut",
     });
 
     return () => {
@@ -123,29 +126,6 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
     return () => window.removeEventListener("keydown", handler);
   }, [skip]);
 
-  // Build letter-by-letter name
-  const name = "MANIKANTA R";
-  const nameChars = name.split("").map((char, i) => (
-    <span
-      key={i}
-      className="intro-char inline-block"
-      style={{
-        opacity: 0,
-        transform: "translateY(-40px) scale(0.4) rotate(-10deg)",
-        fontFamily: '"Fraunces Variable", ui-serif, Georgia, serif',
-        fontStyle: "italic",
-        fontWeight: 600,
-        fontSize: "clamp(3rem, 6vw, 5.5rem)",
-        lineHeight: 1.1,
-        letterSpacing: "-0.03em",
-        color: "#181818",
-        textShadow: "0 0 40px rgba(212, 106, 46, 0.25)",
-      }}
-    >
-      {char === " " ? "\u00A0" : char}
-    </span>
-  ));
-
   return (
     <>
       <AmbientParticles />
@@ -155,19 +135,9 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
         className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
         style={{
           opacity: 0,
-          backgroundColor: "#F8F5EF",
+          backgroundColor: "#000000",
         }}
       >
-        {/* Vermilion flash overlay */}
-        <div
-          ref={flashOverlayRef}
-          className="fixed inset-0 z-[10001] pointer-events-none"
-          style={{
-            background: "radial-gradient(circle at 50% 50%, rgba(212,106,46,0.15), transparent 70%)",
-            opacity: 0,
-          }}
-        />
-
         {/* Skip button */}
         <button
           ref={skipRef}
@@ -177,53 +147,107 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
           }`}
           style={{
             fontFamily: '"JetBrains Mono", monospace',
-            color: "rgba(24, 24, 24, 0.4)",
-            border: "1px solid rgba(24, 24, 24, 0.12)",
+            color: "rgba(245, 241, 235, 0.4)",
+            border: "1px solid rgba(245, 241, 235, 0.12)",
           }}
         >
           Skip &rarr;
         </button>
 
-        {/* Main content — centered */}
-        <div className="flex flex-col items-center justify-center gap-3 relative w-full px-4">
-          {/* Monogram — BIG and CENTERED */}
-          <div ref={logoSmallRef} className="flex items-center justify-center w-full">
-            <MRMonogram ref={monogramRef} size={500} />
+        {/* Main content */}
+        <div className="flex flex-col items-center justify-center gap-6 relative w-full px-4">
+          {/* Portrait — circular reveal */}
+          <div
+            ref={portraitWrapRef}
+            className="relative"
+            style={{
+              width: "clamp(200px, 28vw, 360px)",
+              aspectRatio: "1",
+              borderRadius: "50%",
+              overflow: "hidden",
+              boxShadow: "0 0 0 4px rgba(212,106,46,0.15), 0 0 60px rgba(212,106,46,0.08)",
+              opacity: 0,
+              transform: "scale(0)",
+            }}
+          >
+            <img
+              src={portraitCutout}
+              alt="Manikanta R"
+              draggable={false}
+              style={{
+                width: "112%",
+                height: "112%",
+                objectFit: "cover",
+                objectPosition: "50% 18%",
+                position: "absolute",
+                left: "-6%",
+                top: "-6%",
+                filter: "grayscale(0.1) contrast(1.02)",
+              }}
+            />
           </div>
 
-          {/* Typography */}
-          <div className="flex flex-col items-center text-center mt-3 gap-1.5">
-            <div
-              ref={welcomeRef}
-              className="tracking-[0.35em] text-[clamp(0.75rem,1.2vw,1rem)]"
-              style={{
-                fontFamily: '"JetBrains Mono", monospace',
-                textTransform: "uppercase",
-                letterSpacing: "0.35em",
-                opacity: 0,
-                color: "#D46A2E",
-              }}
+          {/* Name — matches hero section exactly */}
+          <div className="flex flex-col items-center text-center">
+            <h1
+              className="flex flex-row flex-wrap items-baseline justify-center"
+              style={{ columnGap: "0.22em" }}
+              aria-label="Manikanta R"
             >
-              Welcome to My Portfolio
-            </div>
+              <div
+                ref={nameRow1Ref}
+                style={{
+                  fontFamily: '"Instrument Serif", "Fraunces Variable", ui-serif, Georgia, serif',
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  fontSize: "clamp(48px, 7.2vw, 128px)",
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.03em",
+                  color: "#F5F1EB",
+                  opacity: 0,
+                  transform: "translateY(-40px) scale(0.8)",
+                }}
+              >
+                Manikanta
+              </div>
+              <div
+                ref={nameRow2Ref}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "baseline",
+                  fontFamily: '"Instrument Serif", "Fraunces Variable", ui-serif, Georgia, serif',
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  fontSize: "clamp(48px, 7.2vw, 128px)",
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.03em",
+                  color: "#F5F1EB",
+                  opacity: 0,
+                  transform: "translateX(40px) scale(0.6)",
+                }}
+              >
+                <span style={{ fontSize: "1.02em" }}>R</span>
+                <span style={{ color: "#D46A2E", marginLeft: "0.06em", fontStyle: "italic" }}>.</span>
+              </div>
+            </h1>
+          </div>
 
-            <div ref={nameRef} className="flex flex-wrap justify-center">
-              {nameChars}
-            </div>
-
-            <div
-              ref={taglineRef}
-              className="mt-2 max-w-[40ch] text-center leading-relaxed"
-              style={{
-                fontFamily: '"Inter Tight Variable", ui-sans-serif, system-ui, sans-serif',
-                fontSize: "clamp(0.8rem, 1.1vw, 1rem)",
-                letterSpacing: "0.03em",
-                opacity: 0,
-                color: "rgba(24, 24, 24, 0.5)",
-              }}
-            >
-              Building the Future of HR through AI & Analytics
-            </div>
+          {/* Tagline */}
+          <div
+            ref={taglineRef}
+            style={{
+              fontFamily: '"Inter Tight Variable", ui-sans-serif, system-ui, sans-serif',
+              fontSize: "clamp(0.9rem, 1.3vw, 1.1rem)",
+              letterSpacing: "0.02em",
+              opacity: 0,
+              transform: "translateY(15px)",
+              color: "rgba(200, 194, 184, 0.6)",
+              maxWidth: "34ch",
+              textAlign: "center",
+              lineHeight: 1.5,
+            }}
+          >
+            Turning workforce & business data into decisions leaders can act on
           </div>
         </div>
 
@@ -233,10 +257,10 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
             showSkip ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="flex items-center gap-2 text-[10px] font-mono tracking-[0.15em] uppercase" style={{ color: "rgba(24, 24, 24, 0.2)" }}>
-            <span className="w-10 h-px" style={{ backgroundColor: "rgba(24, 24, 24, 0.12)" }} />
+          <div className="flex items-center gap-2 text-[10px] font-mono tracking-[0.15em] uppercase" style={{ color: "rgba(245, 241, 235, 0.15)" }}>
+            <span className="w-10 h-px" style={{ backgroundColor: "rgba(245, 241, 235, 0.1)" }} />
             <span>Space or Esc to skip</span>
-            <span className="w-10 h-px" style={{ backgroundColor: "rgba(24, 24, 24, 0.12)" }} />
+            <span className="w-10 h-px" style={{ backgroundColor: "rgba(245, 241, 235, 0.1)" }} />
           </div>
         </div>
       </div>
