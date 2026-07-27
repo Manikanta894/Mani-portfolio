@@ -111,7 +111,7 @@ export function Ch08Credentials() {
   const stats = sc.stats || [
     { label: "Awards", value: awardsList.length || 4 },
     { label: "Certifications", value: list.length || 10 },
-    { label: "Research Papers", value: 10 },
+    { label: "Research Papers", value: 8 },
     { label: "Skills Acquired", value: 38 },
   ];
 
@@ -201,7 +201,7 @@ export function Ch08Credentials() {
             >
               <ul className="divide-y divide-bone/15 border-y border-bone/15">
                 {(showAllCerts ? list : list.slice(0, 6)).map((c: any) => (
-                  <li key={c.credentialId || c.id}>
+                  <li key={c.credential_id || c.id}>
                     <button
                       type="button"
                       onClick={() => setOpen(c)}
@@ -322,7 +322,7 @@ export function Ch08Credentials() {
                     <div className="text-center">
                       <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">{open.issuer}</div>
                       <div className="text-display mt-2 text-[1.2rem] leading-[1.1] text-bone/60">{open.title || open.name}</div>
-                      <div className="text-mono mt-2 text-eyebrow uppercase tracking-[0.18em] text-bone/35">{open.credentialId || "credential"}</div>
+                      <div className="text-mono mt-2 text-eyebrow uppercase tracking-[0.18em] text-bone/35">{open.credential_id || "credential"}</div>
                     </div>
                   </div>
                 )}
