@@ -10,17 +10,14 @@ type Domain = string;
 const FALLBACK_STAGES = ["Learning", "Practicing", "Applying", "Researching", "Teaching", "Leading"];
 const FALLBACK_DOMAINS: any[] = [
   { id: "Analytics", label: "Analytics", accent: "#E0533D", angle: -90, sort_order: 0 },
-  { id: "Artificial Intelligence", label: "AI & ML", accent: "#7C5CFF", angle: -45, sort_order: 1 },
-  { id: "People & HR", label: "People & HR", accent: "#3DA9FC", angle: 0, sort_order: 2 },
-  { id: "Business", label: "Business", accent: "#F2B33D", angle: 45, sort_order: 3 },
-  { id: "Leadership", label: "Leadership", accent: "#E0533D", angle: 90, sort_order: 4 },
-  { id: "Research", label: "Research", accent: "#7C5CFF", angle: 135, sort_order: 5 },
-  { id: "Technology", label: "Technology", accent: "#3DA9FC", angle: 180, sort_order: 6 },
-  { id: "Visualization", label: "Visualization", accent: "#F2B33D", angle: 225, sort_order: 7 },
+  { id: "Artificial Intelligence", label: "AI & ML", accent: "#7C5CFF", angle: -18, sort_order: 1 },
+  { id: "People & HR", label: "People & HR", accent: "#3DA9FC", angle: 54, sort_order: 2 },
+  { id: "Business", label: "Business", accent: "#F2B33D", angle: 126, sort_order: 3 },
+  { id: "Research", label: "Research", accent: "#7C5CFF", angle: 198, sort_order: 4 },
 ];
 const FALLBACK_STATS: any[] = [
-  { sort_order: 0, label: "Capabilities", value: 33, hint: "tracked" },
-  { sort_order: 1, label: "Domains", value: 8, hint: "interconnected" },
+  { sort_order: 0, label: "Capabilities", value: 16, hint: "tracked" },
+  { sort_order: 1, label: "Domains", value: 5, hint: "interconnected" },
 ];
 
 const SECTION = {
