@@ -15,16 +15,15 @@ export function Ch00Cover() {
     "HR Analytics", "Business Analytics", "AI Strategy", "Research", "Power BI", "People Analytics",
   ];
   const heroMeta = (profile?.hero_meta as any[]) || [
-    { label: "Published Papers", value: "04", type: "text" },
     { label: "MBA", value: "MBA · '27", sub: "HR & Business Analytics", type: "cohort" },
     { label: "Availability", value: "Available", sub: "for collaborations", type: "status" },
   ];
-  const tagline = profile?.tagline || "Building the future of work through <em>AI, analytics & human insight</em>.";
+  const tagline = profile?.tagline || "Turning workforce & business data into <em>decisions leaders can act on</em>.";
   const welcomeText = profile?.welcome_text || "Welcome to my Portfolio.";
   const ctas = (profile?.ctas as any[]) || [
-    { label: "Explore Journey", href: "#about", type: "primary" },
+    { label: "Download Resume", href: profile?.resume_url || "https://manikantar.in/resume.pdf", type: "primary", download: true },
+    { label: "Explore Journey", href: "#about", type: "ghost" },
     { label: "Let's Connect", href: "#contact", type: "ghost" },
-    { label: "Download Resume", href: profile?.resume_url || "https://manikantar.in/resume.pdf", type: "ghost", download: true },
   ];
   const location = profile?.location || "Bengaluru · India";
   const targetRoles = (profile?.target_roles as string[]) || ["HR Analyst", "Talent Acquisition Analyst", "People Analytics"];
