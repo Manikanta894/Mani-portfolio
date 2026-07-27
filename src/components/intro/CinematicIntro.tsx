@@ -27,80 +27,83 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
     onComplete();
   }, [skipped, onComplete]);
 
-  // Initial fade in
   useEffect(() => {
     if (!containerRef.current) return;
-    gsap.to(containerRef.current, {
-      opacity: 1,
-      duration: 0.3,
-      ease: "power2.out",
-    });
+    gsap.to(containerRef.current, { opacity: 1, duration: 0.2, ease: "power2.out" });
   }, []);
 
-  // R shatter handler
   const handleRReady = useCallback(() => {
+    // Camera shake
     if (containerRef.current) {
       gsap.to(containerRef.current, {
-        x: gsap.utils.random(-5, 5),
+        x: gsap.utils.random(-4, 4),
         y: gsap.utils.random(-3, 3),
-        duration: 0.04,
-        repeat: 8,
+        duration: 0.03,
+        repeat: 6,
         yoyo: true,
         ease: "power1.inOut",
         onComplete: () => gsap.set(containerRef.current, { x: 0, y: 0 }),
       });
     }
+    // Shatter particles burst
     if (shatterRef.current) {
       const particles = shatterRef.current;
       gsap.set(particles, { opacity: 1 });
       const els = particles.querySelectorAll(".sp");
       els.forEach((p, i) => {
         const angle = (i / els.length) * Math.PI * 2;
-        const dist = 80 + Math.random() * 200;
+        const dist = 60 + Math.random() * 150;
         const el = p as HTMLElement;
         gsap.set(el, { x: 0, y: 0, scale: 1, opacity: 1 });
         gsap.to(el, {
           x: Math.cos(angle) * dist,
-          y: Math.sin(angle) * dist - 30,
-          rotation: Math.random() * 500 - 250,
+          y: Math.sin(angle) * dist - 20,
+          rotation: Math.random() * 400 - 200,
           scale: 0, opacity: 0,
-          duration: 0.6 + Math.random() * 0.4,
+          duration: 0.4 + Math.random() * 0.3,
           ease: "power2.out",
-          delay: Math.random() * 0.1,
+          delay: Math.random() * 0.05,
         });
       });
+      gsap.to(particles, { opacity: 0, duration: 0.2, delay: 0.5 });
     }
-    gsap.delayedCall(0.6, () => {
+    // Show portrait quickly
+    gsap.delayedCall(0.3, () => {
       setShowLetters(false);
       setShowPortrait(true);
     });
   }, []);
 
-  // Portrait reveal animation
+  // Portrait reveal — fast and magical
   useEffect(() => {
     if (!showPortrait) return;
     const tl = gsap.timeline();
 
+    // Portrait pops in with elastic scale
     if (portraitWrapRef.current) {
-      gsap.set(portraitWrapRef.current, { opacity: 0, scale: 0.8, filter: "blur(20px)" });
-      tl.to(portraitWrapRef.current, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.0, ease: "power3.out" });
+      gsap.set(portraitWrapRef.current, { opacity: 0, scale: 0.3, filter: "blur(10px)" });
+      tl.to(portraitWrapRef.current, {
+        opacity: 1, scale: 1, filter: "blur(0px)",
+        duration: 0.5, ease: "back.out(2)",
+      });
     }
 
+    // Rings expand fast
     if (ringsRef.current) {
       const rings = ringsRef.current.querySelectorAll(".ring-el");
       rings.forEach((ring, i) => {
         const el = ring as HTMLElement;
         gsap.set(el, { scale: 0, opacity: 0 });
-        tl.to(el, { scale: 1, opacity: 0.2, duration: 1.2, ease: "power2.out", delay: i * 0.15 }, "-=0.8");
-        tl.to(el, { opacity: 0, duration: 0.4, ease: "power2.in" }, "-=0.2");
+        tl.to(el, { scale: 1, opacity: 0.15, duration: 0.6, ease: "power2.out" }, "-=0.3");
+        tl.to(el, { opacity: 0, duration: 0.3, ease: "power2.in" }, "-=0.1");
       });
     }
 
-    // Handwriting
+    // Handwriting — faster
     if (handwritingRef.current) {
       const chars = handwritingRef.current.querySelectorAll(".hw-char");
       gsap.set(chars, { opacity: 0 });
-      tl.to(chars, { opacity: 1, duration: 0.06, stagger: 0.035, ease: "none" }, "+=0.2");
+      tl.to(chars, { opacity: 1, duration: 0.04, stagger: 0.025, ease: "none" });
       tl.call(() => {
         if (handwritingRef.current) {
           const el = handwritingRef.current;
@@ -111,38 +114,38 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
           el.style.letterSpacing = "0.15em";
           el.style.color = "#FFFFFF";
         }
-      }, [], "+=0.2");
-      tl.to({}, { duration: 0.3 });
+      }, [], "+=0.15");
+      tl.to({}, { duration: 0.15 });
     }
 
     // Name + tagline
     if (nameRef.current) {
-      gsap.set(nameRef.current, { opacity: 0, y: 20 });
-      tl.to(nameRef.current, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
+      gsap.set(nameRef.current, { opacity: 0, y: 15 });
+      tl.to(nameRef.current, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" });
     }
     if (taglineRef.current) {
-      gsap.set(taglineRef.current, { opacity: 0, y: 12 });
-      tl.to(taglineRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.2");
+      gsap.set(taglineRef.current, { opacity: 0, y: 10 });
+      tl.to(taglineRef.current, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, "-=0.15");
     }
     if (lineRef.current) {
       gsap.set(lineRef.current, { scaleX: 0, opacity: 0 });
-      tl.to(lineRef.current, { scaleX: 1, opacity: 1, duration: 0.5, ease: "power3.out" }, "-=0.2");
-      tl.to(lineRef.current, { opacity: 0.3, duration: 0.3, yoyo: true, repeat: 1, ease: "power2.inOut" });
+      tl.to(lineRef.current, { scaleX: 1, opacity: 1, duration: 0.35, ease: "power3.out" }, "-=0.15");
+      tl.to(lineRef.current, { opacity: 0.3, duration: 0.2, yoyo: true, repeat: 1, ease: "power2.inOut" });
     }
 
-    // Transition out
+    // Zoom + transition out
     if (portraitZoomRef.current) {
-      tl.to(portraitZoomRef.current, { scale: 1.2, duration: 0.8, ease: "power2.inOut" }, "+=0.5");
+      tl.to(portraitZoomRef.current, { scale: 1.15, duration: 0.5, ease: "power2.inOut" }, "+=0.3");
     }
-    tl.to(containerRef.current, { opacity: 0, duration: 0.4, ease: "power2.inOut" }, "-=0.2");
-    tl.call(() => onComplete(), [], "+=0.1");
+    tl.to(containerRef.current, { opacity: 0, duration: 0.3, ease: "power2.inOut" }, "-=0.15");
+    tl.call(() => onComplete(), [], "+=0.05");
 
     return () => { tl.kill(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showPortrait]);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowSkip(true), 1500);
+    const t = setTimeout(() => setShowSkip(true), 1000);
     return () => clearTimeout(t);
   }, []);
 
@@ -166,10 +169,10 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
     }}>{char === " " ? "\u00A0" : char}</span>
   ));
 
-  const shatterParticles = Array.from({ length: 25 }).map((_, i) => (
+  const shatterParticles = Array.from({ length: 20 }).map((_, i) => (
     <div key={i} className="sp" style={{
-      position: "absolute", width: `${2 + Math.random() * 5}px`,
-      height: `${2 + Math.random() * 5}px`, backgroundColor: "#FFFFFF",
+      position: "absolute", width: `${2 + Math.random() * 4}px`,
+      height: `${2 + Math.random() * 4}px`, backgroundColor: "#FFFFFF",
       borderRadius: Math.random() > 0.5 ? "50%" : "1px",
       opacity: 0, pointerEvents: "none",
     }} />
@@ -180,7 +183,7 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
       <AmbientParticles />
 
       <button onClick={skip}
-        className={`fixed top-4 right-4 z-[10002] px-3 py-1.5 text-[10px] sm:text-[11px] tracking-[0.2em] uppercase rounded-full backdrop-blur-sm transition-all duration-300 ${showSkip ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed top-4 right-4 z-[10002] px-3 py-1.5 text-[10px] tracking-[0.2em] uppercase rounded-full backdrop-blur-sm transition-all duration-300 ${showSkip ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         style={{ fontFamily: '"JetBrains Mono", monospace', color: "rgba(255,255,255,0.3)", border: "1px solid rgba(255,255,255,0.08)" }}
       >Skip &rarr;</button>
 
@@ -192,7 +195,7 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
 
       {showPortrait && (
         <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center px-4">
-          <div ref={portraitWrapRef} className="relative mb-6" style={{ width: "clamp(180px, 30vw, 320px)", aspectRatio: "1", borderRadius: "50%", overflow: "hidden", opacity: 0, filter: "blur(20px)", transform: "scale(0.8)" }}>
+          <div ref={portraitWrapRef} className="relative mb-6" style={{ width: "clamp(180px, 30vw, 320px)", aspectRatio: "1", borderRadius: "50%", overflow: "hidden", opacity: 0, transform: "scale(0.3)", filter: "blur(10px)" }}>
             <div ref={portraitZoomRef}>
               <img src={portraitCutout} alt="" draggable={false} style={{ width: "112%", height: "112%", objectFit: "cover", objectPosition: "50% 18%", position: "absolute", left: "-6%", top: "-6%" }} />
             </div>
@@ -203,17 +206,15 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
             <div className="ring-el" style={{ position: "absolute", inset: "-20px", borderRadius: "50%", border: "1px solid rgba(139,92,246,0.08)", opacity: 0, transform: "scale(0)" }} />
           </div>
 
-          <div ref={handwritingRef} className="text-center mb-4">
-            {hwChars}
-          </div>
+          <div ref={handwritingRef} className="text-center mb-4">{hwChars}</div>
 
-          <div ref={nameRef} className="text-center" style={{ fontFamily: '"Fraunces Variable", ui-serif, Georgia, serif', fontStyle: "italic", fontWeight: 500, fontSize: "clamp(1.8rem, 4vw, 3.5rem)", color: "#FFFFFF", letterSpacing: "-0.02em", opacity: 0, transform: "translateY(20px)" }}>
+          <div ref={nameRef} className="text-center" style={{ fontFamily: '"Fraunces Variable", ui-serif, Georgia, serif', fontStyle: "italic", fontWeight: 500, fontSize: "clamp(1.8rem, 4vw, 3.5rem)", color: "#FFFFFF", letterSpacing: "-0.02em", opacity: 0, transform: "translateY(15px)" }}>
             Manikanta R
           </div>
 
-          <div ref={lineRef} className="h-px mt-4 mb-4" style={{ width: "clamp(120px, 20vw, 240px)", background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.3), rgba(139,92,246,0.3), transparent)", transform: "scaleX(0)", opacity: 0 }} />
+          <div ref={lineRef} className="h-px mt-3 mb-3" style={{ width: "clamp(120px, 20vw, 240px)", background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.3), rgba(139,92,246,0.3), transparent)", transform: "scaleX(0)", opacity: 0 }} />
 
-          <div ref={taglineRef} className="text-center max-w-[40ch]" style={{ fontFamily: '"Inter Tight Variable", ui-sans-serif, system-ui, sans-serif', fontSize: "clamp(0.7rem, 1.1vw, 0.95rem)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.05em", lineHeight: 1.6, opacity: 0, transform: "translateY(12px)" }}>
+          <div ref={taglineRef} className="text-center max-w-[40ch]" style={{ fontFamily: '"Inter Tight Variable", ui-sans-serif, system-ui, sans-serif', fontSize: "clamp(0.7rem, 1.1vw, 0.95rem)", color: "rgba(255,255,255,0.4)", letterSpacing: "0.05em", lineHeight: 1.6, opacity: 0, transform: "translateY(10px)" }}>
             Researcher &bull; HR & Business Analytics &bull; AI &bull; Data Intelligence
           </div>
         </div>
@@ -222,7 +223,7 @@ export function CinematicIntro({ onComplete }: { onComplete: () => void }) {
       <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 transition-opacity duration-500 z-[10002] ${showSkip ? "opacity-100" : "opacity-0"}`}>
         <div className="flex items-center gap-2 text-[9px] font-mono tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.1)" }}>
           <span className="w-8 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
-          <span>Space or Esc</span>
+          <span>Skip</span>
           <span className="w-8 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
         </div>
       </div>
