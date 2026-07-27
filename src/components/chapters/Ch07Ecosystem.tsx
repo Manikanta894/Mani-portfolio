@@ -290,7 +290,7 @@ export function Ch07Ecosystem() {
             <h3 className="text-display text-[clamp(1.5rem,3vw,2.4rem)] text-bone">Capability Groups</h3>
             <div className="text-mono text-eyebrow text-bone/50">{effectiveDomains.length} domains · {effectiveCaps.length} capabilities</div>
           </header>
-          <div className="grid grid-cols-2 gap-px overflow-hidden border border-bone/15 bg-bone/10 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-px overflow-hidden border border-bone/15 bg-bone/10 md:grid-cols-5">
             {effectiveDomains.map((d: any) => {
               const items = byDomain.get(d.id) ?? [];
               return (
@@ -322,15 +322,15 @@ export function Ch07Ecosystem() {
             <p className="text-mono text-eyebrow tracking-[0.12em] text-bone/50">A progression, not a progress bar — each stage builds on the last</p>
           </header>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
-            {STAGES.map((s, si) => {
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {STAGES.filter((s) => effectiveCaps.some((c: any) => c.stage === s)).map((s, si, filteredStages) => {
               const items = effectiveCaps.filter((c: any) => c.stage === s);
               const colors = ["#E0533D", "#D46A2E", "#F2B33D", "#3DA9FC", "#7C5CFF", "#E0533D"];
-              const color = colors[si % colors.length];
+              const color = colors[STAGES.indexOf(s) % colors.length];
               return (
                 <div key={s} className="group relative">
                   {/* Connector line */}
-                  {si < STAGES.length - 1 && (
+                  {si < filteredStages.length - 1 && (
                     <div className="absolute -right-2 top-6 hidden h-px w-4 bg-gradient-to-r from-bone/30 to-transparent md:block" />
                   )}
                   <div className="relative rounded-sm border border-bone/12 bg-gradient-to-b from-bone/[0.03] to-transparent p-5 transition-all duration-300 hover:border-bone/30 hover:from-bone/[0.06]">
@@ -340,7 +340,7 @@ export function Ch07Ecosystem() {
                         className="inline-flex h-8 w-8 items-center justify-center rounded-full text-mono text-xs font-bold tabular-nums"
                         style={{ background: `${color}22`, color }}
                       >
-                        {String(si + 1).padStart(2, "0")}
+                        {String(STAGES.indexOf(s) + 1).padStart(2, "0")}
                       </span>
                       <span className="text-display text-xl tracking-tight text-bone">{s}</span>
                     </div>
@@ -365,11 +365,6 @@ export function Ch07Ecosystem() {
                         </span>
                       )}
                     </div>
-
-                    {/* Empty state hint */}
-                    {items.length === 0 && (
-                      <p className="text-[10px] italic text-bone/30">no capabilities at this stage yet</p>
-                    )}
                   </div>
                 </div>
               );
