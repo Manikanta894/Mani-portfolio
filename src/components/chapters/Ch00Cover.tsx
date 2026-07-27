@@ -82,6 +82,10 @@ const onHeroLeave = () => {
 
         {/* RIGHT · NAME + HIERARCHY */}
         <div className={`col-span-12 lg:col-span-7 relative hero-right ${awake ? "is-awake" : ""} ${entered ? "is-entered" : ""}`}>
+          <p className="hero-greeting" style={{ transitionDelay: entered ? "40ms" : "0ms" }}>
+            {welcomeText}
+          </p>
+
           <div className="hero-eyebrow" style={{ transitionDelay: entered ? "120ms" : "0ms" }}>
             <span className="hero-eyebrow-dot" />
             {location}
@@ -108,11 +112,6 @@ const onHeroLeave = () => {
               <span className="hero-name-period" aria-hidden>.</span>
             </span>
           </h1>
-
-          <p className="hero-welcome" style={{ transitionDelay: entered ? "200ms" : "0ms" }}>
-            {welcomeText}
-          </p>
-
 
           <div className="hero-rule" style={{ transitionDelay: entered ? "320ms" : "0ms" }} />
 
@@ -218,7 +217,7 @@ const css = `
 /* Hide secondary UI until visitor "enters" */
 .hero-right .hero-eyebrow,
 .hero-right .hero-target,
-.hero-right .hero-welcome,
+.hero-right .hero-greeting,
 .hero-right .hero-rule,
 .hero-right .hero-skills li,
 .hero-right .hero-tagline,
@@ -230,7 +229,7 @@ const css = `
 }
 .hero-right.is-entered .hero-eyebrow,
 .hero-right.is-entered .hero-target,
-.hero-right.is-entered .hero-welcome,
+.hero-right.is-entered .hero-greeting,
 .hero-right.is-entered .hero-rule,
 .hero-right.is-entered .hero-skills li,
 .hero-right.is-entered .hero-tagline,
@@ -238,6 +237,15 @@ const css = `
 .hero-right.is-entered .hero-meta {
   opacity: 1;
   transform: translateY(0);
+}
+
+.hero-greeting {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--hero-ink-2);
+  margin: 0 0 18px;
 }
 .hero-right .hero-ctas { pointer-events: none; }
 .hero-right.is-entered .hero-ctas { pointer-events: auto; }
@@ -266,7 +274,7 @@ const css = `
   width: clamp(420px, 42vw, 620px);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(245,241,235,0.08), rgba(245,241,235,0) 70%);
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--hero-accent) 16%, rgba(245,241,235,0.10)), rgba(245,241,235,0) 70%);
   filter: blur(20px);
   pointer-events: none;
   transform: translateY(-3%);
@@ -321,7 +329,7 @@ const css = `
 .hero-portrait::after {
   content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 65%, rgba(20,14,8,0.22) 100%);
   pointer-events: none;
 }
 
@@ -329,7 +337,7 @@ const css = `
   width: 112%; height: 112%;
   object-fit: cover; object-position: 50% 18%;
   position: absolute; left: -6%; top: -6%;
-  filter: grayscale(0.15) contrast(1.02);
+  filter: grayscale(0.05) contrast(1.02) saturate(1.08) brightness(1.03);
 }
 
 @keyframes hero-float {
@@ -390,16 +398,19 @@ const css = `
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(64px, 9.6vw, 152px);
-  line-height: 0.9;
+  font-size: clamp(48px, 7.2vw, 128px);
+  line-height: 0.95;
   letter-spacing: -0.03em;
   color: var(--hero-ink);
   margin: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.22em;
 }
 .hero-name-row { display: inline-flex; align-items: baseline; white-space: nowrap; }
-.hero-name-row--two { margin-top: -0.14em; padding-left: 0.04em; }
+.hero-name-row--two { margin-top: 0; padding-left: 0; }
 .hero-letter-anchor { display: inline-block; }
 .hero-letter--R { font-size: 1.02em; }
 .hero-name-period { color: var(--hero-accent); margin-left: 0.06em; font-style: italic; }
