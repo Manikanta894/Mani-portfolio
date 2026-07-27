@@ -18,8 +18,8 @@ const FALLBACK_ITEMS: Item[] = [
   { id: "ecosystem",  label: "Skills",      n: "05" },
   { id: "research",   label: "Research",    n: "06" },
   { id: "credentials",label: "Credentials", n: "07" },
-  { id: "philosophy", label: "Manifesto",   n: "08" },
-  { id: "linkedin",   label: "Connect",     n: "09" },
+  { id: "linkedin",   label: "Connect",     n: "08" },
+  { id: "philosophy", label: "Manifesto",   n: "09" },
   { id: "contact",    label: "Contact",     n: "10" },
   { id: "beyond-me",  label: "Beyond",      n: "11" },
 ];
