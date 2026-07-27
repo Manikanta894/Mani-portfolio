@@ -9,110 +9,97 @@ interface FloatingLettersProps {
 
 /**
  * FloatingLetters — "MANIKANTA R"
- * Each letter floats in from random directions, assembles into position,
- * then all fade except R. R then falls and triggers completion.
+ * Letters float in from random directions, assemble, then all fade except R.
+ * R falls in slow motion → triggers shatter.
  */
-export function FloatingLetters({ onRReady, onLettersComplete }: FloatingLettersProps) {
+export function FloatingLetters({ onRReady }: FloatingLettersProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rRef = useRef<HTMLSpanElement>(null);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const tl = gsap.timeline({
-      onComplete: () => onLettersComplete?.(),
-    });
-    tlRef.current = tl;
-
+    const tl = gsap.timeline();
     const name = "MANIKANTA R";
     const letters: HTMLSpanElement[] = [];
 
+    // Create all letter spans
     name.split("").forEach((char, i) => {
       const span = document.createElement("span");
       span.textContent = char === " " ? "\u00A0" : char;
-      span.style.position = "absolute";
-      span.style.fontFamily = '"Fraunces Variable", ui-serif, Georgia, serif';
-      span.style.fontStyle = "italic";
-      span.style.fontWeight = 500;
-      span.style.fontSize = "clamp(3rem, 8vw, 7rem)";
-      span.style.lineHeight = "1";
-      span.style.letterSpacing = "-0.02em";
-      span.style.color = "#FFFFFF";
-      span.style.opacity = "0";
-      span.style.willChange = "transform, opacity";
-      span.style.pointerEvents = "none";
-      span.dataset.index = String(i);
+      span.style.cssText = `
+        position: absolute;
+        font-family: "Fraunces Variable", ui-serif, Georgia, serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: clamp(3rem, 8vw, 7rem);
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #FFFFFF;
+        opacity: 0;
+        will-change: transform, opacity;
+        pointer-events: none;
+      `;
+      container.appendChild(span);
 
-      // Random entry: from random direction off-screen
+      if (char === "R" && i === 10) {
+        // This is the main R that will fall and shatter
+        span.dataset.isR = "true";
+      }
+
       const angle = Math.random() * Math.PI * 2;
-      const dist = 300 + Math.random() * 400;
-      const startX = Math.cos(angle) * dist;
-      const startY = Math.sin(angle) * dist;
-
+      const dist = 350 + Math.random() * 500;
       gsap.set(span, {
-        x: startX,
-        y: startY,
-        rotation: (Math.random() - 0.5) * 40,
-        scale: 0.3 + Math.random() * 0.4,
+        x: Math.cos(angle) * dist,
+        y: Math.sin(angle) * dist,
+        rotation: (Math.random() - 0.5) * 50,
+        scale: 0.2 + Math.random() * 0.3,
         opacity: 0,
       });
 
-      container.appendChild(span);
       letters.push(span);
 
-      // Float in with staggered timing
+      // Float into position
       tl.to(span, {
-        x: 0,
-        y: 0,
-        rotation: 0,
-        scale: 1,
-        opacity: 1,
-        duration: 1.2,
+        x: 0, y: 0, rotation: 0, scale: 1, opacity: 1,
+        duration: 1.2 + Math.random() * 0.3,
         ease: "power3.out",
-        delay: 0.1 + Math.random() * 0.3,
-      }, i * 0.08);
+        delay: i * 0.06,
+      });
     });
 
-    // After assembly, brief pause
-    tl.to({}, { duration: 0.8 });
+    // Pause after assembly
+    tl.to({}, { duration: 1.0 });
 
-    // All letters fade except R (index 9 = "R", index 10 = " ")
+    // Fade all letters except the last R (index 10)
     letters.forEach((span, i) => {
-      if (i === 9) return; // Keep R
+      if (i === 10) return; // Keep the R
       tl.to(span, {
-        opacity: 0,
-        scale: 0.5,
+        opacity: 0, scale: 0.3,
         duration: 0.5,
         ease: "power2.inOut",
       }, "-=0.3");
     });
 
-    // The space also fades
-    if (letters[10]) {
-      tl.to(letters[10], {
-        opacity: 0,
-        duration: 0.4,
-        ease: "power2.in",
-      }, "-=0.4");
-    }
-
-    // R slowly falls in slow motion
-    if (rRef.current) {
-      tl.to(rRef.current, {
-        y: 200,
-        rotation: 15,
+    // R falls in slow motion
+    const rSpan = letters[10];
+    if (rSpan) {
+      tl.to(rSpan, {
+        y: 250,
+        rotation: 12,
         opacity: 0.9,
-        duration: 1.2,
+        duration: 1.0,
         ease: "power2.in",
-      }, "-=0.2");
-      // Callback when R is about to hit
-      tl.call(() => onRReady?.(), [], "-=0.3");
-      // R fades out after shatter
-      tl.to(rRef.current, {
+      }, "-=0.1");
+
+      // Trigger shatter just before R disappears
+      tl.call(() => onRReady?.(), [], "-=0.25");
+
+      // R fades out
+      tl.to(rSpan, {
         opacity: 0,
-        duration: 0.2,
+        scale: 0.5,
+        duration: 0.15,
         ease: "power2.out",
       });
     }
@@ -129,27 +116,6 @@ export function FloatingLetters({ onRReady, onLettersComplete }: FloatingLetters
       ref={containerRef}
       className="fixed inset-0 z-[10000] flex items-center justify-center"
       style={{ pointerEvents: "none" }}
-    >
-      {/* The R is rendered separately for the fall animation */}
-      <span
-        ref={rRef}
-        style={{
-          position: "absolute",
-          fontFamily: '"Fraunces Variable", ui-serif, Georgia, serif',
-          fontStyle: "italic",
-          fontWeight: 500,
-          fontSize: "clamp(3rem, 8vw, 7rem)",
-          lineHeight: "1",
-          letterSpacing: "-0.02em",
-          color: "#FFFFFF",
-          opacity: 0,
-          willChange: "transform",
-          pointerEvents: "none",
-          zIndex: 10001,
-        }}
-      >
-        R
-      </span>
-    </div>
+    />
   );
 }
