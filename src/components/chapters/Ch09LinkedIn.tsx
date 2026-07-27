@@ -219,12 +219,12 @@ export default function Ch09LinkedIn() {
         <p className="li-subtitle">My writing lives here and on my journal — everything else about my work and network is on LinkedIn itself.</p>
 
         <div className="li-topRow li-topRow--solo">
-          <article className="li-card li-profile">
+          <article className="li-card li-profile li-profile--wide">
             <div className="li-profile__photo">
               <img src={portrait} alt={f.profile.name} loading="lazy" />
               <span className="li-profile__ring" aria-hidden />
             </div>
-            <div className="li-profile__body">
+            <div className="li-profile__identity">
               <div className="li-profile__nameRow">
                 <h3 className="li-profile__name">{f.profile.name}</h3>
                 {f.profile.verified && (
@@ -234,15 +234,15 @@ export default function Ch09LinkedIn() {
                 )}
               </div>
               <p className="li-profile__headline">{f.profile.headline}</p>
-              <dl className="li-profile__meta">
-                <Meta label="Currently" value={f.profile.company} />
-                <Meta label="Based in" value={f.profile.location} />
-                <Meta label="Open to" value="Research collaborations · Analytics roles" />
-              </dl>
-              <a className="li-cta" href={f.profile.profileUrl} target="_blank" rel="noopener noreferrer">
-                View verified profile <Arrow />
-              </a>
             </div>
+            <dl className="li-profile__meta li-profile__meta--row">
+              <Meta label="Currently" value={f.profile.company} />
+              <Meta label="Based in" value={f.profile.location} />
+              <Meta label="Open to" value="Research collaborations · Analytics roles" />
+            </dl>
+            <a className="li-cta li-profile__ctaWide" href={f.profile.profileUrl} target="_blank" rel="noopener noreferrer">
+              View verified profile <Arrow />
+            </a>
           </article>
         </div>
 
@@ -438,10 +438,30 @@ const css = `
 .li-card { position: relative; border-radius: 22px; background: color-mix(in oklab, var(--bone) 6%, transparent); border: 1px solid color-mix(in oklab, currentColor 14%, transparent); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 1px 0 color-mix(in oklab, #ffffff 8%, transparent) inset, 0 24px 60px -32px color-mix(in oklab, #000 70%, transparent); transition: transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s ease, background .3s ease; }
 .li-card:hover { border-color: color-mix(in oklab, currentColor 24%, transparent); transform: translateY(-2px); }
 .li-topRow { margin-top: 56px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: stretch; }
-.li-topRow--solo { grid-template-columns: 1fr; max-width: 640px; }
+.li-topRow--solo { grid-template-columns: 1fr; }
 @media (max-width: 900px) { .li-topRow { grid-template-columns: 1fr; } }
 .li-profile { margin-top: 0; display: grid; grid-template-columns: 96px 1fr; gap: 20px; padding: 22px; align-items: center; }
 @media (max-width: 760px) { .li-profile { grid-template-columns: 1fr; gap: 22px; } }
+
+.li-profile--wide {
+  grid-template-columns: 88px auto 1fr auto;
+  gap: 28px;
+  padding: 28px 32px;
+}
+.li-profile__identity { min-width: 220px; }
+.li-profile__meta--row {
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  border-left: 1px solid var(--rule);
+  padding-left: 28px;
+}
+.li-profile__ctaWide { white-space: nowrap; }
+@media (max-width: 1024px) {
+  .li-profile--wide { grid-template-columns: 72px 1fr; }
+  .li-profile__meta--row { border-left: none; padding-left: 0; margin-top: 16px; flex-wrap: wrap; grid-column: 1 / -1; }
+  .li-profile__ctaWide { grid-column: 1 / -1; margin-top: 16px; justify-self: start; }
+}
 .li-statsCol { display: flex; flex-direction: column; gap: 12px; }
 .li-statsCol__head { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in oklab, currentColor 55%, transparent); }
 .li-grid-2x2 { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; }
