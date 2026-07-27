@@ -63,10 +63,10 @@ export function Ch01About() {
   const { profile, aboutBeats, aboutMilestones, aboutMetrics } = usePortfolio();
 
   const BEATS: Beat[] = (aboutBeats?.length ? aboutBeats : [
-    { no: "I", era: "Childhood · Karnataka", title: "The Beginning", lede: "Curiosity came before language for the work.", body: "I didn't start with a plan. I started with a notebook full of questions about why businesses worked the way they did — and a slow, stubborn refusal to take answers at face value.", pull: "I collected questions the way other kids collected stickers." },
-    { no: "II", era: "2019 — 2024 · The retail floor & the first dataset", title: "The Turning Point", lede: "Where curiosity met evidence.", body: "The discipline came from necessity. On the retail floor, every inventory call and customer interaction quietly revealed how data shapes business outcomes.", pull: "The first chart that proved me wrong became the most honest mentor I ever had." },
-    { no: "III", era: "2025 — Now · Bengaluru", title: "Today", lede: "At the seam between people, process and prediction.", body: "Today I'm an MBA candidate in HR & Business Analytics at Nagarjuna Degree College, Bengaluru." },
-    { no: "IV", era: "2026 → 2036 · The horizon", title: "The Future", lede: "A decade-long bet on human-centered AI.", body: "Over the next decade I want to help write the playbook for human-centered AI inside organizations.", pull: "Build for the team you'll have in three years." },
+    { no: "I", era: "Childhood · Karnataka", title: "The Beginning", lede: "I was the kid asking why, not just what.", body: "Growing up in Karnataka, I was never satisfied with just knowing what happened — I wanted to know why. Why a shop did better on some days than others, why one approach worked and another didn't. Growing up around four languages besides English probably didn't hurt either — you learn early that the same idea can be said many ways, and that's stuck with me in how I read data too.", pull: "I collected questions the way other kids collected stickers." },
+    { no: "II", era: "2019 — 2024 · The retail floor & the first dataset", title: "The Turning Point", lede: "Where curiosity finally met evidence.", body: "Working the retail floor at RCM FMCG and later Fizzy Goblet, I wasn't just serving customers — I was quietly tracking why some days spiked and others didn't, reconciling stock, building my own little Excel dashboards nobody asked for. That's when I realized I liked the evidence more than the guesswork.", pull: "The first chart that proved me wrong became the most honest mentor I ever had." },
+    { no: "III", era: "2025 — Now · Bengaluru", title: "Today", lede: "Building the analyst I want to be, one dataset at a time.", body: "Right now I'm an MBA candidate in HR & Business Analytics at Nagarjuna Degree College in Bengaluru — deliberately choosing the intersection of people and numbers rather than picking one. Outside class, I'm working through certifications (IBM Data Analytics, the McKinsey Forward and Aspire Leaders programs), building small Power BI and HR-analytics projects on my own time, and still doing the thing I did as a kid — asking why, then going and checking.", pull: "I'd rather build a small dashboard nobody asked for than wait for someone to hand me a big project." },
+    { no: "IV", era: "2026 → 2036 · The horizon", title: "The Future", lede: "I want to be the person who makes workforce decisions less of a guess.", body: "The next few years, I want to be working inside an organization's people function — turning attrition risk, hiring funnels, and engagement data into decisions a manager can actually act on, not just a slide nobody reads twice. Long term, I want to be known as someone who made HR decisions more evidence-based without making them feel less human." },
   ]);
 
   const MILESTONES: string[] = (aboutMilestones?.length ? aboutMilestones.map((m: any) => m.label || m) : [
@@ -74,7 +74,6 @@ export function Ch01About() {
   ]);
 
   const METRICS = (aboutMetrics?.length ? aboutMetrics : [
-    { label: "Research Papers", value: 4, suffix: "", target: "research" },
     { label: "Certifications", value: 10, suffix: "+", target: "credentials" },
     { label: "Projects", value: 12, suffix: "+", target: "work" },
     { label: "Publications", value: 2, suffix: "", target: "research" },
