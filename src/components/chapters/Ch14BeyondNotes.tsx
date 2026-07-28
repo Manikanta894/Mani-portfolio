@@ -124,27 +124,27 @@ const DEFAULT_DATA = {
   kicker: "Beyond My Portfolio",
   number: "14",
   title: "Things My Resume Will Never Tell You.",
-  subtitle: "Not achievements. Not milestones. Just the thoughts, lessons, and beliefs that shaped me quietly.",
+  subtitle: "Not achievements. Not milestones. Just the habits and beliefs that shaped how I work.",
   photo: {
     name: "Manikanta R.",
     location: "Bangalore · India",
     tagline: "Still learning. Always building.",
     lastUpdated: "July 2026",
-    note: "Grateful for every struggle.\nIt wrote the strongest chapters.",
+    note: "Grateful for every hard lesson.\nEach one built something I still use.",
   },
   notes: [
-    { line: "No support since __10th grade__.", body: ["No one stood behind me.", "I learned to stand for myself."], icon: "compass" },
-    { line: "Felt ((alone)) when I needed __people__ the most.", body: ["Loneliness became my teacher.", "It made me self-aware."], icon: "loneliness" },
-    { line: "Betrayal taught me __brutal__ lessons.", body: ["I trusted the wrong people.", "But I stopped trusting blindly."], icon: "betrayal" },
-    { line: "I was there for [[everyone]].", body: ["Listened, helped, supported, cared.", "But when I needed someone, no one was there."], icon: "everyone" },
-    { line: "I built in __silence__.", body: ["No audience. No validation.", "Just me, my goals, and my time."], icon: "silence" },
-    { line: "Struggles became my __competitive advantage__.", body: ["While others had shortcuts,", "I had long nights and hard choices."], icon: "mountain" },
-    { line: "Rejection became __normal__.", body: ["It stopped hurting.", "It started guiding."], icon: "checkmark" },
+    { line: "Built my own path since __10th grade__.", body: ["No mentor showed me the way.", "So I learned to read the map myself."], icon: "compass" },
+    { line: "Learned to work well ((alone)).", body: ["Quiet hours taught me focus.", "I got comfortable with my own company."], icon: "loneliness" },
+    { line: "I'm careful about __trust__ now.", body: ["Some lessons cost more than others.", "I just got more selective, not bitter."], icon: "betrayal" },
+    { line: "I show up for [[people]] who show up too.", body: ["Support works both ways.", "I learned to notice who reciprocates."], icon: "everyone" },
+    { line: "I built in __silence__ before anyone noticed.", body: ["No audience, no validation.", "Just me, my goals, and my time."], icon: "silence" },
+    { line: "Hard choices became my __competitive advantage__.", body: ["While others had shortcuts,", "I had long nights and steady effort."], icon: "mountain" },
+    { line: "Rejection became __routine__, not painful.", body: ["It stopped being personal.", "It started being useful feedback."], icon: "checkmark" },
     { line: "I chose [[discipline]] over motivation.", body: ["Motivation comes and goes.", "Discipline stays and builds."], icon: "discipline" },
-    { line: "I stopped waiting for the __'right time'__.", body: ["There is no perfect time.", "I started with what I had."], icon: "clock" },
-    { line: "I'm still __becoming__.", body: ["This is not the end.", "This is my beginning."], icon: "stairs" },
+    { line: "I stopped waiting for the __'right time.'__", body: ["There's no perfect moment to start.", "I began with what I had."], icon: "clock" },
+    { line: "I'm still __becoming__.", body: ["This is not the end.", "This is just the beginning."], icon: "stairs" },
   ] as NoteData[],
-  quote: "From 10th grade till now — no support, no one to lean on. I was alone. Betrayed. But I survived, I learned, I built. Today, I stand for the version of me that never gave up.",
+  quote: "I didn't have a shortcut, a mentor, or a safety net handed to me. I built this — one certification, one project, one quiet decision at a time. I'm proud of the version of me that kept going.",
   signOff: "Still Learning.\nForever Curious.",
 };
 
@@ -269,7 +269,8 @@ export function Ch14BeyondNotes() {
           <div>
             {visibleNotes.map((n, i) => (
               <Reveal key={i} delay={Math.min(i, 8) * 0.03}>
-                <div className="mr-notes__row">
+                <div className="mr-notes__row group relative">
+                  <span aria-hidden className="absolute -left-4 top-0 h-full w-[2px] bg-vermilion opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="mr-notes__num tabular-nums">{String(i + 1).padStart(2, "0")}.</div>
                   <div className="mr-notes__text">
                     <p className="mr-notes__line font-hand">{parseLine(n.line)}</p>
@@ -277,7 +278,7 @@ export function Ch14BeyondNotes() {
                       <p key={j} className="mr-notes__sub">{b}</p>
                     ))}
                   </div>
-                  <div className="mr-notes__icon">{ICONS[n.icon || "default"] || ICONS.default}</div>
+                  <div className="mr-notes__icon transition-all duration-300 group-hover:text-vermilion group-hover:drop-shadow-[0_0_10px_rgba(212,106,46,0.45)]">{ICONS[n.icon || "default"] || ICONS.default}</div>
                 </div>
               </Reveal>
             ))}
