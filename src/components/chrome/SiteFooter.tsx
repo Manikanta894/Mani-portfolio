@@ -18,7 +18,8 @@ export function SiteFooter() {
   const { profile, socialLinks, siteSettings } = usePortfolio();
 
   // Get footer data from profile
-  const blurb = profile?.blurb || "Building the future of work — one model, one paper, one decision at a time.";
+  const blurbFallback = "Still learning, still building — one dataset, one decision, one <em>quiet Tuesday</em> at a time.";
+  const blurb = profile?.blurb || blurbFallback;
   const name = profile?.name || "Manikanta R";
   const role = profile?.role || "MBA — HR & Business Analytics";
   const location = profile?.location || "Bengaluru, India";
@@ -60,9 +61,7 @@ export function SiteFooter() {
 
       <div className="mr-footer__inner">
         {/* Closing statement */}
-        <p className="mr-footer__closing">
-          {blurb}
-        </p>
+        <p className="mr-footer__closing" dangerouslySetInnerHTML={{ __html: blurb }} />
 
         <div className="mr-footer__rule" aria-hidden />
 
@@ -151,7 +150,7 @@ const css = `
   padding: 0;
   background:
     radial-gradient(120% 80% at 50% 0%,
-      color-mix(in oklab, var(--vermilion) 6%, transparent) 0%,
+      color-mix(in oklab, var(--vermilion) 10%, transparent) 0%,
       transparent 65%),
     color-mix(in oklab, var(--bone) 92%, var(--ink) 8%);
   color: var(--ink);
@@ -161,11 +160,19 @@ const css = `
   transform: translateY(12px);
   transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1);
 }
+.mr-footer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--vermilion) 50%, transparent);
+  opacity: 0.7;
+}
 .mr-footer.is-in { opacity: 1; transform: translateY(0); }
 .dark .mr-footer {
   background:
     radial-gradient(120% 80% at 50% 0%,
-      color-mix(in oklab, var(--vermilion) 9%, transparent) 0%,
+      color-mix(in oklab, var(--vermilion) 13%, transparent) 0%,
       transparent 65%),
     color-mix(in oklab, var(--bone) 96%, transparent);
 }
