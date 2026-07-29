@@ -6,7 +6,7 @@ import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Ch
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
-import { NameReveal } from "@/components/hero/NameReveal";
+import { ParticleName } from "@/components/hero/ParticleName";
 
 
 import { Ch00Cover } from "@/components/chapters/Ch00Cover";
@@ -97,11 +97,7 @@ function Index() {
   };
 
   if (!introDone) {
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0a0c]">
-        <NameReveal className="w-full h-full" onSettled={handleIntroComplete} />
-      </div>
-    );
+    return <ParticleName onDone={handleIntroComplete} />;
   }
 
   if (loading) {
