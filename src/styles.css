@@ -324,6 +324,56 @@ img {
   padding-inline: clamp(1.5rem, 6vw, 5rem);
 }
 
+/* ─── Enhanced Theme Utilities ────────────────────────────────────────── */
+
+/* Ambient glow behind sections — pairs with data-mood="ink" */
+@utility ambient-glow {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(70% 40% at 15% 10%, color-mix(in oklab, var(--vermilion) 8%, transparent), transparent 70%),
+      radial-gradient(50% 35% at 85% 90%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 65%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  }
+}
+
+/* Glass card with vermilion tint */
+@utility glass {
+  background: color-mix(in oklab, var(--bone) 6%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--bone) 14%, transparent);
+  box-shadow: 0 8px 32px -12px color-mix(in oklab, #000 50%, transparent);
+}
+
+/* Gradient text accent */
+@utility text-gradient {
+  background: linear-gradient(135deg, var(--vermilion), color-mix(in oklab, var(--vermilion) 70%, #fff 30%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Vermilion glow ring */
+@utility glow-ring {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--vermilion) 20%, transparent),
+    0 0 24px -8px color-mix(in oklab, var(--vermilion) 35%, transparent);
+}
+
+/* Enhanced scrollbar for dark mood */
+[data-mood="ink"] ::-webkit-scrollbar-thumb,
+[data-mood="graphite"] ::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--bone) 18%, transparent);
+}
+[data-mood="ink"] ::-webkit-scrollbar-thumb:hover,
+[data-mood="graphite"] ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--bone) 30%, transparent);
+}
+
 /* ─── Animations ─────────────────────────────────────────────────────── */
 
 @utility marquee-track {
@@ -403,4 +453,24 @@ img {
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@utility shimmer {
+  background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--bone) 8%, transparent) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@utility glow-pulse {
+  animation: glow-pulse 2.4s ease-in-out infinite;
 }
