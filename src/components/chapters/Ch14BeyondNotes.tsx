@@ -331,14 +331,6 @@ export function Ch14BeyondNotes() {
           </div>
         </Reveal>
 
-        {/* Colophon */}
-        <div className="mr-notes__colophon">
-          <span>Set in Inter Tight, Instrument Serif, JetBrains Mono &amp; Caveat</span>
-          <span className="mr-notes__colophon-sep" aria-hidden />
-          <span>Designed &amp; built with care · MMXXVI</span>
-          <span className="mr-notes__colophon-sep" aria-hidden />
-          <span>Manikanta R.</span>
-        </div>
       </div>
 
       <style>{css}</style>
@@ -479,25 +471,6 @@ const css = `
   width: 120px; height: 16px;
   fill: none; stroke: var(--vermilion); stroke-width: 1.4; stroke-linecap: round;
   opacity: 0.5;
-}
-
-/* ── Colophon ──────────────────────────────────────────────────────── */
-.mr-notes__colophon {
-  margin-top: 80px;
-  padding-bottom: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--bone) 30%, transparent);
-}
-.mr-notes__colophon-sep {
-  width: 1px; height: 10px;
-  background: color-mix(in oklab, var(--bone) 15%, transparent);
 }
 
 @media (max-width: 640px) {
