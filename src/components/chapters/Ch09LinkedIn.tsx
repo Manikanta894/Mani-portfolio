@@ -135,7 +135,7 @@ export default function Ch09LinkedIn() {
         <p className="li-subtitle">LinkedIn profile, social channels, and a direct line to reach me.</p>
 
         {/* Profile card */}
-        <Reveal>
+        <Reveal className="li-profile-card-wrap">
           <article className="li-profile-card">
             <div className="li-profile-card__photo">
               <img src={portrait} alt={p.name} loading="lazy" />
@@ -318,6 +318,7 @@ const css = `
 .li-subtitle { margin-top: 14px; max-width: 60ch; font-size: clamp(1rem, 1.15vw, 1.125rem); color: color-mix(in oklab, currentColor 72%, transparent); }
 
 /* Profile card */
+.li-profile-card-wrap { max-width: 780px; }
 .li-profile-card {
   margin-top: 48px;
   display: flex;
