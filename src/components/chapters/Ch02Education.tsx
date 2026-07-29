@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 
 export function Ch02Education() {
@@ -8,7 +8,9 @@ export function Ch02Education() {
 
   const [activeIdx, setActiveIdx] = useState(0);
   const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
+  // Track which card is most visible
   useEffect(() => {
     const els = itemRefs.current.filter(Boolean) as HTMLLIElement[];
     if (!els.length) return;
@@ -22,88 +24,116 @@ export function Ch02Education() {
         }
         if (best) setActiveIdx(best.idx);
       },
-      { rootMargin: "-35% 0px -50% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
+      { rootMargin: "-30% 0px -45% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
-  const sectionNumber = "02";
-  const sectionKicker = "Academic Archive";
+  // Click timeline dot to scroll to card
+  const scrollTo = useCallback((idx: number) => {
+    const el = itemRefs.current[idx];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, []);
 
   return (
-    <section id="education" data-mood="ink" className="mr-edu chapter-pad">
+    <section ref={sectionRef} id="education" className="mr-edu chapter-pad">
       <div className="mr-edu__shell">
+        {/* Header */}
         <header className="mr-edu__header">
           <div className="mr-edu__eyebrow">
-            /{sectionNumber} — {sectionKicker}
+            <span className="text-vermilion">02</span>
+            <span className="mr-edu__eyebrow-line" />
+            Academic Archive
           </div>
-          <h2 className="mr-edu__title">The Academic Archive.</h2>
-          <p className="mr-edu__intro">An analytics-meets-people thesis, built one degree at a time.</p>
+          <h2 className="mr-edu__title">
+            The Academic<br />Archive.
+          </h2>
+          <p className="mr-edu__intro">
+            An analytics-meets-people thesis, built one degree at a time.
+          </p>
         </header>
 
-        <div className="mr-edu__grid">
-          <aside className="mr-edu__rail" aria-hidden>
-            <div className="mr-edu__rail-line">
-              <span
-                className="mr-edu__rail-fill"
-                style={{
-                  height: `${
-                    entries.length > 1
-                      ? (activeIdx / (entries.length - 1)) * 100
-                      : 100
-                  }%`,
-                }}
-              />
-            </div>
+        <div className="mr-edu__layout">
+          {/* Sticky timeline rail */}
+          <nav className="mr-edu__rail" aria-label="Education timeline">
             <ol className="mr-edu__rail-list">
-              {entries.map((e: any, i: number) => (
-                <li
-                  key={i}
-                  className={`mr-edu__rail-item ${i === activeIdx ? "is-active" : ""} ${
-                    i < activeIdx ? "is-past" : ""
-                  }`}
-                >
-                  <span className="mr-edu__rail-dot" />
-                  <span className="mr-edu__rail-year">{e.span?.split("—")[0]?.trim() || ""}</span>
-                  <span className="mr-edu__rail-label">{e.degree?.split("·")[0]?.trim() || ""}</span>
-                </li>
-              ))}
+              {entries.map((e: any, i: number) => {
+                const active = i === activeIdx;
+                const past = i < activeIdx;
+                const year = e.span?.split("—")[0]?.trim() || "";
+                const deg = e.degree?.split("·")[0]?.trim() || "";
+                return (
+                  <li key={i}>
+                    <button
+                      onClick={() => scrollTo(i)}
+                      className={`mr-edu__rail-btn ${active ? "is-active" : ""} ${past ? "is-past" : ""}`}
+                    >
+                      <span className="mr-edu__rail-dot-wrap">
+                        <span className="mr-edu__rail-dot" />
+                      </span>
+                      <span className="mr-edu__rail-year">{year}</span>
+                      <span className="mr-edu__rail-degree">{deg}</span>
+                    </button>
+                  </li>
+                );
+              })}
+              {/* Fill line */}
+              <div className="mr-edu__rail-track">
+                <div
+                  className="mr-edu__rail-track-fill"
+                  style={{
+                    height: entries.length > 1
+                      ? `${(activeIdx / (entries.length - 1)) * 100}%`
+                      : "100%",
+                  }}
+                />
+              </div>
             </ol>
-          </aside>
+          </nav>
 
-          <ol className="mr-edu__list">
+          {/* Cards */}
+          <ol className="mr-edu__cards">
             {entries.map((e: any, i: number) => {
               const num = String(entries.length - i).padStart(2, "0");
               const isCurrent = e.state === "Current" || e.state === "current";
+              const active = i === activeIdx;
               return (
                 <li
                   key={i}
                   ref={(el) => { itemRefs.current[i] = el; }}
                   data-idx={i}
-                  className={`mr-edu__item ${activeIdx === i ? "is-active" : ""}`}
-                  style={{ animationDelay: `${i * 0.1}s` }}
+                  className={`mr-edu__card ${active ? "is-active" : ""}`}
+                  style={{ animationDelay: `${i * 0.08}s` }}
                 >
-                  <span className="mr-edu__big-num">{num}</span>
-                  <div className="mr-edu__card">
-                    <div className="mr-edu__body">
-                      <div className="mr-edu__top-row">
-                        <span className="mr-edu__span">{e.span}</span>
-                        <span className={`mr-edu__state ${isCurrent ? "is-current" : ""}`}>
-                          {isCurrent && <span className="mr-edu__pulse" />}
-                          {e.state}
-                        </span>
-                      </div>
-                      <h3 className="mr-edu__degree">{e.degree}</h3>
-                      <div className="mr-edu__school">{e.school}</div>
-                      {e.points && (
-                        <ul className="mr-edu__points">
-                          {(e.points as string[]).map((p: string, idx: number) => (
-                            <li key={idx}>{p}</li>
-                          ))}
-                        </ul>
-                      )}
+                  {/* Giant watermark number */}
+                  <span className="mr-edu__card-num" aria-hidden>{num}</span>
+
+                  {/* Content */}
+                  <div className="mr-edu__card-body">
+                    {/* Meta row */}
+                    <div className="mr-edu__card-meta">
+                      <span className="mr-edu__card-span">{e.span}</span>
+                      <span className={`mr-edu__card-badge ${isCurrent ? "is-live" : ""}`}>
+                        {isCurrent && <span className="mr-edu__card-pulse" />}
+                        {e.state}
+                      </span>
                     </div>
+
+                    {/* Degree title */}
+                    <h3 className="mr-edu__card-degree">{e.degree}</h3>
+                    <div className="mr-edu__card-school">{e.school}</div>
+
+                    {/* Points */}
+                    {e.points && e.points.length > 0 && (
+                      <ul className="mr-edu__card-points">
+                        {(e.points as string[]).map((p: string, idx: number) => (
+                          <li key={idx}>{p}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </li>
               );
@@ -121,294 +151,284 @@ const css = `
 .mr-edu {
   position: relative;
   color: var(--ink);
-  background:
-    radial-gradient(900px 600px at 12% -10%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 60%),
-    radial-gradient(700px 500px at 100% 110%, color-mix(in oklab, var(--ink) 7%, transparent), transparent 60%);
+  overflow: hidden;
 }
 .mr-edu::before {
   content: "";
   position: absolute; inset: 0;
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--ink) 4%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 4%, transparent) 1px, transparent 1px);
-  background-size: 56px 56px;
+  background:
+    radial-gradient(700px 500px at 5% 0%, color-mix(in oklab, var(--vermilion) 5%, transparent), transparent 70%),
+    radial-gradient(600px 400px at 95% 100%, color-mix(in oklab, var(--ink) 5%, transparent), transparent 70%);
   pointer-events: none;
-  mask-image: radial-gradient(ellipse at 50% 30%, #000 35%, transparent 80%);
 }
 .mr-edu__shell {
   position: relative;
   margin: 0 auto;
   max-width: 1200px;
-  padding: 0 clamp(16px, 4vw, 48px);
+  padding: 0 clamp(20px, 4vw, 48px);
 }
 
-/* Header */
-.mr-edu__header { max-width: 900px; margin-bottom: clamp(56px, 8vw, 88px); }
+/* ── Header ── */
+.mr-edu__header { margin-bottom: clamp(64px, 9vw, 100px); }
 .mr-edu__eyebrow {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 12px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 45%, transparent);
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.5;
+  margin-bottom: 20px;
+}
+.mr-edu__eyebrow-line {
+  display: inline-block; width: 32px; height: 1px;
+  background: var(--ink); opacity: 0.2;
 }
 .mr-edu__title {
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
-  font-size: clamp(48px, 8.4vw, 132px);
-  line-height: 0.94;
-  letter-spacing: -0.025em;
-  margin: 16px 0 20px;
+  font-size: clamp(52px, 9vw, 140px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin: 0;
 }
 .mr-edu__title::after {
   content: ""; display: block;
-  width: 64px; height: 2px;
-  margin-top: 24px;
+  width: 80px; height: 3px;
+  margin-top: 28px;
   background: var(--vermilion);
 }
 .mr-edu__intro {
+  margin-top: 24px;
   font-family: var(--font-serif, "Instrument Serif", serif);
   font-style: italic;
-  font-size: clamp(17px, 1.5vw, 22px);
-  line-height: 1.55;
-  max-width: 56ch;
-  color: color-mix(in oklab, currentColor 72%, transparent);
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.6;
+  max-width: 48ch;
+  color: color-mix(in oklab, var(--ink) 65%, transparent);
 }
 
-/* Grid */
-.mr-edu__grid {
+/* ── Layout ── */
+.mr-edu__layout {
   display: grid;
-  grid-template-columns: 168px 1fr;
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: 180px 1fr;
+  gap: clamp(32px, 5vw, 72px);
   align-items: start;
 }
-@media (max-width: 900px) {
-  .mr-edu__grid { grid-template-columns: 1fr; }
+@media (max-width: 860px) {
+  .mr-edu__layout { grid-template-columns: 1fr; }
   .mr-edu__rail { display: none; }
 }
 
-/* Rail */
+/* ── Timeline Rail ── */
 .mr-edu__rail {
-  position: sticky;
-  top: 120px;
-  align-self: start;
+  position: sticky; top: 120px;
 }
-.mr-edu__rail-line {
+.mr-edu__rail-list {
+  position: relative;
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.mr-edu__rail-track {
   position: absolute;
-  left: 11px;
-  top: 8px;
-  bottom: 8px;
-  width: 1.5px;
-  background: color-mix(in oklab, currentColor 12%, transparent);
+  left: 21px; top: 18px; bottom: 18px;
+  width: 2px;
+  background: color-mix(in oklab, var(--ink) 12%, transparent);
   border-radius: 2px;
   overflow: hidden;
+  z-index: 0; pointer-events: none;
 }
-.mr-edu__rail-fill {
-  display: block;
+.mr-edu__rail-track-fill {
   width: 100%;
-  background: linear-gradient(to bottom, var(--vermilion), color-mix(in oklab, var(--vermilion) 40%, transparent));
-  transition: height .6s cubic-bezier(.2,.7,.2,1);
+  background: linear-gradient(to bottom, var(--vermilion), color-mix(in oklab, var(--vermilion) 50%, transparent));
+  transition: height 0.6s cubic-bezier(0.22,0.8,0.22,1);
 }
-.mr-edu__rail-list { list-style: none; margin: 0; padding: 0; }
-.mr-edu__rail-item {
-  position: relative;
-  padding: 12px 0 30px 30px;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px;
-  letter-spacing: 0.16em;
+
+.mr-edu__rail-btn {
+  position: relative; z-index: 1;
+  display: block; width: 100%;
+  text-align: left; padding: 10px 0 10px 40px;
+  background: none; border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 32%, transparent);
-  transition: color .4s ease, transform .4s ease;
+  color: color-mix(in oklab, var(--ink) 30%, transparent);
+  transition: color 0.35s ease, transform 0.35s ease;
+}
+.mr-edu__rail-btn:hover { color: var(--ink); }
+.mr-edu__rail-btn.is-past { color: color-mix(in oklab, var(--vermilion) 55%, transparent); }
+.mr-edu__rail-btn.is-active {
+  color: var(--ink);
+  transform: translateX(3px);
+}
+
+.mr-edu__rail-dot-wrap {
+  position: absolute; left: 16px; top: 50%;
+  width: 12px; height: 12px; margin-top: -6px;
+  display: flex; align-items: center; justify-content: center;
 }
 .mr-edu__rail-dot {
-  position: absolute;
-  left: 6.25px; top: 15px;
-  width: 10px; height: 10px;
+  display: block; width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--bone);
-  border: 2px solid color-mix(in oklab, currentColor 18%, transparent);
-  transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease;
+  border: 2px solid color-mix(in oklab, var(--ink) 14%, transparent);
+  transition: all 0.35s ease;
 }
-.mr-edu__rail-item.is-past .mr-edu__rail-dot {
-  border-color: color-mix(in oklab, var(--vermilion) 70%, transparent);
+.mr-edu__rail-btn:hover .mr-edu__rail-dot { border-color: var(--vermilion); }
+.mr-edu__rail-btn.is-past .mr-edu__rail-dot { background: var(--vermilion); border-color: var(--vermilion); }
+.mr-edu__rail-btn.is-active .mr-edu__rail-dot {
+  width: 12px; height: 12px;
+  background: var(--vermilion); border-color: var(--vermilion);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--vermilion) 12%, transparent);
 }
-.mr-edu__rail-item.is-active {
-  color: var(--ink);
-  transform: translateX(2px);
+
+.mr-edu__rail-year {
+  display: block; line-height: 1;
 }
-.mr-edu__rail-item.is-active .mr-edu__rail-dot {
-  border-color: var(--vermilion);
-  background: var(--vermilion);
-  box-shadow: 0 0 0 5px color-mix(in oklab, var(--vermilion) 14%, transparent);
-}
-.mr-edu__rail-year { display: block; }
-.mr-edu__rail-label {
-  display: block;
-  margin-top: 3px;
+.mr-edu__rail-degree {
+  display: block; margin-top: 3px;
   font-family: var(--font-display, "Instrument Serif", serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0;
-  text-transform: none;
-  color: inherit;
-  opacity: .85;
+  font-style: italic; font-weight: 400;
+  font-size: 12px; letter-spacing: 0;
+  text-transform: none; opacity: 0.8;
 }
 
-/* List */
-.mr-edu__list {
-  list-style: none;
-  margin: 0; padding: 0;
+/* ── Cards ── */
+.mr-edu__cards {
+  list-style: none; margin: 0; padding: 0;
   display: flex; flex-direction: column;
-  gap: 1px;
 }
 
-/* Item */
-.mr-edu__item {
+.mr-edu__card {
   position: relative;
-  border-top: 1px solid color-mix(in oklab, currentColor 10%, transparent);
-  padding: clamp(28px, 3.5vw, 44px) 0 clamp(28px, 3.5vw, 44px) clamp(56px, 8vw, 100px);
-  transition: border-color .5s ease, background .5s ease;
+  padding: clamp(32px, 4vw, 48px) 0;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
   opacity: 0;
-  animation: mr-edu-enter .7s cubic-bezier(.22,.8,.22,1) forwards;
+  animation: edu-enter 0.6s cubic-bezier(0.22,0.8,0.22,1) forwards;
+  transition: background 0.5s ease;
+  overflow: hidden;
 }
-@keyframes mr-edu-enter {
-  from { opacity: 0; transform: translateY(24px); }
+@keyframes edu-enter {
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.mr-edu__item:hover {
-  background: color-mix(in oklab, var(--ink) 2%, transparent);
+.mr-edu__card:hover {
+  background: color-mix(in oklab, var(--ink) 1.5%, transparent);
 }
-.mr-edu__item.is-active {
-  border-top-color: color-mix(in oklab, var(--vermilion) 35%, transparent);
-}
-.mr-edu__item.is-active::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2px;
-  background: var(--vermilion);
-  transform: scaleY(0);
-  transform-origin: top;
-  animation: mr-edu-bar .5s .15s cubic-bezier(.22,.8,.22,1) forwards;
-}
-@keyframes mr-edu-bar {
-  to { transform: scaleY(1); }
-}
-@media (max-width: 640px) {
-  .mr-edu__item { padding-left: 0; }
+.mr-edu__card.is-active {
+  border-top-color: color-mix(in oklab, var(--vermilion) 30%, transparent);
 }
 
-/* Big number */
-.mr-edu__big-num {
+/* Active left bar */
+.mr-edu__card.is-active::before {
+  content: "";
+  position: absolute; left: -2px; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, var(--vermilion), color-mix(in oklab, var(--vermilion) 30%, transparent));
+  animation: edu-bar 0.5s 0.1s cubic-bezier(0.22,0.8,0.22,1) forwards;
+  transform-origin: top;
+  transform: scaleY(0);
+}
+@keyframes edu-bar { to { transform: scaleY(1); } }
+
+/* Watermark number */
+.mr-edu__card-num {
   position: absolute;
-  left: 0; top: clamp(20px, 3vw, 36px);
+  right: 0; top: clamp(16px, 2vw, 28px);
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
-  font-size: clamp(48px, 6.5vw, 96px);
+  font-size: clamp(72px, 10vw, 140px);
   line-height: 0.85;
-  letter-spacing: -0.04em;
-  color: color-mix(in oklab, var(--vermilion) 35%, transparent);
-  transition: color .5s ease, transform .5s ease;
+  letter-spacing: -0.05em;
+  color: color-mix(in oklab, var(--vermilion) 8%, transparent);
   pointer-events: none;
+  transition: color 0.5s ease, transform 0.5s ease;
 }
-.mr-edu__item.is-active .mr-edu__big-num {
-  color: color-mix(in oklab, var(--vermilion) 65%, transparent);
+.mr-edu__card.is-active .mr-edu__card-num {
+  color: color-mix(in oklab, var(--vermilion) 16%, transparent);
 }
-.mr-edu__item:hover .mr-edu__big-num {
-  transform: scale(1.04);
+.mr-edu__card:hover .mr-edu__card-num {
+  transform: scale(1.03);
 }
 @media (max-width: 640px) {
-  .mr-edu__big-num {
-    position: relative; left: auto; top: auto;
-    font-size: clamp(36px, 8vw, 56px);
-    margin-bottom: 8px;
-  }
+  .mr-edu__card-num { font-size: clamp(48px, 14vw, 80px); }
 }
 
-/* Card */
-.mr-edu__card {
-  display: block;
-}
+/* Card body */
+.mr-edu__card-body { position: relative; z-index: 1; }
 
-/* Top row: span + status */
-.mr-edu__top-row {
+.mr-edu__card-meta {
   display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-.mr-edu__span {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px;
-  letter-spacing: 0.2em;
+.mr-edu__card-span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 50%, transparent);
+  color: color-mix(in oklab, var(--ink) 45%, transparent);
 }
-.mr-edu__state {
+.mr-edu__card-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
-  border: 1px solid color-mix(in oklab, currentColor 16%, transparent);
-  font-family: var(--font-mono, ui-monospace, monospace);
+  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 60%, transparent);
+  color: color-mix(in oklab, var(--ink) 55%, transparent);
 }
-.mr-edu__state.is-current {
+.mr-edu__card-badge.is-live {
   color: var(--vermilion);
-  border-color: color-mix(in oklab, var(--vermilion) 45%, transparent);
-  background: color-mix(in oklab, var(--vermilion) 7%, transparent);
+  border-color: color-mix(in oklab, var(--vermilion) 40%, transparent);
+  background: color-mix(in oklab, var(--vermilion) 6%, transparent);
 }
-.mr-edu__pulse {
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
+.mr-edu__card-pulse {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
   background: var(--vermilion);
   box-shadow: 0 0 0 0 color-mix(in oklab, var(--vermilion) 50%, transparent);
-  animation: mr-edu-pulse 2.4s ease-in-out infinite;
+  animation: edu-pulse 2.4s ease-in-out infinite;
 }
-@keyframes mr-edu-pulse {
+@keyframes edu-pulse {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--vermilion) 50%, transparent); }
   50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--vermilion) 0%, transparent); }
 }
 
-.mr-edu__body { min-width: 0; }
-.mr-edu__degree {
+.mr-edu__card-degree {
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
-  font-size: clamp(24px, 2.8vw, 38px);
-  line-height: 1.08;
-  letter-spacing: -0.012em;
+  font-size: clamp(22px, 2.6vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   margin: 0;
 }
-.mr-edu__school {
-  margin-top: 8px;
+.mr-edu__card-school {
+  margin-top: 6px;
   font-family: var(--font-serif, "Instrument Serif", serif);
   font-style: italic;
-  font-size: clamp(14px, 1.1vw, 17px);
-  color: color-mix(in oklab, currentColor 65%, transparent);
+  font-size: clamp(14px, 1.05vw, 16px);
+  color: color-mix(in oklab, var(--ink) 60%, transparent);
 }
 
-.mr-edu__points {
-  list-style: none;
-  margin: 16px 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: clamp(14px, 1vw, 16px);
+.mr-edu__card-points {
+  list-style: none; margin: 18px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 7px;
+  font-size: clamp(13px, 0.95vw, 15px);
   line-height: 1.6;
-  color: color-mix(in oklab, currentColor 82%, transparent);
+  color: color-mix(in oklab, var(--ink) 78%, transparent);
 }
-.mr-edu__points li {
+.mr-edu__card-points li {
   position: relative;
   padding-left: 16px;
 }
-.mr-edu__points li::before {
+.mr-edu__card-points li::before {
   content: "+";
   position: absolute; left: 0; top: 0;
   color: var(--vermilion);
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 10px;
-  line-height: 1.6;
+  line-height: inherit;
 }
 `;
