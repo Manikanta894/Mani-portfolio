@@ -1,23 +1,15 @@
 "use client";
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowUpRight, ArrowUp, Mail, Linkedin, Github, Instagram, Facebook } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, ArrowUp, Linkedin, Github, Instagram, Facebook } from "lucide-react";
 import usePortfolio from "@/hooks/usePortfolio";
 
-/**
- * SiteFooter — editorial closing chapter. Final page of the book:
- * a large closing line, profile card, two link columns, a quiet
- * newsletter, and a back-to-top control. Inherits theme tokens.
- * All data comes from Supabase via usePortfolio.
- */
-
 const ICON_MAP: Record<string, React.ComponentType<any>> = {
-  Linkedin, Github, Instagram, Facebook, Mail,
+  Linkedin, Github, Instagram, Facebook,
 };
 
 export function SiteFooter() {
-  const { profile, socialLinks, siteSettings } = usePortfolio();
+  const { profile, socialLinks } = usePortfolio();
 
-  // Get footer data from profile
   const blurb = profile?.blurb || "Building the future of work — one model, one paper, one decision at a time.";
   const name = profile?.name || "Manikanta R";
   const role = profile?.role || "MBA — HR & Business Analytics";
@@ -26,15 +18,12 @@ export function SiteFooter() {
   const tagline = profile?.tagline || "Building the future of work";
   const copyright = profile?.copyright || "© 2026 Manikanta R";
 
-  // Social links from Supabase
   const socialIcons = (socialLinks || []).filter((s: any) => s.category === "social" && s.visible !== false);
   const quickLinks = (socialLinks || []).filter((s: any) => s.category === "quick" && s.visible !== false);
   const professionalLinks = (socialLinks || []).filter((s: any) => s.category === "professional" && s.visible !== false);
 
   const rootRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const [sub, setSub] = useState<"idle" | "ok">("idle");
-  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const el = rootRef.current;
@@ -47,143 +36,84 @@ export function SiteFooter() {
     return () => io.disconnect();
   }, []);
 
-  const onSubscribe = (e: FormEvent) => {
-    e.preventDefault();
-    if (!email.includes("@")) return;
-    setSub("ok");
-    setEmail("");
-    window.setTimeout(() => setSub("idle"), 3200);
-  };
-
   const onTop = () => {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   };
 
   return (
-    <footer
-      ref={rootRef}
-      aria-labelledby="site-footer-heading"
-      className={`mr-footer ${visible ? "is-in" : ""}`}
-    >
-      <h2 id="site-footer-heading" className="sr-only">Site footer</h2>
-
+    <footer ref={rootRef} className={`mr-footer ${visible ? "is-in" : ""}`}>
+      <div className="mr-footer-canvas" aria-hidden />
       <div className="mr-footer__inner">
-        {/* Closing statement */}
-        <p className="mr-footer__closing">
-          {blurb}
-        </p>
+        <p className="mr-footer__closing">{blurb}</p>
 
-        <div className="mr-footer__rule" aria-hidden />
-
-        {/* Main grid */}
         <div className="mr-footer__grid">
-          {/* Identity */}
-          <section className="mr-footer__col mr-footer__identity">
-            <div className="mr-footer__name">{name}</div>
-            <div className="mr-footer__line">{role}</div>
-            <div className="mr-footer__line">{location}</div>
-            <div className="mr-footer__status">
-              <span className="mr-footer__dot" aria-hidden />
-              {status}
-            </div>
-            <div className="mr-footer__social" aria-label="Social media">
-              {socialIcons.map((s: any) => {
-                const Icon = ICON_MAP[s.icon_name] || null;
-                if (!Icon && !s.icon_name) return null;
-                return Icon ? (
-                  <a
-                    key={s.id || s.platform}
-                    href={s.url}
-                    aria-label={s.label}
-                    className="mr-footer__social-icon"
-                    {...(s.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  >
-                    <Icon aria-hidden className="mr-footer__social-svg" />
-                  </a>
-                ) : null;
-              })}
+          <section className="mr-footer__card mr-footer__identity">
+            <div className="mr-footer__card-glow" aria-hidden />
+            <div className="mr-footer__card-body">
+              <div className="mr-footer__name">{name}</div>
+              <div className="mr-footer__line">{role}</div>
+              <div className="mr-footer__line">{location}</div>
+              <div className="mr-footer__status">
+                <span className="mr-footer__dot" aria-hidden />
+                {status}
+              </div>
+              {socialIcons.length > 0 && (
+                <div className="mr-footer__social" aria-label="Social media">
+                  {socialIcons.map((s: any) => {
+                    const Icon = ICON_MAP[s.icon_name];
+                    if (!Icon) return null;
+                    return (
+                      <a key={s.id || s.platform} href={s.url} aria-label={s.label}
+                        className="mr-footer__social-icon"
+                        {...(s.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                        <Icon aria-hidden className="mr-footer__social-svg" />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </section>
 
-          {/* Quick links */}
           {quickLinks.length > 0 && (
-            <nav className="mr-footer__col" aria-label="Quick links">
-              <div className="mr-footer__kicker">Quick links</div>
-              <ul className="mr-footer__list">
-                {quickLinks.map((l: any) => (
-                  <li key={l.id || l.platform}>
-                    <a href={l.url} className="mr-footer__link">{l.label}</a>
-                  </li>
-                ))}
-              </ul>
+            <nav className="mr-footer__card mr-footer__col" aria-label="Quick links">
+              <div className="mr-footer__card-body">
+                <div className="mr-footer__kicker">Quick links</div>
+                <ul className="mr-footer__list">
+                  {quickLinks.map((l: any) => (
+                    <li key={l.id || l.platform}>
+                      <a href={l.url} className="mr-footer__link">{l.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </nav>
           )}
 
-          {/* Professional links */}
           {professionalLinks.length > 0 && (
-            <nav className="mr-footer__col" aria-label="Professional links">
-              <div className="mr-footer__kicker">Elsewhere</div>
-              <ul className="mr-footer__list">
-                {professionalLinks.map((l: any) => (
-                  <li key={l.id || l.platform}>
-                    <a
-                      href={l.url}
-                      className="mr-footer__link mr-footer__link--ext"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span>{l.label}</span>
-                      <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            <nav className="mr-footer__card mr-footer__col" aria-label="Professional links">
+              <div className="mr-footer__card-body">
+                <div className="mr-footer__kicker">Elsewhere</div>
+                <ul className="mr-footer__list">
+                  {professionalLinks.map((l: any) => (
+                    <li key={l.id || l.platform}>
+                      <a href={l.url} className="mr-footer__link mr-footer__link--ext"
+                        target="_blank" rel="noopener noreferrer">
+                        <span>{l.label}</span>
+                        <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </nav>
           )}
-
-          {/* Newsletter */}
-          <section className="mr-footer__col mr-footer__news" aria-labelledby="news-h">
-            <div id="news-h" className="mr-footer__kicker">The dispatch</div>
-            <p className="mr-footer__news-copy">
-              Occasional notes on research, analytics and the work in progress.
-            </p>
-            <form className="mr-footer__form" onSubmit={onSubscribe} noValidate>
-              <label htmlFor="footer-email" className="sr-only">Email address</label>
-              <div className="mr-footer__field">
-                <Mail aria-hidden className="mr-footer__field-icon" />
-                <input
-                  id="footer-email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="you@domain.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mr-footer__input"
-                />
-                <button type="submit" className="mr-footer__submit" aria-label="Subscribe">
-                  Subscribe
-                </button>
-              </div>
-              <div
-                aria-live="polite"
-                className={`mr-footer__hint ${sub === "ok" ? "is-ok" : ""}`}
-              >
-                {sub === "ok" ? "Thank you — you're on the list." : "No spam. Unsubscribe anytime."}
-              </div>
-            </form>
-          </section>
         </div>
 
-        <div className="mr-footer__rule" aria-hidden />
-
-        {/* Bottom */}
         <div className="mr-footer__bottom">
           <div className="mr-footer__copy">{copyright}</div>
-          <div className="mr-footer__craft">
-            {tagline}
-          </div>
+          <div className="mr-footer__craft">{tagline}</div>
           <button type="button" onClick={onTop} className="mr-footer__top">
             <ArrowUp aria-hidden className="mr-footer__top-icon" />
             <span>Back to top</span>
@@ -199,100 +129,143 @@ export function SiteFooter() {
 const css = `
 .mr-footer {
   position: relative;
-  margin-top: 96px;
+  margin-top: 120px;
   padding: 0;
-  background:
-    radial-gradient(120% 80% at 50% 0%,
-      color-mix(in oklab, var(--vermilion) 6%, transparent) 0%,
-      transparent 65%),
-    color-mix(in oklab, var(--bone) 92%, var(--ink) 8%);
+  background: color-mix(in oklab, var(--bone) 96%, var(--ink) 4%);
   color: var(--ink);
-  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
   font-family: var(--font-sans, system-ui, sans-serif);
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(16px);
   transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1);
+  overflow: hidden;
 }
 .mr-footer.is-in { opacity: 1; transform: translateY(0); }
+
 .dark .mr-footer {
+  background: #0a0a0c;
+}
+
+/* Animated canvas gradient */
+.mr-footer-canvas {
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(120% 80% at 50% 0%,
-      color-mix(in oklab, var(--vermilion) 9%, transparent) 0%,
-      transparent 65%),
-    color-mix(in oklab, var(--bone) 96%, transparent);
+    radial-gradient(110% 70% at 20% 10%, rgba(212,106,46,0.05), transparent 60%),
+    radial-gradient(80% 60% at 90% 80%, rgba(212,106,46,0.03), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .mr-footer__inner {
+  position: relative;
+  z-index: 1;
   max-width: 1480px;
   margin: 0 auto;
-  padding: clamp(64px, 9vw, 120px) clamp(16px, 3vw, 40px) clamp(36px, 5vw, 56px);
+  padding: clamp(72px, 10vw, 128px) clamp(16px, 3vw, 40px) clamp(32px, 4vw, 48px);
 }
 
 .mr-footer__closing {
-  margin: 0 0 clamp(48px, 7vw, 84px);
-  max-width: 28ch;
+  margin: 0 0 clamp(48px, 6vw, 72px);
+  max-width: 30ch;
   font-family: var(--font-serif, "Instrument Serif", Georgia, serif);
   font-weight: 400;
-  font-size: clamp(2rem, 4.6vw, 3.6rem);
-  line-height: 1.08;
-  letter-spacing: -0.015em;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
   color: var(--ink);
-}
-.mr-footer__closing em {
-  font-style: italic;
-  color: var(--vermilion);
-}
-
-.mr-footer__rule {
-  height: 1px;
-  background: color-mix(in oklab, var(--ink) 12%, transparent);
+  background: linear-gradient(135deg, var(--ink) 50%, color-mix(in oklab, var(--vermilion) 70%, var(--ink) 30%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .mr-footer__grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
-  gap: clamp(28px, 4vw, 56px);
-  padding: clamp(40px, 5vw, 64px) 0;
-}
-@media (max-width: 960px) {
-  .mr-footer__grid { grid-template-columns: 1fr 1fr; }
-  .mr-footer__news { grid-column: 1 / -1; }
-}
-@media (max-width: 560px) {
-  .mr-footer__grid { grid-template-columns: 1fr; gap: 36px; }
+  grid-template-columns: 1.3fr 0.85fr 0.85fr;
+  gap: clamp(20px, 3vw, 40px);
+  padding: 0;
 }
 
-.mr-footer__col { min-width: 0; }
+@media (max-width: 960px) {
+  .mr-footer__grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .mr-footer__grid { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* Glass card */
+.mr-footer__card {
+  position: relative;
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--bone) 55%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: border-color .4s ease, box-shadow .4s ease;
+}
+.mr-footer__card:hover {
+  border-color: color-mix(in oklab, var(--vermilion) 20%, transparent);
+  box-shadow: 0 8px 32px -12px rgba(212,106,46,0.15);
+}
+
+.dark .mr-footer__card {
+  background: color-mix(in oklab, white 4%, transparent);
+  border-color: color-mix(in oklab, white 6%, transparent);
+}
+.dark .mr-footer__card:hover {
+  border-color: color-mix(in oklab, var(--vermilion) 25%, transparent);
+  box-shadow: 0 8px 32px -12px rgba(212,106,46,0.2);
+}
+
+.mr-footer__card-glow {
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,106,46,0.08), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+.mr-footer__card:hover .mr-footer__card-glow { opacity: 1; }
+
+.mr-footer__card-body {
+  position: relative;
+  padding: clamp(22px, 2.4vw, 30px);
+}
 
 .mr-footer__name {
   font-family: var(--font-serif, "Instrument Serif", Georgia, serif);
-  font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+  font-size: clamp(1.4rem, 2vw, 1.7rem);
   letter-spacing: -0.01em;
   line-height: 1.05;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  color: var(--ink);
 }
 .mr-footer__line {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   line-height: 1.55;
-  color: color-mix(in oklab, var(--ink) 70%, transparent);
+  color: color-mix(in oklab, var(--ink) 65%, transparent);
 }
 .mr-footer__status {
   display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 18px;
-  padding: 7px 14px;
+  margin-top: 16px;
+  padding: 6px 13px;
   border-radius: 999px;
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink);
-  background: color-mix(in oklab, var(--vermilion) 10%, transparent);
-  border: 1px solid color-mix(in oklab, var(--vermilion) 28%, transparent);
+  background: color-mix(in oklab, var(--vermilion) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vermilion) 22%, transparent);
 }
 .mr-footer__dot {
-  width: 7px; height: 7px; border-radius: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
   background: #2bb673;
-  box-shadow: 0 0 10px rgba(43,182,115,.6);
+  box-shadow: 0 0 8px rgba(43,182,115,.6);
   animation: mr-footer-pulse 2.4s ease-in-out infinite;
 }
 @keyframes mr-footer-pulse {
@@ -304,7 +277,7 @@ const css = `
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 18px;
   flex-wrap: wrap;
 }
 .mr-footer__social-icon {
@@ -314,15 +287,16 @@ const css = `
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
-  color: color-mix(in oklab, var(--ink) 70%, transparent);
-  transition: color .25s ease, border-color .25s ease, background .25s ease, transform .25s ease;
+  border: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+  color: color-mix(in oklab, var(--ink) 65%, transparent);
+  transition: color .25s ease, border-color .25s ease, background .25s ease, transform .25s ease, box-shadow .25s ease;
 }
 .mr-footer__social-icon:hover {
   color: var(--vermilion);
   border-color: color-mix(in oklab, var(--vermilion) 55%, transparent);
   background: color-mix(in oklab, var(--vermilion) 8%, transparent);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -8px rgba(212,106,46,0.25);
 }
 .mr-footer__social-icon:focus-visible {
   outline: 2px solid var(--vermilion);
@@ -332,10 +306,10 @@ const css = `
 
 .mr-footer__kicker {
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10.5px;
+  font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink) 55%, transparent);
+  color: color-mix(in oklab, var(--ink) 50%, transparent);
   margin-bottom: 18px;
 }
 
@@ -345,20 +319,32 @@ const css = `
 }
 .mr-footer__link {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   line-height: 1.4;
-  color: color-mix(in oklab, var(--ink) 78%, transparent);
+  color: color-mix(in oklab, var(--ink) 75%, transparent);
   text-decoration: none;
   transition: color .25s ease, transform .25s ease;
+  position: relative;
 }
-.mr-footer__link:hover { color: var(--vermilion); transform: translateX(2px); }
+.mr-footer__link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 1px;
+  background: var(--vermilion);
+  transition: width .35s cubic-bezier(.2,.8,.2,1);
+}
+.mr-footer__link:hover { color: var(--vermilion); transform: translateX(4px); }
+.mr-footer__link:hover::before { width: 100%; }
 .mr-footer__link:focus-visible {
   outline: 2px solid var(--vermilion);
   outline-offset: 4px;
   border-radius: 4px;
 }
 .mr-footer__ext-icon {
-  width: 13px; height: 13px;
+  width: 12px; height: 12px;
   opacity: 0; transform: translate(-2px, 2px);
   transition: opacity .25s ease, transform .25s ease;
 }
@@ -366,105 +352,58 @@ const css = `
   opacity: .9; transform: translate(0, 0);
 }
 
-.mr-footer__news-copy {
-  margin: 0 0 16px;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: color-mix(in oklab, var(--ink) 68%, transparent);
-  max-width: 32ch;
-}
-.mr-footer__form { display: flex; flex-direction: column; gap: 10px; }
-.mr-footer__field {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 6px 6px 14px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--bone) 70%, var(--ink) 6%);
-  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
-  transition: border-color .25s ease, background .25s ease;
-}
-.mr-footer__field:focus-within {
-  border-color: color-mix(in oklab, var(--vermilion) 55%, transparent);
-  background: color-mix(in oklab, var(--bone) 86%, transparent);
-}
-.mr-footer__field-icon {
-  width: 15px; height: 15px;
-  color: color-mix(in oklab, var(--ink) 55%, transparent);
-}
-.mr-footer__input {
-  background: transparent;
-  border: 0; outline: 0;
-  font: inherit;
-  font-size: 0.92rem;
-  color: var(--ink);
-  min-width: 0;
-}
-.mr-footer__input::placeholder { color: color-mix(in oklab, var(--ink) 40%, transparent); }
-.mr-footer__submit {
-  appearance: none; border: 0;
-  padding: 9px 16px;
-  border-radius: 999px;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--bone);
-  background: var(--ink);
-  cursor: pointer;
-  transition: background .25s ease, transform .25s ease;
-}
-.mr-footer__submit:hover { background: var(--vermilion); transform: translateY(-1px); }
-.mr-footer__submit:focus-visible { outline: 2px solid var(--vermilion); outline-offset: 3px; }
-.mr-footer__hint {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink) 50%, transparent);
-  padding-left: 4px;
-  transition: color .25s ease;
-}
-.mr-footer__hint.is-ok { color: #2bb673; }
-
 .mr-footer__bottom {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: clamp(16px, 3vw, 32px);
-  padding-top: clamp(28px, 4vw, 40px);
+  margin-top: clamp(40px, 5vw, 56px);
+  padding-top: clamp(24px, 3vw, 32px);
+  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink) 55%, transparent);
+  color: color-mix(in oklab, var(--ink) 50%, transparent);
 }
 @media (max-width: 720px) {
-  .mr-footer__bottom { grid-template-columns: 1fr; text-align: left; }
+  .mr-footer__bottom { grid-template-columns: 1fr; text-align: left; gap: 14px; }
 }
-.mr-footer__craft { text-transform: none; letter-spacing: 0.02em; font-family: var(--font-sans, system-ui, sans-serif); font-size: 0.82rem; }
+.mr-footer__craft {
+  text-transform: none; letter-spacing: 0.02em;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.8rem;
+  color: color-mix(in oklab, var(--ink) 45%, transparent);
+}
 
 .mr-footer__top {
   display: inline-flex; align-items: center; gap: 8px;
   appearance: none;
-  padding: 9px 14px;
+  padding: 8px 14px;
   border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
+  color: color-mix(in oklab, var(--ink) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
   cursor: pointer;
-  transition: color .25s ease, border-color .25s ease, transform .25s ease, background .25s ease;
+  transition: color .25s ease, border-color .25s ease, transform .25s ease, background .25s ease, box-shadow .25s ease;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 .mr-footer__top:hover {
   color: var(--vermilion);
-  border-color: color-mix(in oklab, var(--vermilion) 55%, transparent);
-  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--vermilion) 50%, transparent);
+  background: color-mix(in oklab, var(--vermilion) 6%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -8px rgba(212,106,46,0.2);
 }
 .mr-footer__top:focus-visible { outline: 2px solid var(--vermilion); outline-offset: 3px; }
-.mr-footer__top-icon { width: 13px; height: 13px; }
+.mr-footer__top-icon { width: 12px; height: 12px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .mr-footer, .mr-footer__link, .mr-footer__submit, .mr-footer__top, .mr-footer__dot { transition: none; animation: none; }
+  .mr-footer, .mr-footer__link, .mr-footer__top, .mr-footer__dot, .mr-footer__social-icon,
+  .mr-footer__card, .mr-footer__card-glow { transition: none; animation: none; }
+  .mr-footer__link::before { display: none; }
 }
 `;
