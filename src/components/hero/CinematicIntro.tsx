@@ -157,12 +157,15 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
       globalTime = now;
       ctx!.clearRect(0, 0, W, H);
 
-      // Update phase based on current scene
+      // Update phase based on current scene — particles only after DOM letters fully exit
       const s = sceneRef.current;
-      if (s === "letters") { /* stay hidden */ }
-      else if (s === "collide") { if (phase === "hidden") setPhase("holdShape"); }
-      else if (s === "flow") { if (phase === "holdShape") setPhase("flow"); }
-      else if (s === "portrait") { if (phase === "flow") setPhase("spiral"); }
+      if (s === "letters" || s === "collide") { /* stay hidden */ }
+      else if (s === "flow") {
+        if (phase === "hidden") setPhase("holdShape");
+        // auto-advance holdShape → flow after brief shape preservation
+        if (phase === "holdShape" && now - phaseStart > 350) setPhase("flow");
+      }
+      else if (s === "portrait") { if (phase === "holdShape" || phase === "flow") setPhase("spiral"); }
       else if (s === "text") { if (phase === "spiral") setPhase("settled"); }
       else if (s === "exit") { if (phase !== "exit") setPhase("exit"); }
 
