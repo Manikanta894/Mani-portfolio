@@ -44,6 +44,42 @@ async function fetchFeaturedArticles(): Promise<JournalArticle[]> {
   }
 }
 
+function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const num = parseInt(value.replace(/[^0-9]/g, ""));
+  const isNumeric = !isNaN(num);
+
+  return (
+    <span ref={ref}>
+      {inView && isNumeric ? (
+        <CounterDisplay target={num} suffix={suffix || ""} />
+      ) : isNumeric ? (
+        "0"
+      ) : (
+        value
+      )}
+    </span>
+  );
+}
+
+function CounterDisplay({ target, suffix }: { target: number; suffix: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const doneRef = useRef(false);
+  if (inView && !doneRef.current) {
+    doneRef.current = true;
+    let start = 0;
+    const step = Math.max(1, Math.floor(target / 60));
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { start = target; clearInterval(timer); }
+      if (ref.current) ref.current.textContent = start.toString();
+    }, 16);
+  }
+  return <span ref={ref}>{target}</span>;
+}
+
 function JournalBlock() {
   const { data, isLoading } = useQuery({
     queryKey: ["journal", "featured"],
@@ -63,6 +99,7 @@ function JournalBlock() {
                 <a href={a.url} target="_blank" rel="noreferrer noopener" className="li-card li-row">
                   <div className="li-row__thumb" aria-hidden>
                     {a.cover ? <img src={a.cover} alt="" loading="lazy" /> : <span className="li-row__thumbArt" />}
+                    <span className="li-row__thumb-read">{a.readingTime}</span>
                   </div>
                   <div className="li-row__body">
                     <span className="li-row__date">{a.category ? `${a.category} · ` : ""}{a.date}</span>
@@ -93,7 +130,7 @@ export default function Ch09LinkedIn() {
 
   return (
     <section id="linkedin" data-mood="ink" className="relative chapter-pad overflow-hidden">
-      <div aria-hidden className="li-ambient" />
+      <div aria-hidden className="li-grid-bg" />
       <div className="relative mx-auto w-full max-w-6xl">
         <div className="li-eyebrow">
           <span className="li-eyebrow__num">09</span>
@@ -123,12 +160,27 @@ export default function Ch09LinkedIn() {
             <dl className="li-profile__meta li-profile__meta--row">
               <Meta label="Currently" value={p.company} />
               <Meta label="Based in" value={p.location} />
-              <Meta label="Open to" value="Research collaborations · Analytics roles" />
+              <Meta label="Open to" value="Research · Analytics · Consulting" />
             </dl>
-            <a className="li-cta li-profile__ctaWide" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
+            <a className="li-cta" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
               View verified profile <Arrow />
             </a>
           </article>
+
+          <div className="li-stats">
+            <div className="li-stat">
+              <span className="li-stat__num"><AnimatedCounter value="847" suffix="+" /></span>
+              <span className="li-stat__label">Connections</span>
+            </div>
+            <div className="li-stat">
+              <span className="li-stat__num"><AnimatedCounter value="12" suffix="+" /></span>
+              <span className="li-stat__label">Publications</span>
+            </div>
+            <div className="li-stat">
+              <span className="li-stat__num"><AnimatedCounter value="5" suffix="k+" /></span>
+              <span className="li-stat__label">Post Impressions</span>
+            </div>
+          </div>
         </div>
 
         <div className="li-block">
@@ -186,7 +238,13 @@ function Arrow() {
 }
 
 const css = `
-.li-ambient { position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(60% 40% at 12% 8%, color-mix(in oklab, var(--vermilion) 14%, transparent), transparent 60%), radial-gradient(50% 35% at 88% 80%, color-mix(in oklab, var(--ink) 30%, transparent), transparent 60%); opacity: 0.5; }
+.li-grid-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(60% 40% at 12% 8%, color-mix(in oklab, var(--vermilion) 14%, transparent), transparent 60%),
+    radial-gradient(50% 35% at 88% 80%, color-mix(in oklab, var(--ink) 30%, transparent), transparent 60%);
+  opacity: 0.5;
+}
 .li-eyebrow { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: color-mix(in oklab, currentColor 65%, transparent); margin-bottom: 18px; }
 .li-eyebrow__num { color: var(--vermilion); font-weight: 600; }
 .li-eyebrow__sep { width: 22px; height: 1px; background: color-mix(in oklab, currentColor 35%, transparent); }
@@ -194,16 +252,13 @@ const css = `
 .li-subtitle { margin-top: 14px; max-width: 60ch; font-size: clamp(1rem, 1.15vw, 1.125rem); color: color-mix(in oklab, currentColor 72%, transparent); }
 .li-card { position: relative; border-radius: 22px; background: color-mix(in oklab, var(--bone) 6%, transparent); border: 1px solid color-mix(in oklab, currentColor 14%, transparent); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 1px 0 color-mix(in oklab, #ffffff 8%, transparent) inset, 0 24px 60px -32px color-mix(in oklab, #000 70%, transparent); transition: transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s ease, background .3s ease; }
 .li-card:hover { border-color: color-mix(in oklab, currentColor 24%, transparent); transform: translateY(-2px); }
-.li-topRow { margin-top: 56px; }
-.li-topRow--solo { display: grid; grid-template-columns: 1fr; }
+.li-topRow { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 20px; }
 .li-profile--wide { grid-template-columns: 88px auto 1fr auto; gap: 28px; padding: 28px 32px; display: grid; align-items: center; }
 .li-profile__identity { min-width: 220px; }
 .li-profile__meta--row { display: flex; gap: 28px; margin: 0; border-left: 1px solid var(--rule); padding-left: 28px; }
-.li-profile__ctaWide { white-space: nowrap; }
 @media (max-width: 1024px) {
   .li-profile--wide { grid-template-columns: 72px 1fr; }
   .li-profile__meta--row { border-left: none; padding-left: 0; margin-top: 16px; flex-wrap: wrap; grid-column: 1 / -1; }
-  .li-profile__ctaWide { grid-column: 1 / -1; margin-top: 16px; justify-self: start; }
 }
 .li-profile__photo { position: relative; width: 96px; height: 96px; border-radius: 50%; overflow: hidden; isolation: isolate; }
 .li-profile__photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.05) contrast(1.02); }
@@ -211,16 +266,62 @@ const css = `
 .li-profile__nameRow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .li-profile__name { font-family: var(--font-display); font-size: clamp(1.8rem, 2.6vw, 2.4rem); line-height: 1; letter-spacing: -0.01em; }
 .li-verified { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: color-mix(in oklab, var(--vermilion) 14%, transparent); border: 1px solid color-mix(in oklab, var(--vermilion) 42%, transparent); color: var(--ink); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; }
+.dark .li-verified { color: var(--bone); }
 .li-profile__headline { margin-top: 10px; font-size: clamp(1rem, 1.15vw, 1.125rem); color: color-mix(in oklab, currentColor 78%, transparent); max-width: 56ch; }
 .li-meta { border-left: 1px solid color-mix(in oklab, currentColor 18%, transparent); padding-left: 12px; }
 .li-meta dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in oklab, currentColor 55%, transparent); }
 .li-meta dd { margin: 4px 0 0; font-size: 14px; }
-.li-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 11px 18px; border-radius: 999px; background: color-mix(in oklab, var(--ink) 70%, transparent); color: var(--bone); font-size: 13.5px; letter-spacing: 0.02em; text-decoration: none; border: 1px solid color-mix(in oklab, currentColor 18%, transparent); transition: transform .25s ease, background .25s ease; }
+
+/* Stats row */
+.li-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 8px;
+}
+.li-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 16px;
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--bone) 4%, transparent);
+  border: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+  backdrop-filter: blur(8px);
+  transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+.li-stat:hover {
+  border-color: color-mix(in oklab, var(--vermilion) 25%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -12px rgba(212,106,46,0.12);
+}
+.li-stat__num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  line-height: 1;
+  color: var(--vermilion);
+}
+.li-stat__label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, currentColor 50%, transparent);
+}
+@media (max-width: 640px) {
+  .li-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .li-stat { padding: 14px 8px; }
+}
+
+.li-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; background: color-mix(in oklab, var(--ink) 70%, transparent); color: var(--bone); font-size: 13.5px; letter-spacing: 0.02em; text-decoration: none; border: 1px solid color-mix(in oklab, currentColor 18%, transparent); transition: transform .25s ease, background .25s ease, box-shadow .25s ease; }
 .dark .li-cta { background: var(--bone); color: var(--ink); }
-.li-cta:hover { transform: translateY(-1px); }
-.li-cta--lg { padding: 14px 24px; font-size: 15px; }
+.li-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -12px rgba(212,106,46,0.15); }
+.li-cta--lg { padding: 14px 28px; font-size: 15px; }
 .li-arrow { transition: transform .3s ease; }
-.li-cta:hover .li-arrow { transform: translateX(3px); }
+.li-cta:hover .li-arrow { transform: translateX(4px); }
 .li-block { margin-top: 64px; }
 .li-blockHead { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
 .li-blockHead__n { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; color: var(--vermilion); }
@@ -230,7 +331,9 @@ const css = `
 .li-row { display: grid; grid-template-columns: 120px 1fr auto; gap: 22px; padding: 18px 22px; align-items: center; text-decoration: none; color: inherit; }
 @media (max-width: 720px) { .li-row { grid-template-columns: 1fr; gap: 12px; padding: 18px; } .li-row__read { justify-self: start; } }
 .li-row__thumb { width: 120px; height: 80px; border-radius: 12px; overflow: hidden; background: linear-gradient(135deg, oklch(0.22 0.02 60), oklch(0.13 0.008 60)); position: relative; }
+.li-row__thumb img { width: 100%; height: 100%; object-fit: cover; }
 .li-row__thumbArt { position: absolute; inset: 0; background: radial-gradient(60% 60% at 70% 30%, color-mix(in oklab, var(--vermilion) 50%, transparent), transparent 70%), linear-gradient(135deg, oklch(0.22 0.02 60), oklch(0.13 0.008 60)); }
+.li-row__thumb-read { position: absolute; bottom: 4px; left: 4px; padding: 2px 6px; border-radius: 4px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; color: #fff; }
 .li-row__date { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in oklab, currentColor 55%, transparent); }
 .li-row__title { font-family: var(--font-display); font-size: clamp(1.1rem, 1.4vw, 1.3rem); line-height: 1.18; letter-spacing: -0.005em; margin-top: 4px; }
 .li-row__excerpt { margin-top: 6px; font-size: 13.5px; line-height: 1.5; color: color-mix(in oklab, currentColor 70%, transparent); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -240,4 +343,5 @@ const css = `
 .li-row--skeleton { height: 96px; background: color-mix(in oklab, currentColor 6%, transparent); animation: li-pulse 1.6s ease-in-out infinite; }
 @keyframes li-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 .li-journal__more { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.08em; color: color-mix(in oklab, var(--vermilion) 75%, currentColor 25%); text-decoration: none; }
+.li-journal__more:hover { color: var(--vermilion); }
 `;
