@@ -21,8 +21,7 @@ const FALLBACK_ITEMS: Item[] = [
   { id: "credentials",label: "Credentials", n: "07" },
   { id: "philosophy", label: "Manifesto",   n: "08" },
   { id: "linkedin",   label: "Connect",     n: "09" },
-  { id: "contact",    label: "Contact",     n: "10" },
-  { id: "beyond-me",  label: "Beyond",      n: "11" },
+  { id: "beyond-me",  label: "Beyond",      n: "10" },
 ];
 
 export function PremiumNav() {
