@@ -5,13 +5,12 @@
  * site, after Contact — the last word before the footer.
  *
  * Every piece of text here is editable from Supabase: it all comes from
- * the `field_notes` JSONB column on the `profiles` table (see
- * backend/db/migration_005_add_field_notes.sql for the shape + defaults).
+ * the `field_notes` JSONB column on the `profiles` table.
  * If that column is empty/missing, the component falls back to the same
  * content locally so the section never breaks.
  */
-import { useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { useState, useRef, useEffect } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useInView } from "motion/react";
 import { Reveal, SplitWords } from "@/components/motion/primitives";
 import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 import usePortfolio from "@/hooks/usePortfolio";
@@ -20,27 +19,27 @@ import portrait from "@/assets/portrait.jpg";
 /* ── Icon set — keyed so Supabase only needs to store a short string ───── */
 const ICONS: Record<string, React.ReactNode> = {
   compass: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <circle cx="24" cy="10" r="4" />
       <path d="M24 14v14M24 22l-8 10M24 22l8 10" />
       <path d="M6 34c6-4 30-4 36 0" />
     </svg>
   ),
   loneliness: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <path d="M17 10a9 9 0 1 1-3 17.5M17 10a9 9 0 1 0 0 12" />
       <circle cx="17" cy="34" r="5" />
       <path d="M12 44c1-6 4-9 5-9s4 3 5 9" />
     </svg>
   ),
   betrayal: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <path d="M24 40C10 30 5 22 5 15a8 8 0 0 1 15-4l4 4 4-4a8 8 0 0 1 15 4c0 7-5 15-19 25z" />
       <path d="M22 16l-4 6 5 4-4 8" />
     </svg>
   ),
   everyone: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <circle cx="14" cy="12" r="5" />
       <path d="M6 30c1-7 5-11 8-11s7 4 8 11" />
       <circle cx="36" cy="16" r="4" />
@@ -49,58 +48,50 @@ const ICONS: Record<string, React.ReactNode> = {
     </svg>
   ),
   silence: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <path d="M4 24c6-9 14-13 20-13s14 4 20 13c-6 9-14 13-20 13S10 33 4 24z" />
       <circle cx="24" cy="24" r="5" />
       <path d="M6 6l36 36" />
     </svg>
   ),
   mountain: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <path d="M4 40 18 14l7 10 6-8 13 24z" />
       <path d="M32 14l10-6-2 11z" />
     </svg>
   ),
   checkmark: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <path d="M6 14l16 20 20-26" />
       <path d="M34 22l8 2" />
     </svg>
   ),
   discipline: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <rect x="10" y="8" width="28" height="34" rx="2" />
       <path d="M17 4h14v8H17z" />
       <path d="M16 22l5 5 11-11M16 32l5 5 11-11" opacity="0.55" />
     </svg>
   ),
   clock: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <circle cx="24" cy="24" r="18" />
       <path d="M24 14v10l7 5" />
     </svg>
   ),
   stairs: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <path d="M4 40h8v-8h8v-8h8v-8h8v-8" />
       <circle cx="38" cy="6" r="3" />
     </svg>
   ),
   default: (
-    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.4" className="mr-notes__svg">
       <circle cx="24" cy="24" r="4" />
     </svg>
   ),
 };
 
-/**
- * Turns a plain CMS string into styled inline React nodes.
- *   __word__  -> underlined
- *   [[word]]  -> boxed
- *   ((word))  -> circled
- * Kept intentionally simple so anyone editing text in Supabase doesn't
- * need to write HTML/JSX — just plain text with these three markers.
- */
 function parseLine(text: string): React.ReactNode {
   const pattern = /__([^_]+)__|\[\[([^\]]+)\]\]|\(\(([^)]+)\)\)/g;
   const out: React.ReactNode[] = [];
@@ -161,33 +152,48 @@ function TiltPhoto({ src, alt }: { src: string; alt: string }) {
     mx.set((e.clientX - rect.left) / rect.width - 0.5);
     my.set((e.clientY - rect.top) / rect.height - 0.5);
   };
-  const onLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
+  const onLeave = () => { mx.set(0); my.set(0); };
 
   return (
-    <div
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="mr-notes__photo"
-      style={{ perspective: 1000 }}
-    >
+    <div onMouseMove={onMove} onMouseLeave={onLeave} className="mr-notes__photo" style={{ perspective: 1000 }}>
       <span className="mr-notes__tape" aria-hidden />
-      <motion.div
-        style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}
-        className="relative h-full w-full"
-      >
-        <img
-          src={src}
-          alt={alt}
-          width={640}
-          height={800}
-          className="h-full w-full object-cover"
-          style={{ filter: "grayscale(85%) contrast(1.05)" }}
-        />
+      <motion.div style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }} className="relative h-full w-full">
+        <img src={src} alt={alt} width={640} height={800} className="h-full w-full object-cover" style={{ filter: "grayscale(85%) contrast(1.05)" }} />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/35 via-transparent to-bone/10" />
       </motion.div>
+    </div>
+  );
+}
+
+/* ── Staggered reveal for a list of items ────────────────────────────── */
+function StaggerReveal({ children, index, className = "" }: { children: React.ReactNode; index: number; className?: string }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ y: 24, opacity: 0, filter: "blur(4px)" }}
+      animate={inView ? { y: 0, opacity: 1, filter: "blur(0px)" } : undefined}
+      transition={{ duration: 0.7, delay: Math.min(index, 8) * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ── Accordion container with smooth max-height transition ──────────── */
+function Accordion({ open, children }: { open: boolean; children: React.ReactNode }) {
+  const innerRef = useRef<HTMLDivElement | null>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (innerRef.current) setHeight(innerRef.current.scrollHeight);
+  }, [open, children]);
+
+  return (
+    <div style={{ maxHeight: open ? height : 0, opacity: open ? 1 : 0, overflow: "hidden", transition: "max-height 0.6s cubic-bezier(.22,1,.36,1), opacity 0.5s ease" }}>
+      <div ref={innerRef}>{children}</div>
     </div>
   );
 }
@@ -202,16 +208,14 @@ export function Ch14BeyondNotes() {
 
   const [expanded, setExpanded] = useState(false);
   const hasMore = notes.length > VISIBLE_BY_DEFAULT;
-  const visibleNotes = expanded ? notes : notes.slice(0, VISIBLE_BY_DEFAULT);
+  const visibleNotes = notes.slice(0, VISIBLE_BY_DEFAULT);
+  const hiddenNotes = notes.slice(VISIBLE_BY_DEFAULT);
 
   return (
-    <section
-      id="beyond-me"
-      data-mood="ink"
-      className="relative chapter-pad grain overflow-hidden"
-      aria-labelledby="field-notes-title"
-    >
+    <section id="beyond-me" data-mood="ink" className="relative chapter-pad grain overflow-hidden" aria-labelledby="field-notes-title">
       <div aria-hidden className="mr-notes__ambient" />
+      <div aria-hidden className="mr-notes__paper-lines" />
+
       <div className="relative mx-auto max-w-6xl">
         {/* Stamp badge */}
         <div className="mr-notes__stamp" aria-hidden>
@@ -245,9 +249,7 @@ export function Ch14BeyondNotes() {
               </svg>
             </div>
             <div className="mt-3 text-mono text-meta uppercase tracking-[0.2em] text-bone/55">
-              {photo.location}
-              <br />
-              {photo.tagline}
+              {photo.location}<br />{photo.tagline}
             </div>
             <div className="mt-4 text-mono text-meta uppercase tracking-[0.2em] text-bone/35">
               Last updated: {photo.lastUpdated}
@@ -255,12 +257,7 @@ export function Ch14BeyondNotes() {
             <div className="mt-5 flex items-start gap-2 text-bone/70">
               <span className="mt-0.5">♡</span>
               <span className="font-hand text-[1.3rem] leading-snug text-bone/80">
-                {photo.note.split("\n").map((l: string, i: number) => (
-                  <span key={i}>
-                    {l}
-                    <br />
-                  </span>
-                ))}
+                {photo.note.split("\n").map((l: string, i: number) => (<span key={i}>{l}<br /></span>))}
               </span>
             </div>
           </Reveal>
@@ -268,28 +265,39 @@ export function Ch14BeyondNotes() {
           {/* Right — numbered field notes */}
           <div>
             {visibleNotes.map((n, i) => (
-              <Reveal key={i} delay={Math.min(i, 8) * 0.03}>
+              <StaggerReveal key={i} index={i}>
                 <div className="mr-notes__row group relative">
                   <span aria-hidden className="absolute -left-4 top-0 h-full w-[2px] bg-vermilion opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="mr-notes__num tabular-nums">{String(i + 1).padStart(2, "0")}.</div>
                   <div className="mr-notes__text">
                     <p className="mr-notes__line font-hand">{parseLine(n.line)}</p>
-                    {(n.body || []).map((b, j) => (
-                      <p key={j} className="mr-notes__sub">{b}</p>
-                    ))}
+                    {(n.body || []).map((b, j) => (<p key={j} className="mr-notes__sub">{b}</p>))}
                   </div>
-                  <div className="mr-notes__icon transition-all duration-300 group-hover:text-vermilion group-hover:drop-shadow-[0_0_10px_rgba(212,106,46,0.45)]">{ICONS[n.icon || "default"] || ICONS.default}</div>
+                  <div className="mr-notes__icon group-hover:animate-svg-icon">{ICONS[n.icon || "default"] || ICONS.default}</div>
                 </div>
-              </Reveal>
+              </StaggerReveal>
             ))}
+
+            {/* Accordion for hidden notes */}
+            <Accordion open={expanded}>
+              {hiddenNotes.map((n, i) => (
+                <StaggerReveal key={i + VISIBLE_BY_DEFAULT} index={i + VISIBLE_BY_DEFAULT}>
+                  <div className="mr-notes__row group relative">
+                    <span aria-hidden className="absolute -left-4 top-0 h-full w-[2px] bg-vermilion opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="mr-notes__num tabular-nums">{String(i + VISIBLE_BY_DEFAULT + 1).padStart(2, "0")}.</div>
+                    <div className="mr-notes__text">
+                      <p className="mr-notes__line font-hand">{parseLine(n.line)}</p>
+                      {(n.body || []).map((b, j) => (<p key={j} className="mr-notes__sub">{b}</p>))}
+                    </div>
+                    <div className="mr-notes__icon group-hover:animate-svg-icon">{ICONS[n.icon || "default"] || ICONS.default}</div>
+                  </div>
+                </StaggerReveal>
+              ))}
+            </Accordion>
 
             {hasMore && (
               <div className="mt-8 flex justify-start">
-                <button
-                  type="button"
-                  onClick={() => setExpanded((v) => !v)}
-                  className="mr-notes__more"
-                >
+                <button type="button" onClick={() => setExpanded((v) => !v)} className="mr-notes__more">
                   {expanded ? "Show less" : `Read more · ${notes.length - VISIBLE_BY_DEFAULT} more`}
                   <span className={`mr-notes__more-arrow ${expanded ? "is-open" : ""}`} aria-hidden>↓</span>
                 </button>
@@ -298,26 +306,41 @@ export function Ch14BeyondNotes() {
           </div>
         </div>
 
-        <div className="mr-beyond__rule mt-20" aria-hidden />
+        {/* Perforated tear-off edge */}
+        <div className="mr-notes__tear" aria-hidden />
 
+        {/* Quote as handwritten letter */}
         <Reveal>
-          <div className="mt-16 flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
-            <p className="max-w-2xl text-display italic text-[clamp(1.3rem,2.4vw,1.9rem)] leading-[1.4] text-bone/95">
-              <span className="mr-beyond__pull">"</span>
-              {d.quote}
-              <span className="mr-beyond__pull">"</span>
-            </p>
-            <div className="font-hand shrink-0 text-right text-[1.6rem] leading-tight text-bone/70">
-              {d.signOff.split("\n").map((l: string, i: number) => (
-                <span key={i}>
-                  {l}
-                  <br />
-                </span>
-              ))}
+          <div className="mr-notes__letter">
+            <div className="mr-notes__letter-envelope" aria-hidden>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.08" className="w-full h-full">
+                <rect x="4" y="8" width="40" height="32" rx="2" />
+                <path d="M4 12l20 14 20-14" />
+              </svg>
+            </div>
+            <span className="mr-notes__letter-salute">Dear Reader,</span>
+            <p className="mr-notes__letter-body">{d.quote}</p>
+            <div className="mr-notes__letter-signoff">
+              <span className="font-hand text-[1.8rem] leading-none text-vermilion">
+                {d.signOff.split("\n").map((l: string, i: number) => (<span key={i}>{l}<br /></span>))}
+              </span>
+              <svg viewBox="0 0 120 16" className="mr-notes__letter-swig" aria-hidden>
+                <path d="M2 10c14-6 28-2 36 4 6 5 12 5 18-2 6-7 14-10 24-4 8 5 16 5 22-2 4-5 8-6 16-2" />
+              </svg>
             </div>
           </div>
         </Reveal>
+
+        {/* Colophon */}
+        <div className="mr-notes__colophon">
+          <span>Set in Inter Tight, Instrument Serif, JetBrains Mono &amp; Caveat</span>
+          <span className="mr-notes__colophon-sep" aria-hidden />
+          <span>Designed &amp; built with care · MMXXVI</span>
+          <span className="mr-notes__colophon-sep" aria-hidden />
+          <span>Manikanta R.</span>
+        </div>
       </div>
+
       <style>{css}</style>
     </section>
   );
@@ -326,7 +349,23 @@ export function Ch14BeyondNotes() {
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
 
-.mr-notes__ambient { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(55% 38% at 20% 12%, color-mix(in oklab, var(--vermilion) 7%, transparent), transparent 70%), radial-gradient(50% 35% at 85% 85%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 72%); mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%); }
+/* ── Ambient + paper texture ──────────────────────────────────────── */
+.mr-notes__ambient {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(55% 38% at 20% 12%, color-mix(in oklab, var(--vermilion) 7%, transparent), transparent 70%),
+    radial-gradient(50% 35% at 85% 85%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 72%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+}
+.mr-notes__paper-lines {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: repeating-linear-gradient(
+    transparent 0px, transparent 23px,
+    color-mix(in oklab, var(--bone) 6%, transparent) 23px,
+    color-mix(in oklab, var(--bone) 6%, transparent) 24px
+  );
+  mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
 
 .font-hand { font-family: "Caveat", "Segoe Script", cursive; }
 
@@ -341,6 +380,7 @@ const css = `
 .mr-notes__photo { position: relative; aspect-ratio: 4/5; width: 100%; max-width: 300px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--bone) 30%, transparent); box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7); }
 .mr-notes__tape { position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-3deg); width: 96px; height: 26px; background: linear-gradient(180deg, rgba(212,180,131,0.55), rgba(212,180,131,0.35)); border: 1px solid rgba(255,255,255,0.15); z-index: 2; }
 
+/* ── Note rows ────────────────────────────────────────────────────── */
 .mr-notes__row { display: grid; grid-template-columns: 44px 1fr 44px; align-items: start; gap: 18px; padding: 22px 0; border-bottom: 1px solid color-mix(in oklab, var(--bone) 12%, transparent); }
 .mr-notes__num { font-family: var(--font-mono); font-size: 0.85rem; color: var(--vermilion); padding-top: 0.35em; }
 .mr-notes__line { font-size: clamp(1.35rem, 2.4vw, 1.9rem); line-height: 1.25; color: var(--bone); }
@@ -349,17 +389,122 @@ const css = `
 .mr-notes__circle::after { content: ""; position: absolute; inset: -6px -10px; border: 1.4px solid var(--vermilion); border-radius: 50%; }
 .mr-notes__box { border: 1.4px solid var(--vermilion); padding: 0 6px; border-radius: 2px; }
 .mr-notes__sub { margin: 0.35em 0 0; font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.01em; color: color-mix(in oklab, var(--bone) 62%, transparent); }
-.mr-notes__icon { color: color-mix(in oklab, var(--vermilion) 80%, var(--bone) 20%); opacity: 0.85; padding-top: 0.2em; }
-.mr-notes__icon svg { width: 34px; height: 34px; }
 
+/* ── Animated SVG icons ────────────────────────────────────────────── */
+.mr-notes__icon { color: color-mix(in oklab, var(--vermilion) 80%, var(--bone) 20%); opacity: 0.85; padding-top: 0.2em; }
+.mr-notes__svg { width: 34px; height: 34px; display: block; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.mr-notes__icon:hover .mr-notes__svg {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 10px rgba(212,106,46,0.5));
+}
+@keyframes mr-svg-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(212,106,46,0.4)); }
+}
+.group:hover .mr-notes__svg {
+  animation: mr-svg-pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Read more button ─────────────────────────────────────────────── */
 .mr-notes__more { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bone); background: transparent; border: 1px solid color-mix(in oklab, var(--bone) 30%, transparent); border-radius: 999px; padding: 10px 18px; cursor: pointer; transition: border-color 200ms ease, color 200ms ease, background 200ms ease; }
 .mr-notes__more:hover { border-color: var(--vermilion); color: var(--vermilion); background: color-mix(in oklab, var(--vermilion) 8%, transparent); }
 .mr-notes__more-arrow { display: inline-block; transition: transform 250ms ease; }
 .mr-notes__more-arrow.is-open { transform: rotate(180deg); }
 
+/* ── Perforated tear edge ──────────────────────────────────────────── */
+.mr-notes__tear {
+  margin-top: 72px;
+  height: 20px;
+  position: relative;
+  background-image: radial-gradient(circle at 4px 10px, var(--ink) 2px, transparent 2px);
+  background-size: 10px 20px;
+  opacity: 0.06;
+}
+.mr-notes__tear::before {
+  content: "";
+  position: absolute; top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: color-mix(in oklab, var(--bone) 10%, transparent);
+}
+.dark .mr-notes__tear { opacity: 0.08; }
+
+/* ── Handwritten letter ────────────────────────────────────────────── */
+.mr-notes__letter {
+  position: relative;
+  margin-top: 48px;
+  padding: clamp(32px, 4vw, 48px) clamp(28px, 3.6vw, 40px);
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--bone) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--vermilion) 12%, transparent);
+  transform: rotate(-0.3deg);
+  transition: transform .4s ease, box-shadow .4s ease;
+  overflow: hidden;
+}
+.mr-notes__letter:hover {
+  transform: rotate(0deg);
+  box-shadow: 0 16px 48px -24px rgba(212,106,46,0.15);
+}
+.dark .mr-notes__letter {
+  background: color-mix(in oklab, white 3%, transparent);
+  border-color: color-mix(in oklab, var(--vermilion) 10%, transparent);
+}
+.mr-notes__letter-envelope {
+  position: absolute; bottom: 16px; right: 20px;
+  width: 80px; height: 80px;
+  color: var(--vermilion);
+  pointer-events: none;
+}
+.mr-notes__letter-salute {
+  display: block;
+  font-family: "Caveat", "Segoe Script", cursive;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  color: var(--vermilion);
+  margin-bottom: 18px;
+}
+.mr-notes__letter-body {
+  font-family: "Caveat", "Segoe Script", cursive;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.5;
+  color: var(--bone);
+  max-width: 48ch;
+}
+.mr-notes__letter-signoff {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.mr-notes__letter-swig {
+  width: 120px; height: 16px;
+  fill: none; stroke: var(--vermilion); stroke-width: 1.4; stroke-linecap: round;
+  opacity: 0.5;
+}
+
+/* ── Colophon ──────────────────────────────────────────────────────── */
+.mr-notes__colophon {
+  margin-top: 80px;
+  padding-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--bone) 30%, transparent);
+}
+.mr-notes__colophon-sep {
+  width: 1px; height: 10px;
+  background: color-mix(in oklab, var(--bone) 15%, transparent);
+}
+
 @media (max-width: 640px) {
   .mr-notes__row { grid-template-columns: 34px 1fr; }
   .mr-notes__icon { display: none; }
   .mr-notes__stamp { width: 84px; height: 84px; }
+  .mr-notes__letter { transform: none; }
+  .mr-notes__letter-envelope { display: none; }
 }
 `;
