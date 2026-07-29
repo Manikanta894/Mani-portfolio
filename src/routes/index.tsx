@@ -56,12 +56,15 @@ function Index() {
     siteSettings,
   } = usePortfolio();
 
+  const totalExp = profile?.total_experience || "6+";
+  const targetRoles = profile?.target_roles?.join(" · ") || "HR Analytics · People Analytics · AI Strategy";
+
   const SITE_URL = "https://manikantar.in";
 
   // Dynamic SEO — page_seo table first, fall back to profile
   const pageSeoData = (pageSeo || []).find((p: any) => p.page_slug === "/");
   const title = pageSeoData?.title || profile?.site_title || "Manikanta R — HR Analytics · AI Strategy · People Data";
-  const desc = pageSeoData?.description || profile?.site_description || "Manikanta R · MBA candidate in HR & Business Analytics, Bengaluru.";
+  const desc = pageSeoData?.description || profile?.site_description || `Manikanta R · ${totalExp}+ years in HR Analytics & Business Analytics · ${targetRoles} · Bengaluru.`;
   const keywords = pageSeoData?.keywords || profile?.site_keywords || "Manikanta R, HR Analytics, Business Analytics, AI Strategy, People Analytics, MBA, Bengaluru";
   const ogImage = pageSeoData?.og_image || profile?.og_image || `${SITE_URL}/og-image.jpg`;
   const ogTitle = pageSeoData?.og_title || title;
@@ -102,16 +105,28 @@ function Index() {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        Loading Portfolio...
+      <main className="min-h-screen flex items-center justify-center bg-bone text-ink">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 rounded-full border-2 border-ink/20 border-t-vermilion animate-spin" />
+          <p className="text-mono text-sm text-ink/50">Loading portfolio...</p>
+        </div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        Failed to load portfolio.
+      <main className="min-h-screen flex items-center justify-center bg-bone text-ink">
+        <div className="flex flex-col items-center gap-4 max-w-md text-center px-4">
+          <p className="font-display text-h3">Oops</p>
+          <p className="text-body text-ink/60">Couldn't load the portfolio data right now. Please try refreshing.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-3 rounded-full bg-ink text-bone text-mono text-xs tracking-widest uppercase hover:bg-vermilion transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
       </main>
     );
   }

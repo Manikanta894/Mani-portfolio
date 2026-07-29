@@ -15,8 +15,9 @@ export function Ch00Cover() {
   ];
   const heroMeta = (profile?.hero_meta as any[]) || [
     { label: "Published Papers", value: "04", type: "text" },
+    { label: "Experience", value: "6+ Years", sub: "Analytics · Operations · Research", type: "cohort" },
     { label: "MBA", value: "MBA · '27", sub: "HR & Business Analytics", type: "cohort" },
-    { label: "Availability", value: "Available", sub: "for collaborations", type: "status" },
+    { label: "Availability", value: "Available", sub: "for opportunities", type: "status" },
   ];
   const tagline = profile?.tagline || "Building the future of work through <em>AI, analytics & human insight</em>.";
   const welcomeText = profile?.welcome_text || "Welcome to my Portfolio.";

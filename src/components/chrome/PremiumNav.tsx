@@ -240,6 +240,19 @@ export function PremiumNav() {
             </li>
           ))}
         </ul>
+
+        <a
+          href="https://manikantar.in/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mr-nav__resume"
+          aria-label="Download Resume"
+        >
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <path d="M7 1v9m0 0L3 6m4 4l4-4M1 13h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square" strokeLinejoin="round" />
+          </svg>
+          <span>Resume</span>
+        </a>
       </nav>
 
       <LiveAnnouncer navItems={navItems} />
@@ -269,6 +282,19 @@ export function PremiumNav() {
             </li>
           ))}
         </ul>
+
+        <a
+          href="https://manikantar.in/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mr-nav-mobile__resume"
+          aria-label="Download Resume"
+          title="Resume"
+        >
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <path d="M7 1v9m0 0L3 6m4 4l4-4M1 13h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square" strokeLinejoin="round" />
+          </svg>
+        </a>
       </nav>
 
       <style>{css}</style>
@@ -557,9 +583,52 @@ const css = `
 .mr-nav ~ * [data-legacy-rail],
 [data-legacy-rail] { display: none !important; }
 
+.mr-nav__resume {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-left: 14px;
+  padding: 6px 14px 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bone);
+  background: var(--vermilion);
+  text-decoration: none;
+  transition: background .3s ease, transform .3s ease, box-shadow .3s ease;
+  white-space: nowrap;
+}
+.mr-nav__resume:hover {
+  background: #c05a20;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px -6px color-mix(in oklab, var(--vermilion) 60%, transparent);
+}
+.mr-nav__resume:focus-visible {
+  outline: 2px solid var(--vermilion);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.mr-nav-mobile__resume {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 4px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  color: var(--bone);
+  background: var(--vermilion);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background .3s ease, transform .3s ease;
+}
+.mr-nav-mobile__resume:hover {
+  background: #c05a20;
+  transform: scale(1.05);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mr-nav__pill, .mr-nav-mobile__pill,
   .mr-nav__link, .mr-nav-mobile__link { transition: none; }
   .mr-nav__link.is-active::after { animation: none; }
+  .mr-nav__resume, .mr-nav-mobile__resume { transition: none; }
 }
 `;
