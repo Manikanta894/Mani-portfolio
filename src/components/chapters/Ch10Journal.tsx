@@ -131,7 +131,7 @@ export function Ch10Journal() {
         <header className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-9">
             <div className="text-mono text-meta uppercase tracking-[0.24em] text-graphite/55">
-              /10 — Editorial · insights.manikantar.in
+              Editorial · insights.manikantar.in
             </div>
             <h2 className="text-display mt-5 text-[clamp(2.4rem,5.6vw,4.8rem)] leading-[0.98] tracking-[-0.015em]">
               <MaskReveal>Research. Ideas. Field Notes.</MaskReveal>

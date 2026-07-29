@@ -9,6 +9,5 @@ export const CHAPTER_NUMBERS: Record<string, string> = {
   credentials: "07",
   philosophy: "08",
   linkedin: "09",
-  contact: "10",
-  "beyond-me": "11",
+  "beyond-me": "10",
 };
