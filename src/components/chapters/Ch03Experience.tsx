@@ -4,6 +4,17 @@ import { motion, useScroll, useTransform } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
 
+function normalizeExperience(raw: any) {
+  return {
+    ...raw,
+    span: raw.span || (raw.start_date ? `${raw.start_date} — ${raw.current ? "Present" : (raw.end_date || "")}` : raw.duration),
+    city: raw.city || raw.location,
+    context: raw.context || raw.description,
+    achievements: (raw.achievements && raw.achievements.length) ? raw.achievements : (Array.isArray(raw.highlights) ? raw.highlights : []),
+    lesson: raw.lesson || null,
+  };
+}
+
 function EvolutionStep({
   scrollYProgress,
   i,
@@ -137,7 +148,7 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
 
 export function Ch03Experience() {
   const { experience } = usePortfolio();
-  const roles = experience?.length ? experience : [];
+  const roles = (experience?.length ? experience : []).map(normalizeExperience);
   const evolution: string[] = [
     "Operations", "Customer Experience", "Leadership", "Business Thinking",
     "Analytics", "Research", "AI & Business Strategy",

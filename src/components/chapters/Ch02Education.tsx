@@ -2,9 +2,20 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 
+function normalizeEducation(raw: any) {
+  return {
+    ...raw,
+    span: raw.span || (raw.start_date || raw.end_date ? `${raw.start_date || ""} — ${raw.end_date || raw.current ? "Present" : (raw.end_date || "")}` : ""),
+    state: raw.state || raw.status,
+    degree: raw.degree ? (raw.field ? `${raw.degree}, ${raw.field}` : raw.degree) : raw.degree,
+    school: raw.school || raw.institution,
+    points: (raw.points && raw.points.length) ? raw.points : (Array.isArray(raw.highlights) ? raw.highlights : []),
+  };
+}
+
 export function Ch02Education() {
   const { education } = usePortfolio();
-  const entries = education?.length ? education : [];
+  const entries = (education?.length ? education : []).map(normalizeEducation);
 
   const [activeIdx, setActiveIdx] = useState(0);
   const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
