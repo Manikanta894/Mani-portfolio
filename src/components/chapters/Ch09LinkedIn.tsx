@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { Reveal, MaskReveal } from "@/components/motion/primitives";
+import { useState } from "react";
+import { Reveal } from "@/components/motion/primitives";
 import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
 
@@ -9,35 +9,6 @@ const API_BASE = typeof window !== "undefined"
   : "";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/manikanta894/";
-
-const PLACEHOLDER_CYCLES: Record<string, string[]> = {
-  name: ["Your full name", "e.g. Jane Doe", "type here..."],
-  email: ["you@company.com", "your@email.com", "hello@domain.in"],
-  subject: ["Role · Project · Research", "collaboration query", "consulting inquiry"],
-  message: ["What's the context?", "the question, the outcome...", "describe your idea"],
-};
-
-function TypewriterPlaceholder({ name, period = 2500 }: { name: string; period?: number }) {
-  const phrases = PLACEHOLDER_CYCLES[name] || ["..."];
-  const [index, setIndex] = useState(0);
-  const [char, setChar] = useState(0);
-  const [dir, setDir] = useState<1 | -1>(1);
-
-  useEffect(() => {
-    const full = phrases[index];
-    const timer = setInterval(() => {
-      setChar((c) => {
-        const next = c + dir;
-        if (next >= full.length + 1) { setDir(-1); return full.length; }
-        if (next <= 0) { setDir(1); setIndex((i) => (i + 1) % phrases.length); return 0; }
-        return next;
-      });
-    }, 60);
-    return () => clearInterval(timer);
-  }, [index, dir, phrases]);
-
-  return <>{phrases[index].slice(0, char)}{char < phrases[index].length && <span className="mr-cursor" />}</>;
-}
 
 export default function Ch09LinkedIn() {
   const { profile } = usePortfolio();
@@ -101,27 +72,6 @@ export default function Ch09LinkedIn() {
     }
   };
 
-  const [latency, setLatency] = useState(38);
-  useEffect(() => {
-    const i = setInterval(() => setLatency(30 + Math.floor(Math.random() * 30)), 1800);
-    return () => clearInterval(i);
-  }, []);
-
-  const bootRef = useRef<HTMLDivElement>(null);
-  const [typedLine, setTypedLine] = useState("");
-  const bootLines = ["SYSTEM: connect.sh initializing...", "PORT: 443 open", "SESSION: established"];
-
-  useEffect(() => {
-    let acc = "";
-    let i = 0;
-    const full = bootLines.join("\n");
-    const t = setInterval(() => {
-      if (i < full.length) { acc += full[i]; setTypedLine(acc); i++; }
-      else clearInterval(t);
-    }, 12);
-    return () => clearInterval(t);
-  }, []);
-
   return (
     <section id="linkedin" data-mood="ink" className="relative chapter-pad overflow-hidden">
       <div aria-hidden className="li-grid-bg" />
@@ -179,66 +129,43 @@ export default function Ch09LinkedIn() {
         {/* Contact form */}
         <div className="li-form-wrap">
           <Reveal>
-            <div className="li-terminal">
-              <div aria-hidden className="li-scanline" />
-              <form onSubmit={handleSubmit}>
-                <div className="li-terminal__header">
-                  <span className="inline-flex gap-1">
-                    <span className="h-2 w-2 rounded-full bg-bone/25" />
-                    <span className="h-2 w-2 rounded-full bg-bone/25" />
-                    <span className="h-2 w-2 rounded-full bg-vermilion" />
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <span className="text-vermilion">➜</span>
-                    ~/manikantar.in/contact
-                    <span className="text-bone/30 mx-1">⌁</span>
-                    ping {latency}ms
-                  </span>
-                </div>
-                <div className="li-terminal__body">
-                  {contactInfo.fields.map((f: any) => {
-                    const isMessage = f.name === "message";
-                    const required = f.name === "name" || f.name === "email";
-                    return (
-                      <label key={f.name} className="block group">
-                        <span className="li-terminal__label">
-                          <span className="text-bone/35">$</span> {f.name}:
-                        </span>
-                        {isMessage ? (
-                          <textarea required={required} rows={4} value={formData[f.name] || ""}
-                            onChange={(e) => handleChange(f.name, e.target.value)}
-                            className="li-terminal__input li-terminal__input--area" />
-                        ) : (
-                          <input type={f.name === "email" ? "email" : "text"} required={required}
-                            value={formData[f.name] || ""}
-                            onChange={(e) => handleChange(f.name, e.target.value)}
-                            className="li-terminal__input" />
-                        )}
-                        {!formData[f.name] && (
-                          <span className="li-terminal__ghost">
-                            <TypewriterPlaceholder name={f.name} />
-                          </span>
-                        )}
-                      </label>
-                    );
-                  })}
-                  <div className="flex items-center justify-between pt-2">
-                    <button type="submit" disabled={submitting} className="li-terminal__btn">
-                      <span className="li-terminal__btn-ring" aria-hidden />
-                      <span>{">"} {submitting ? "sending..." : "transmit"}</span>
-                      <span className="caret">▍</span>
-                    </button>
-                    <span className="li-terminal__status">
-                      {submitStatus === "success"
-                        ? <span className="text-vermilion">// message sent ✓</span>
-                        : submitStatus === "error"
-                        ? <span className="text-red-400">// {errorMessage}</span>
-                        : "// awaiting input"}
-                    </span>
-                  </div>
-                </div>
-              </form>
-            </div>
+            <form onSubmit={handleSubmit} className="li-form">
+              <div className="li-form__grid">
+                {contactInfo.fields.map((f: any) => {
+                  const isMessage = f.name === "message";
+                  const required = f.name === "name" || f.name === "email";
+                  return (
+                    <label key={f.name} className={`li-form__field ${isMessage ? "li-form__field--wide" : ""}`}>
+                      <span className="li-form__label">{f.label || f.name}</span>
+                      {isMessage ? (
+                        <textarea required={required} rows={4} value={formData[f.name] || ""}
+                          onChange={(e) => handleChange(f.name, e.target.value)}
+                          placeholder={f.placeholder}
+                          className="li-form__input li-form__input--area" />
+                      ) : (
+                        <input type={f.name === "email" ? "email" : "text"} required={required}
+                          value={formData[f.name] || ""}
+                          onChange={(e) => handleChange(f.name, e.target.value)}
+                          placeholder={f.placeholder}
+                          className="li-form__input" />
+                      )}
+                    </label>
+                  );
+                })}
+              </div>
+              <div className="li-form__footer">
+                <button type="submit" disabled={submitting} className="li-form__btn">
+                  {submitting ? "Sending..." : "Send message"}
+                </button>
+                <span className="li-form__status">
+                  {submitStatus === "success"
+                    ? "Message sent"
+                    : submitStatus === "error"
+                    ? errorMessage
+                    : ""}
+                </span>
+              </div>
+            </form>
           </Reveal>
         </div>
       </div>
@@ -390,95 +317,78 @@ const css = `
   .li-profile-card__cta { align-self: stretch; justify-content: center; }
 }
 
-/* Terminal form */
+/* Form */
 .li-form-wrap { margin-top: 48px; }
-.li-terminal {
-  position: relative;
-  border-radius: 4px;
-  background: #0a0a0c;
-  border: 1px solid color-mix(in oklab, var(--vermilion) 18%, transparent);
-  box-shadow: 0 0 20px rgba(212,106,46,0.06), 0 0 60px rgba(212,106,46,0.04), inset 0 0 40px rgba(0,0,0,0.5);
-  overflow: hidden;
+.li-form {
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--bone) 8%, transparent);
+  border: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+  padding: 36px;
   transition: border-color .4s ease, box-shadow .4s ease;
 }
-.li-terminal:hover {
-  border-color: color-mix(in oklab, var(--vermilion) 30%, transparent);
-  box-shadow: 0 0 30px rgba(212,106,46,0.1), 0 0 80px rgba(212,106,46,0.06), inset 0 0 40px rgba(0,0,0,0.5);
+.li-form:hover {
+  border-color: color-mix(in oklab, currentColor 18%, transparent);
 }
-.li-scanline {
-  position: absolute; inset: 0; pointer-events: none; z-index: 2;
-  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+.li-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 36px;
 }
-.li-terminal__header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid color-mix(in oklab, var(--bone) 12%, transparent);
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.02em;
-  color: color-mix(in oklab, var(--bone) 45%, transparent);
+@media (max-width: 640px) {
+  .li-form__grid { grid-template-columns: 1fr; }
 }
-.li-terminal__body { padding: 24px; position: relative; z-index: 1; }
-.li-terminal__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--vermilion);
+.li-form__field { position: relative; }
+.li-form__field--wide { grid-column: 1 / -1; }
+.li-form__label {
   display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklab, currentColor 55%, transparent);
+  margin-bottom: 8px;
 }
-.li-terminal__input {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  display: block; width: 100%;
-  margin-top: 4px; padding: 8px 0;
-  border: 0; border-bottom: 1px solid color-mix(in oklab, var(--bone) 15%, transparent);
-  background: transparent; color: var(--bone);
-  outline: none; transition: border-color .3s ease;
-  position: relative; z-index: 1;
+.li-form__input {
+  width: 100%;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+  background: transparent;
+  font-size: 0.95rem;
+  color: currentColor;
+  outline: none;
+  transition: border-color .25s ease;
 }
-.li-terminal__input:focus { border-bottom-color: var(--vermilion); }
-.li-terminal__input--area {
+.li-form__input:focus { border-bottom-color: var(--vermilion); }
+.li-form__input::placeholder { color: color-mix(in oklab, currentColor 28%, transparent); }
+.li-form__input--area {
+  border: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+  border-radius: 8px;
+  padding: 12px 14px;
   resize: none;
-  border: 1px solid color-mix(in oklab, var(--bone) 15%, transparent);
-  padding: 8px 10px; border-radius: 2px;
+  font-family: inherit;
 }
-.li-terminal__input--area:focus { border-color: var(--vermilion); }
-.li-terminal__ghost {
-  position: absolute; left: 0; bottom: 9px;
-  font-family: var(--font-mono); font-size: 0.85rem;
-  color: color-mix(in oklab, var(--bone) 25%, transparent);
-  pointer-events: none; z-index: 0;
+.li-form__input--area:focus { border-color: var(--vermilion); }
+.li-form__footer {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  margin-top: 32px; padding-top: 22px;
+  border-top: 1px solid color-mix(in oklab, currentColor 10%, transparent);
 }
-label { position: relative; }
-
-.mr-cursor {
-  display: inline-block; width: 1px; height: 1em;
-  background: var(--vermilion); vertical-align: text-bottom;
-  margin-left: 1px;
-  animation: mr-blink 0.8s steps(1) infinite;
+.li-form__btn {
+  padding: 10px 28px; border-radius: 999px;
+  font-size: 13.5px; font-weight: 500; letter-spacing: 0.03em;
+  background: var(--vermilion); color: var(--bone); border: none;
+  cursor: pointer;
+  transition: background .25s ease, transform .2s ease, box-shadow .25s ease;
 }
-@keyframes mr-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-
-.li-terminal__btn {
-  position: relative;
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
-  text-transform: uppercase;
-  padding: 10px 22px; border-radius: 999px;
-  border: 1px solid var(--vermilion);
-  background: var(--vermilion); color: var(--bone);
-  cursor: pointer; overflow: hidden; isolation: isolate;
-  transition: background .3s ease, color .3s ease, transform .3s ease;
+.li-form__btn:hover {
+  background: color-mix(in oklab, var(--vermilion) 90%, #000 10%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px -6px color-mix(in oklab, var(--vermilion) 40%, transparent);
 }
-.li-terminal__btn:hover { background: transparent; color: var(--vermilion); transform: translateY(-2px); }
-.li-terminal__btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.li-terminal__btn-ring {
-  position: absolute; inset: -4px; border-radius: inherit;
-  border: 1px solid var(--vermilion);
-  opacity: 0; transition: opacity .3s ease, transform .3s ease;
-}
-.li-terminal__btn:hover .li-terminal__btn-ring { opacity: 0.4; transform: scale(1.04); }
-.li-terminal__status {
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em;
-  color: color-mix(in oklab, var(--bone) 45%, transparent);
+.li-form__btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.li-form__status {
+  font-size: 12.5px;
+  color: color-mix(in oklab, currentColor 50%, transparent);
 }
 .li-arrow { transition: transform .3s ease; }
 .li-profile-card__cta:hover .li-arrow { transform: translateX(4px); }

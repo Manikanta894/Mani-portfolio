@@ -85,7 +85,7 @@ export function Ch07Ecosystem() {
   const R = 270;
 
   return (
-    <section id="ecosystem" data-mood="ink" className="relative chapter-pad grain">
+    <section id="ecosystem" data-mood="ink" className="relative chapter-pad">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <header className="mb-14 grid grid-cols-12 gap-6">

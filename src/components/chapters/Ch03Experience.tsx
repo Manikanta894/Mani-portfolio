@@ -134,7 +134,7 @@ export function Ch03Experience() {
   ];
 
   return (
-    <section id="experience" data-mood="ink" className="relative chapter-pad grain">
+    <section id="experience" data-mood="ink" className="relative chapter-pad">
       <div className="mx-auto max-w-6xl">
         <header className="mb-16 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">

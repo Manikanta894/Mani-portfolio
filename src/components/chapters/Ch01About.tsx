@@ -172,7 +172,7 @@ export function Ch01About() {
     <section
       id="about"
       data-mood="ink"
-      className="about-stage relative chapter-pad grain"
+      className="about-stage relative chapter-pad"
     >
       {/* quiet editorial wash */}
       <div aria-hidden className="about-wash" />

@@ -22,7 +22,7 @@ export function Ch11Philosophy() {
   const draw = useTransform(scrollYProgress, [0.15, 0.65], [0, 1]);
 
   return (
-    <section id="philosophy" data-mood="ink" className="relative chapter-pad grain" ref={ref}>
+    <section id="philosophy" data-mood="ink" className="relative chapter-pad" ref={ref}>
       <div className="mx-auto max-w-6xl">
         <div className="text-mono text-meta text-bone/55">
           /{philosophyData.number} · Personal Philosophy
