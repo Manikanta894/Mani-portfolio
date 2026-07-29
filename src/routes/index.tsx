@@ -6,7 +6,7 @@ import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Ch
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
-import { ParticleName } from "@/components/hero/ParticleName";
+import { CinematicIntro } from "@/components/hero/CinematicIntro";
 
 
 import { Ch00Cover } from "@/components/chapters/Ch00Cover";
@@ -97,7 +97,7 @@ function Index() {
   };
 
   if (!introDone) {
-    return <ParticleName onDone={handleIntroComplete} />;
+    return <CinematicIntro onDone={handleIntroComplete} />;
   }
 
   if (loading) {
