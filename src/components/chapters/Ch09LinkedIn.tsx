@@ -318,7 +318,6 @@ const css = `
 .li-subtitle { margin-top: 14px; max-width: 60ch; font-size: clamp(1rem, 1.15vw, 1.125rem); color: color-mix(in oklab, currentColor 72%, transparent); }
 
 /* Profile card */
-.li-profile-card-wrap { max-width: 780px; }
 .li-profile-card {
   margin-top: 48px;
   display: flex;
@@ -392,7 +391,7 @@ const css = `
 }
 
 /* Terminal form */
-.li-form-wrap { margin-top: 48px; max-width: 780px; }
+.li-form-wrap { margin-top: 48px; }
 .li-terminal {
   position: relative;
   border-radius: 4px;
