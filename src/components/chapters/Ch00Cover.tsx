@@ -244,9 +244,6 @@ export function Ch00Cover() {
       <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
         <span className="hero-status-dot" />
         <span>Open to Opportunities</span>
-        <svg className="hero-status-linkedin" viewBox="0 0 20 20" fill="currentColor" width="12" height="12" aria-hidden>
-          <path d="M16 0H4C1.8 0 0 1.8 0 4v12c0 2.2 1.8 4 4 4h12c2.2 0 4-1.8 4-4V4c0-2.2-1.8-4-4-4zM6 17H3V8h3v9zM4.5 6.3c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zM17 17h-3v-5.3c0-1.3-.5-2-1.5-2s-1.5.7-1.5 2V17H8V8h3v1.2c.5-.8 1.5-1.4 2.5-1.4 1.8 0 3.5 1.1 3.5 3.8V17z" />
-        </svg>
         <span className="hero-status-sep" aria-hidden />
         <span className="hero-status-loc">{location}</span>
       </div>
@@ -263,12 +260,7 @@ export function Ch00Cover() {
             </div>
           </div>
 
-          {/* Social proof */}
-          <div className="hero-proof">
-            <span className="hero-proof-mark" aria-hidden>&#10018;</span>
-            <span className="hero-proof-text">"One of the sharpest analysts I've mentored — combines technical depth with real business instinct."</span>
-          </div>
-
+          
           {/* Metrics cards below portrait */}
           <div className="hero-metrics-strip">
             {metrics.slice(0, 4).map((m: any, i: number) => (
@@ -448,14 +440,6 @@ const css = `
   0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(34,197,94,0.5); }
   50% { opacity: 0.6; box-shadow: 0 0 14px rgba(34,197,94,0.3); }
 }
-.hero-status-linkedin {
-  color: #0a66c2;
-  margin-left: 2px;
-}
-.hero-status-linkedin-text {
-  color: color-mix(in oklab, var(--hero-mute) 80%, transparent);
-  font-size: 9px;
-}
 .hero-status-sep {
   width: 1px; height: 14px;
   background: color-mix(in oklab, var(--hero-ink) 14%, transparent);
@@ -608,49 +592,25 @@ const css = `
   50%      { transform: translateY(calc(0% - 10px)); }
 }
 
-/* Social proof quote */
-.hero-proof {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 18px;
-  max-width: 300px;
-  opacity: 0;
-  animation: hero-settle 1s ease forwards 0.5s;
-}
-.hero-proof-mark {
-  color: var(--hero-accent);
-  font-size: 0.7rem;
-  margin-top: 1px;
-  flex-shrink: 0;
-}
-.hero-proof-text {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(0.78rem, 1vw, 0.88rem);
-  line-height: 1.4;
-  color: var(--hero-ink-2);
-  opacity: 0.75;
-}
-
 /* Metrics strip below portrait */
 .hero-metrics-strip {
   display: flex;
-  gap: 6px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
   z-index: 3;
   width: 100%;
-  max-width: 380px;
+  max-width: 420px;
   margin-top: 16px;
 }
 .hero-metric {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 10px 12px;
-  min-width: 80px;
+  gap: 4px;
+  padding: 14px 20px;
+  min-width: 140px;
+  flex: 1;
   border-radius: 10px;
   background: color-mix(in oklab, var(--hero-paper) 75%, transparent);
   border: 1px solid color-mix(in oklab, var(--hero-ink) 8%, transparent);
@@ -661,8 +621,6 @@ const css = `
 }
 .hero-metric:nth-child(1) { animation-delay: 1.0s; }
 .hero-metric:nth-child(2) { animation-delay: 1.1s; }
-.hero-metric:nth-child(3) { animation-delay: 1.2s; }
-.hero-metric:nth-child(4) { animation-delay: 1.3s; }
 @keyframes hero-metric-in {
   to { opacity: 1; transform: translateY(0); }
 }
@@ -1023,8 +981,6 @@ const css = `
   background: color-mix(in oklab, var(--hero-ink) 8%, transparent);
   border-color: color-mix(in oklab, var(--hero-ink) 10%, transparent);
 }
-.dark .hero-proof-text { color: var(--hero-ink-2); }
-
 @media (max-width: 1024px) {
   .hero-name { font-size: clamp(54px, 13vw, 108px); }
   .hero-watermark { font-size: 40vw; }
@@ -1038,7 +994,6 @@ const css = `
   .hero-status-bar { font-size: 9px; padding: 6px 14px 6px 12px; top: 16px; gap: 8px; }
   .hero-metrics-strip { gap: 4px; }
   .hero-metric { min-width: 68px; padding: 8px 10px; }
-  .hero-proof { display: none; }
   .hero-trust { margin-top: 22px; }
 }
 `;
