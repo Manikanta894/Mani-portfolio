@@ -43,6 +43,7 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
   const [go, setGo] = useState(false);
   const [collided, setCollided] = useState(false);
   const done = useRef(false);
+  const sceneRef = useRef<Scene>("letters");
 
   const finish = useCallback(() => {
     if (done.current) return;
@@ -55,9 +56,9 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
     const alreadyPlayed = sessionStorage.getItem(SESSION_KEY) === "1";
     if (alreadyPlayed) { onDone(); return; }
 
-    const t0 = setTimeout(() => setGo(true), 300);
-    const tCol = setTimeout(() => { setScene("collide"); setCollided(true); }, 1200);
-    const t2 = setTimeout(() => setScene("flow"), 1500);
+    const t0 = setTimeout(() => setGo(true), 400);
+    const t1 = setTimeout(() => { setScene("collide"); setCollided(true); }, 1300);
+    const t2 = setTimeout(() => setScene("flow"), 1650);
     const t3 = setTimeout(() => setScene("portrait"), 2400);
     const t4 = setTimeout(() => setScene("text"), 4200);
     const t5 = setTimeout(() => finish(), 6600);
@@ -69,10 +70,13 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
     window.addEventListener("keydown", skip);
 
     return () => {
-      clearTimeout(t0); clearTimeout(tCol); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); clearTimeout(tFinal);
+      clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); clearTimeout(tFinal);
       window.removeEventListener("keydown", skip);
     };
   }, [finish, onDone]);
+
+  // Keep sceneRef in sync
+  useEffect(() => { sceneRef.current = scene; }, [scene]);
 
   /* ─── Particle canvas ──────────────────────────────────── */
   useEffect(() => {
@@ -96,26 +100,24 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
     fit();
     window.addEventListener("resize", fit);
 
-    const fontSize = Math.min(W * 0.28, 240);
-    const letterCY = H * 0.5;
+    const fontSize = Math.min(W * 0.3, 260);
+    const offY = H * 0.5;
 
-    // M from right side, R from left side
-    const mPts = sampleLetter(ctx, "M", W * 0.68, letterCY, fontSize, W, H);
-    const rPts = sampleLetter(ctx, "R", W * 0.32, letterCY, fontSize, W, H);
+    // M sampled at right (where DOM M slides to), R at left
+    const mPts = sampleLetter(ctx, "M", W * 0.66, offY, fontSize, W, H);
+    const rPts = sampleLetter(ctx, "R", W * 0.34, offY, fontSize, W, H);
 
-    // Each particle stores: current pos, origin pos (letter shape), velocity
     interface P {
       x: number; y: number;
       ox: number; oy: number;
-      vx: number; vy: number;
     }
 
     const particles: P[] = [
-      ...mPts.map((p) => ({ ...p, ox: p.x, oy: p.y, vx: 0, vy: 0 })),
-      ...rPts.map((p) => ({ ...p, ox: p.x, oy: p.y, vx: 0, vy: 0 })),
+      ...mPts.map((p) => ({ ...p, ox: p.x, oy: p.y })),
+      ...rPts.map((p) => ({ ...p, ox: p.x, oy: p.y })),
     ];
 
-    // Target: circular portrait frame at center
+    // Portrait circle target positions
     const pcx = W * 0.5;
     const pcy = H * 0.47;
     const pradius = Math.min(W * 0.13, 130);
@@ -126,15 +128,13 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
       return { x: pcx + Math.cos(angle) * r, y: pcy + Math.sin(angle) * r };
     });
 
-    type Phase = "idle" | "holdShape" | "flow" | "spiral" | "settled" | "exit";
-    let phase: Phase = "idle";
-    let phaseStart = 0;
+    type Phase = "hidden" | "holdShape" | "flow" | "spiral" | "settled" | "exit";
+    let phase: Phase = "hidden";
     let alpha = 0;
     let targetAlpha = 0;
+    let phaseStart = 0;
     let globalTime = 0;
-    let flowAngle = 0;
 
-    // Assign random outward flow directions (magnetic field look)
     const flowAngles = particles.map(() => {
       const dx = (Math.random() - 0.5) * 2;
       const dy = (Math.random() - 0.5) * 2;
@@ -142,66 +142,62 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
       return { dx: dx / mag, dy: dy / mag, speed: 1.5 + Math.random() * 2.5 };
     });
 
+    function setPhase(p: Phase) {
+      phase = p;
+      phaseStart = performance.now();
+      if (p === "hidden") targetAlpha = 0;
+      if (p === "holdShape") targetAlpha = 0.45;
+      if (p === "flow") targetAlpha = 0.55;
+      if (p === "spiral" || p === "settled") targetAlpha = 0.6;
+      if (p === "exit") targetAlpha = 0;
+    }
+
     function tick(now: number) {
-      const dt = Math.min((now - globalTime) / 16.67, 3); // normalize to ~60fps
+      const dt = Math.min((now - globalTime) / 16.67, 2.5);
       globalTime = now;
       ctx!.clearRect(0, 0, W, H);
 
-      if (phase === "idle") {
-        // nothing visible yet
-      } else if (phase === "holdShape") {
-        // Brief hold at collision — subtle vibration
-        for (const p of particles) {
-          p.x += (p.ox - p.x) * 0.3 + (Math.random() - 0.5) * 0.4;
-          p.y += (p.oy - p.y) * 0.3 + (Math.random() - 0.5) * 0.4;
+      // Update phase based on current scene
+      const s = sceneRef.current;
+      if (s === "letters") { /* stay hidden */ }
+      else if (s === "collide") { if (phase === "hidden") setPhase("holdShape"); }
+      else if (s === "flow") { if (phase === "holdShape") setPhase("flow"); }
+      else if (s === "portrait") { if (phase === "flow") setPhase("spiral"); }
+      else if (s === "text") { if (phase === "spiral") setPhase("settled"); }
+      else if (s === "exit") { if (phase !== "exit") setPhase("exit"); }
+
+      if (phase === "hidden") return;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const t = targets[i];
+
+        if (phase === "holdShape") {
+          p.x += (p.ox - p.x) * 0.25 + (Math.random() - 0.5) * 0.5;
+          p.y += (p.oy - p.y) * 0.25 + (Math.random() - 0.5) * 0.5;
         }
-        targetAlpha = 0.5;
-      } else if (phase === "flow") {
-        // Graceful outward magnetic drift
-        const elapsed = (now - phaseStart) / 1000;
-        flowAngle += 0.003;
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
+        if (phase === "flow") {
           const f = flowAngles[i];
-          // Add slight curvature for magnetic feel
-          const ca = flowAngle + i * 0.001;
-          p.x += (f.dx * f.speed + Math.cos(ca) * 0.3) * dt;
-          p.y += (f.dy * f.speed + Math.sin(ca) * 0.3) * dt;
+          p.x += f.dx * f.speed * dt;
+          p.y += f.dy * f.speed * dt;
         }
-        targetAlpha = elapsed > 0.3 ? 0.55 : 0.35;
-      } else if (phase === "spiral") {
-        // Spiral inward toward portrait circle
-        const elapsed = (now - phaseStart) / 1000;
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          const t = targets[i];
+        if (phase === "spiral") {
           const dx = t.x - p.x;
           const dy = t.y - p.y;
           const dist = Math.hypot(dx, dy) || 1;
-          const force = 0.04 + elapsed * 0.002;
-          // Add spiral motion
-          const angle = Math.atan2(dy, dx);
-          const spiralX = Math.cos(angle + 1.2) * 0.5;
-          const spiralY = Math.sin(angle + 1.2) * 0.5;
-          p.x += (dx / dist) * force * dist * 0.15 + spiralX * dt;
-          p.y += (dy / dist) * force * dist * 0.15 + spiralY * dt;
+          const force = 0.06;
+          const a = Math.atan2(dy, dx);
+          p.x += Math.cos(a) * force * Math.min(dist, 40) * dt + Math.cos(a + 1.2) * 0.4 * dt;
+          p.y += Math.sin(a) * force * Math.min(dist, 40) * dt + Math.sin(a + 1.2) * 0.4 * dt;
         }
-        targetAlpha = 0.65;
-      } else if (phase === "settled") {
-        // Gentle orbit around target
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          const t = targets[i];
+        if (phase === "settled") {
           p.x += (t.x - p.x) * 0.03;
           p.y += (t.y - p.y) * 0.03;
         }
-        targetAlpha = 0.55;
-      } else if (phase === "exit") {
-        for (const p of particles) {
+        if (phase === "exit") {
           p.x += (Math.random() - 0.5) * 2.5 * dt;
           p.y += (Math.random() - 0.5) * 2.5 * dt;
         }
-        targetAlpha = 0;
       }
 
       alpha += (targetAlpha - alpha) * 0.04;
@@ -209,77 +205,68 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
       for (const p of particles) {
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, 0.7 + Math.random() * 0.4, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(170,195,235,${alpha.toFixed(3)})`;
+        ctx!.fillStyle = `rgba(170,195,240,${alpha.toFixed(3)})`;
         ctx!.fill();
       }
     }
 
-    // Scene watcher
-    const el = document.querySelector("[data-scene]");
-    const observer = new MutationObserver(() => {
-      const s = el?.getAttribute("data-scene");
-      if (s === "collide") { phase = "holdShape"; phaseStart = performance.now(); targetAlpha = 0.5; }
-      if (s === "flow") { phase = "flow"; phaseStart = performance.now(); }
-      if (s === "portrait") { phase = "spiral"; phaseStart = performance.now(); }
-      if (s === "text") { phase = "settled"; }
-      if (s === "exit") { phase = "exit"; targetAlpha = 0; }
-    });
-    if (el) observer.observe(el, { attributes: true, attributeFilter: ["data-scene"] });
-
-    let raf = requestAnimationFrame(function loop(now: number) {
+    let raf = 0;
+    function loop(now: number) {
       tick(now);
       raf = requestAnimationFrame(loop);
-    });
+    }
+    raf = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(raf);
-      observer.disconnect();
       window.removeEventListener("resize", fit);
     };
   }, []);
+
+  const isExit = scene === "exit";
 
   return (
     <motion.div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden select-none"
       onClick={() => { finish(); setTimeout(onDone, 600); }}
-      animate={scene === "exit" ? { opacity: 0 } : { opacity: 1 }}
+      animate={isExit ? { opacity: 0 } : { opacity: 1 }}
       transition={{ duration: 1, ease: [0.22, 0.8, 0.22, 1] }}
     >
+      {/* Scene marker for canvas tick to read */}
       <div data-scene={scene} className="hidden" aria-hidden />
 
-      {/* Particle canvas */}
+      {/* Particle canvas — only renders after DOM letters exit */}
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
       {/* Ambient bloom */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(50,80,160,0.05)_0%,_transparent_55%)]" />
 
-      {scene === "exit" && (
+      {isExit && (
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_transparent_40%,_rgba(0,0,0,0.7)_100%)]" />
       )}
 
-      {/* ─── Energy pulse ring ─── */}
+      {/* ─── Energy pulse ─── */}
       <AnimatePresence>
-        {collided && scene !== "exit" && (
+        {collided && !isExit && (
           <motion.div
             className="absolute rounded-full pointer-events-none"
             style={{
               width: 4, height: 4,
               left: "50%", top: "50%",
               marginLeft: -2, marginTop: -2,
-              border: "1px solid rgba(130,160,220,0.5)",
+              border: "1px solid rgba(130,160,220,0.45)",
             }}
-            initial={{ width: 4, height: 4, marginLeft: -2, marginTop: -2, opacity: 0.6 }}
-            animate={{ width: 600, height: 600, marginLeft: -300, marginTop: -300, opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.22, 0.8, 0.22, 1] }}
+            initial={{ width: 4, height: 4, marginLeft: -2, marginTop: -2, opacity: 0.5 }}
+            animate={{ width: 500, height: 500, marginLeft: -250, marginTop: -250, opacity: 0 }}
+            transition={{ duration: 1, ease: [0.22, 0.8, 0.22, 1] }}
           />
         )}
       </AnimatePresence>
 
-      {/* ─── M + R letters ─── */}
+      {/* ─── M + R DOM letters — ONLY visible before/at collision, not after ─── */}
       <AnimatePresence>
-        {(scene === "letters" || scene === "collide") && (
+        {scene === "letters" && (
           <>
-            {/* M from right — metallic finish */}
             <motion.span
               className="absolute select-none"
               style={{
@@ -291,21 +278,20 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                filter: "drop-shadow(0 0 18px rgba(100,140,220,0.3))",
+                filter: "drop-shadow(0 0 18px rgba(100,140,220,0.25))",
               }}
-              initial={go ? { x: 140, opacity: 0 } : { x: 140, opacity: 0 }}
-              animate={go ? { x: 28, opacity: 1 } : {}}
-              exit={{ x: 80, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(2px)" }}
+              initial={go ? { x: 120, opacity: 0 } : { x: 120, opacity: 0 }}
+              animate={go ? { x: 24, opacity: 1 } : {}}
+              exit={{ x: 80, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(3px)", transition: { duration: 0.3 } }}
               transition={
                 go
-                  ? { x: { duration: 0.75, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.4, delay: 0.05 } }
-                  : { duration: 0.35 }
+                  ? { x: { duration: 0.75, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.35, delay: 0.05 } }
+                  : {}
               }
             >
               M
             </motion.span>
 
-            {/* R from left — metallic finish */}
             <motion.span
               className="absolute select-none"
               style={{
@@ -317,15 +303,15 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                filter: "drop-shadow(0 0 18px rgba(100,140,220,0.3))",
+                filter: "drop-shadow(0 0 18px rgba(100,140,220,0.25))",
               }}
-              initial={go ? { x: -140, opacity: 0 } : { x: -140, opacity: 0 }}
-              animate={go ? { x: -28, opacity: 1 } : {}}
-              exit={{ x: -80, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(2px)" }}
+              initial={go ? { x: -120, opacity: 0 } : { x: -120, opacity: 0 }}
+              animate={go ? { x: -24, opacity: 1 } : {}}
+              exit={{ x: -80, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(3px)", transition: { duration: 0.3 } }}
               transition={
                 go
-                  ? { x: { duration: 0.75, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.4, delay: 0.05 } }
-                  : { duration: 0.35 }
+                  ? { x: { duration: 0.75, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.35, delay: 0.05 } }
+                  : {}
               }
             >
               R
@@ -334,7 +320,21 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
         )}
       </AnimatePresence>
 
-      {/* ─── Portrait reveal ─── */}
+      {/* Collide flash — brief overlap between DOM letters exiting and particles starting */}
+      <AnimatePresence>
+        {scene === "collide" && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.08 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            style={{ background: "radial-gradient(ellipse at center, rgba(130,160,220,1) 0%, transparent 60%)" }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ─── Portrait ─── */}
       <AnimatePresence>
         {scene === "portrait" && (
           <motion.div
@@ -357,17 +357,14 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
             >
               <img
                 src={portraitImg}
-                alt="Manikanta R"
+                alt=""
                 className="w-full h-full object-cover"
                 style={{ filter: "contrast(1.03) brightness(1.04)" }}
               />
-              {/* Rim light — subtle white/blue edge glow */}
               <div className="absolute inset-0 rounded-full pointer-events-none"
-                style={{
-                  boxShadow: "inset 0 0 60px rgba(0,0,0,0.35), inset 0 0 20px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(130,160,220,0.08)",
-                }}
+                style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35), inset 0 0 20px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(130,160,220,0.06)" }}
               />
-              <div className="absolute inset-[-2px] rounded-full pointer-events-none border border-white/[0.06]" />
+              <div className="absolute inset-[-2px] rounded-full pointer-events-none border border-white/[0.05]" />
             </motion.div>
           </motion.div>
         )}
@@ -398,7 +395,6 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
               MANIKANTA R
             </motion.h1>
 
-            {/* Accent line — draws left to right */}
             <div style={{ width: "clamp(100px, 20vw, 180px)", height: 1, overflow: "hidden" }}>
               <motion.div
                 className="h-full"
