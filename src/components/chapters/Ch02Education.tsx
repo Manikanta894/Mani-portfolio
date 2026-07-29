@@ -81,18 +81,19 @@ export function Ch02Education() {
                   key={i}
                   ref={(el) => { itemRefs.current[i] = el; }}
                   data-idx={i}
-                  className={`mr-edu__item ${activeIdx === i ? "is-active" : "is-faded"}`}
+                  className={`mr-edu__item ${activeIdx === i ? "is-active" : ""}`}
+                  style={{ animationDelay: `${i * 0.1}s` }}
                 >
+                  <span className="mr-edu__big-num">{num}</span>
                   <div className="mr-edu__card">
-                    <div className="mr-edu__meta">
-                      <span className="mr-edu__num">{num}</span>
-                      <span className={`mr-edu__state ${isCurrent ? "is-current" : ""}`}>
-                        {isCurrent && <span className="mr-edu__pulse" />}
-                        {e.state}
-                      </span>
-                    </div>
                     <div className="mr-edu__body">
-                      <span className="mr-edu__span">{e.span}</span>
+                      <div className="mr-edu__top-row">
+                        <span className="mr-edu__span">{e.span}</span>
+                        <span className={`mr-edu__state ${isCurrent ? "is-current" : ""}`}>
+                          {isCurrent && <span className="mr-edu__pulse" />}
+                          {e.state}
+                        </span>
+                      </div>
                       <h3 className="mr-edu__degree">{e.degree}</h3>
                       <div className="mr-edu__school">{e.school}</div>
                       {e.points && (
@@ -128,8 +129,8 @@ const css = `
   content: "";
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--ink) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 4%, transparent) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
   mask-image: radial-gradient(ellipse at 50% 30%, #000 35%, transparent 80%);
@@ -142,29 +143,35 @@ const css = `
 }
 
 /* Header */
-.mr-edu__header { max-width: 980px; margin-bottom: clamp(48px, 8vw, 96px); }
+.mr-edu__header { max-width: 900px; margin-bottom: clamp(56px, 8vw, 88px); }
 .mr-edu__eyebrow {
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 55%, transparent);
+  color: color-mix(in oklab, currentColor 45%, transparent);
 }
 .mr-edu__title {
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
   font-size: clamp(48px, 8.4vw, 132px);
-  line-height: 0.96;
-  letter-spacing: -0.02em;
-  margin: 18px 0 22px;
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  margin: 16px 0 20px;
+}
+.mr-edu__title::after {
+  content: ""; display: block;
+  width: 64px; height: 2px;
+  margin-top: 24px;
+  background: var(--vermilion);
 }
 .mr-edu__intro {
   font-family: var(--font-serif, "Instrument Serif", serif);
   font-style: italic;
-  font-size: clamp(18px, 1.6vw, 24px);
+  font-size: clamp(17px, 1.5vw, 22px);
   line-height: 1.55;
-  max-width: 64ch;
-  color: color-mix(in oklab, currentColor 78%, transparent);
+  max-width: 56ch;
+  color: color-mix(in oklab, currentColor 72%, transparent);
 }
 
 /* Grid */
@@ -190,8 +197,8 @@ const css = `
   left: 11px;
   top: 8px;
   bottom: 8px;
-  width: 2px;
-  background: color-mix(in oklab, currentColor 14%, transparent);
+  width: 1.5px;
+  background: color-mix(in oklab, currentColor 12%, transparent);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -207,18 +214,18 @@ const css = `
   padding: 12px 0 30px 30px;
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 36%, transparent);
-  transition: color .4s ease, opacity .4s ease, transform .4s ease;
+  color: color-mix(in oklab, currentColor 32%, transparent);
+  transition: color .4s ease, transform .4s ease;
 }
 .mr-edu__rail-dot {
   position: absolute;
-  left: 6px; top: 16px;
-  width: 12px; height: 12px;
+  left: 6.25px; top: 15px;
+  width: 10px; height: 10px;
   border-radius: 50%;
   background: var(--bone);
-  border: 2px solid color-mix(in oklab, currentColor 22%, transparent);
+  border: 2px solid color-mix(in oklab, currentColor 18%, transparent);
   transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease;
 }
 .mr-edu__rail-item.is-past .mr-edu__rail-dot {
@@ -231,20 +238,20 @@ const css = `
 .mr-edu__rail-item.is-active .mr-edu__rail-dot {
   border-color: var(--vermilion);
   background: var(--vermilion);
-  box-shadow: 0 0 0 6px color-mix(in oklab, var(--vermilion) 18%, transparent);
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--vermilion) 14%, transparent);
 }
 .mr-edu__rail-year { display: block; }
 .mr-edu__rail-label {
   display: block;
-  margin-top: 4px;
+  margin-top: 3px;
   font-family: var(--font-display, "Instrument Serif", serif);
   font-style: italic;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0;
   text-transform: none;
   color: inherit;
-  opacity: .9;
+  opacity: .85;
 }
 
 /* List */
@@ -252,86 +259,124 @@ const css = `
   list-style: none;
   margin: 0; padding: 0;
   display: flex; flex-direction: column;
-  gap: clamp(24px, 3.5vw, 48px);
+  gap: 1px;
 }
+
+/* Item */
 .mr-edu__item {
-  border-top: 1px solid color-mix(in oklab, currentColor 14%, transparent);
-  padding-top: clamp(20px, 2.5vw, 32px);
-  transition: opacity .5s ease, filter .5s ease;
+  position: relative;
+  border-top: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+  padding: clamp(28px, 3.5vw, 44px) 0 clamp(28px, 3.5vw, 44px) clamp(56px, 8vw, 100px);
+  transition: border-color .5s ease, background .5s ease;
+  opacity: 0;
+  animation: mr-edu-enter .7s cubic-bezier(.22,.8,.22,1) forwards;
 }
-.mr-edu__item.is-faded { opacity: .45; }
-.mr-edu__item.is-active { opacity: 1; }
+@keyframes mr-edu-enter {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mr-edu__item:hover {
+  background: color-mix(in oklab, var(--ink) 2%, transparent);
+}
+.mr-edu__item.is-active {
+  border-top-color: color-mix(in oklab, var(--vermilion) 35%, transparent);
+}
+.mr-edu__item.is-active::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--vermilion);
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: mr-edu-bar .5s .15s cubic-bezier(.22,.8,.22,1) forwards;
+}
+@keyframes mr-edu-bar {
+  to { transform: scaleY(1); }
+}
+@media (max-width: 640px) {
+  .mr-edu__item { padding-left: 0; }
+}
+
+/* Big number */
+.mr-edu__big-num {
+  position: absolute;
+  left: 0; top: clamp(20px, 3vw, 36px);
+  font-family: var(--font-display, "Instrument Serif", serif);
+  font-weight: 400;
+  font-size: clamp(48px, 6.5vw, 96px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: color-mix(in oklab, var(--vermilion) 35%, transparent);
+  transition: color .5s ease, transform .5s ease;
+  pointer-events: none;
+}
+.mr-edu__item.is-active .mr-edu__big-num {
+  color: color-mix(in oklab, var(--vermilion) 65%, transparent);
+}
+.mr-edu__item:hover .mr-edu__big-num {
+  transform: scale(1.04);
+}
+@media (max-width: 640px) {
+  .mr-edu__big-num {
+    position: relative; left: auto; top: auto;
+    font-size: clamp(36px, 8vw, 56px);
+    margin-bottom: 8px;
+  }
+}
 
 /* Card */
 .mr-edu__card {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: clamp(16px, 2vw, 32px);
-  align-items: start;
-}
-@media (max-width: 640px) {
-  .mr-edu__card { grid-template-columns: 1fr; }
+  display: block;
 }
 
-.mr-edu__meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
+/* Top row: span + status */
+.mr-edu__top-row {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 14px;
 }
-.mr-edu__num {
-  font-family: var(--font-display, "Instrument Serif", serif);
-  font-weight: 400;
-  font-size: clamp(36px, 4vw, 64px);
-  line-height: 0.9;
-  letter-spacing: -0.02em;
-  color: color-mix(in oklab, currentColor 70%, transparent);
-  font-variant-numeric: tabular-nums;
-}
-.mr-edu__state {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+.mr-edu__span {
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 70%, transparent);
+  color: color-mix(in oklab, currentColor 50%, transparent);
+}
+.mr-edu__state {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, currentColor 16%, transparent);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, currentColor 60%, transparent);
 }
 .mr-edu__state.is-current {
   color: var(--vermilion);
-  border-color: color-mix(in oklab, var(--vermilion) 50%, transparent);
-  background: color-mix(in oklab, var(--vermilion) 8%, transparent);
+  border-color: color-mix(in oklab, var(--vermilion) 45%, transparent);
+  background: color-mix(in oklab, var(--vermilion) 7%, transparent);
 }
 .mr-edu__pulse {
   display: inline-block;
-  width: 7px; height: 7px;
+  width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--vermilion);
-  box-shadow: 0 0 0 0 color-mix(in oklab, var(--vermilion) 60%, transparent);
-  animation: mr-edu-pulse 2.1s ease-in-out infinite;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--vermilion) 50%, transparent);
+  animation: mr-edu-pulse 2.4s ease-in-out infinite;
 }
 @keyframes mr-edu-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--vermilion) 55%, transparent); }
-  50%      { box-shadow: 0 0 0 8px color-mix(in oklab, var(--vermilion) 0%, transparent); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--vermilion) 50%, transparent); }
+  50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--vermilion) 0%, transparent); }
 }
 
 .mr-edu__body { min-width: 0; }
-.mr-edu__span {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11.5px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 55%, transparent);
-  margin-bottom: 10px;
-  display: block;
-}
 .mr-edu__degree {
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.2vw, 44px);
-  line-height: 1.05;
+  font-size: clamp(24px, 2.8vw, 38px);
+  line-height: 1.08;
   letter-spacing: -0.012em;
   margin: 0;
 }
@@ -339,28 +384,31 @@ const css = `
   margin-top: 8px;
   font-family: var(--font-serif, "Instrument Serif", serif);
   font-style: italic;
-  font-size: clamp(15px, 1.2vw, 18px);
-  color: color-mix(in oklab, currentColor 70%, transparent);
+  font-size: clamp(14px, 1.1vw, 17px);
+  color: color-mix(in oklab, currentColor 65%, transparent);
 }
 
 .mr-edu__points {
   list-style: none;
-  margin: 18px 0 0;
+  margin: 16px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: clamp(15px, 1.05vw, 17px);
-  line-height: 1.65;
-  color: color-mix(in oklab, currentColor 88%, transparent);
+  gap: 8px;
+  font-size: clamp(14px, 1vw, 16px);
+  line-height: 1.6;
+  color: color-mix(in oklab, currentColor 82%, transparent);
 }
 .mr-edu__points li {
   position: relative;
-  padding-left: 18px;
+  padding-left: 16px;
 }
 .mr-edu__points li::before {
-  content: "—";
+  content: "+";
   position: absolute; left: 0; top: 0;
   color: var(--vermilion);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  line-height: 1.6;
 }
 `;
