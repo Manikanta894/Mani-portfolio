@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal, SplitWords } from "@/components/motion/primitives";
-import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 
 /* ─────────────────────────────────────────────────────────────
    Ch01 — "The Story Behind the Work"
@@ -63,10 +62,10 @@ export function Ch01About() {
   const { profile, aboutBeats, aboutMilestones, aboutMetrics } = usePortfolio();
 
   const BEATS: Beat[] = (aboutBeats?.length ? aboutBeats : [
-    { no: "I", era: "Childhood · Karnataka", title: "The Beginning", lede: "I was the kid asking why, not just what.", body: "Growing up in Karnataka, I was never satisfied with just knowing what happened — I wanted to know why. Why a shop did better on some days than others, why one approach worked and another didn't. Growing up around four languages besides English probably didn't hurt either — you learn early that the same idea can be said many ways, and that's stuck with me in how I read data too.", pull: "I collected questions the way other kids collected stickers." },
-    { no: "II", era: "2019 — 2024 · The retail floor & the first dataset", title: "The Turning Point", lede: "Where curiosity finally met evidence.", body: "Working the retail floor at RCM FMCG and later Fizzy Goblet, I wasn't just serving customers — I was quietly tracking why some days spiked and others didn't, reconciling stock, building my own little Excel dashboards nobody asked for. That's when I realized I liked the evidence more than the guesswork.", pull: "The first chart that proved me wrong became the most honest mentor I ever had." },
-    { no: "III", era: "2025 — Now · Bengaluru", title: "Today", lede: "Building the analyst I want to be, one dataset at a time.", body: "Right now I'm an MBA candidate in HR & Business Analytics at Nagarjuna Degree College in Bengaluru — deliberately choosing the intersection of people and numbers rather than picking one. Outside class, I'm working through certifications (IBM Data Analytics, the McKinsey Forward and Aspire Leaders programs), building small Power BI and HR-analytics projects on my own time, and still doing the thing I did as a kid — asking why, then going and checking.", pull: "I'd rather build a small dashboard nobody asked for than wait for someone to hand me a big project." },
-    { no: "IV", era: "2026 → 2036 · The horizon", title: "The Future", lede: "I want to be the person who makes workforce decisions less of a guess.", body: "The next few years, I want to be working inside an organization's people function — turning attrition risk, hiring funnels, and engagement data into decisions a manager can actually act on, not just a slide nobody reads twice. Long term, I want to be known as someone who made HR decisions more evidence-based without making them feel less human." },
+    { no: "I", era: "Childhood · Karnataka", title: "The Beginning", lede: "Curiosity came before language for the work.", body: "I didn't start with a plan. I started with a notebook full of questions about why businesses worked the way they did — and a slow, stubborn refusal to take answers at face value.", pull: "I collected questions the way other kids collected stickers." },
+    { no: "II", era: "2019 — 2024 · The retail floor & the first dataset", title: "The Turning Point", lede: "Where curiosity met evidence.", body: "The discipline came from necessity. On the retail floor, every inventory call and customer interaction quietly revealed how data shapes business outcomes.", pull: "The first chart that proved me wrong became the most honest mentor I ever had." },
+    { no: "III", era: "2025 — Now · Bengaluru", title: "Today", lede: "At the seam between people, process and prediction.", body: "Today I'm an MBA candidate in HR & Business Analytics at Nagarjuna Degree College, Bengaluru." },
+    { no: "IV", era: "2026 → 2036 · The horizon", title: "The Future", lede: "A decade-long bet on human-centered AI.", body: "Over the next decade I want to help write the playbook for human-centered AI inside organizations.", pull: "Build for the team you'll have in three years." },
   ]);
 
   const MILESTONES: string[] = (aboutMilestones?.length ? aboutMilestones.map((m: any) => m.label || m) : [
@@ -74,13 +73,14 @@ export function Ch01About() {
   ]);
 
   const METRICS = (aboutMetrics?.length ? aboutMetrics : [
+    { label: "Research Papers", value: 4, suffix: "", target: "research" },
     { label: "Certifications", value: 10, suffix: "+", target: "credentials" },
     { label: "Projects", value: 12, suffix: "+", target: "work" },
     { label: "Publications", value: 2, suffix: "", target: "research" },
   ]);
 
   const aboutData = {
-    number: CHAPTER_NUMBERS.about,
+    number: "01",
     kicker: "Origin / Position",
     epigraph: profile?.about_epigraph || "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions.",
     footnote: profile?.about_footnote || "signal over noise",
@@ -294,21 +294,43 @@ export function Ch01About() {
           </div>
         </div>
 
+        {/* ── Animated counters (clickable → jump) ─────────── */}
+        <div className="about-metrics" role="list">
+          {METRICS.map((m: any) => (
+            <a
+              key={m.label}
+              role="listitem"
+              href={`#${m.target || m.target_anchor || ""}`}
+              onClick={onJump(m.target || m.target_anchor)}
+              className="about-metric"
+            >
+              <span className="about-metric__value">
+                <Counter to={m.value} suffix={m.suffix || ""} />
+              </span>
+              <span className="about-metric__label">{m.label}</span>
+              <span className="about-metric__cue" aria-hidden>↗ view</span>
+            </a>
+          ))}
+        </div>
+
+        <div className="about-footnote">// {aboutData.footnote}</div>
+
+
+
       </div>
 
       <style>{`
         .about-stage {
           position: relative;
-          background-color: var(--ink);
-          background-image:
+          background:
             radial-gradient(80% 60% at 80% 0%, color-mix(in oklab, var(--vermilion, #D46A2E) 7%, transparent), transparent 60%),
-            radial-gradient(60% 40% at 0% 100%, color-mix(in oklab, var(--bone) 6%, transparent), transparent 60%);
+            radial-gradient(60% 40% at 0% 100%, color-mix(in oklab, var(--ink) 6%, transparent), transparent 60%);
         }
         .about-wash {
           position: absolute; inset: 0; pointer-events: none;
           background:
             repeating-linear-gradient(0deg,
-              color-mix(in oklab, var(--bone) 4%, transparent) 0 1px,
+              color-mix(in oklab, var(--ink) 4%, transparent) 0 1px,
               transparent 1px 96px);
           mask-image: radial-gradient(60% 80% at 50% 30%, #000 60%, transparent 100%);
           opacity: .35;
@@ -321,7 +343,7 @@ export function Ch01About() {
           font-size: clamp(140px, 22vw, 360px);
           line-height: 1;
           letter-spacing: -0.02em;
-          color: color-mix(in oklab, var(--bone) 5%, transparent);
+          color: color-mix(in oklab, var(--ink) 5%, transparent);
           user-select: none; pointer-events: none;
           white-space: nowrap;
           transform: rotate(-4deg);
@@ -333,7 +355,7 @@ export function Ch01About() {
           display: inline-flex; align-items: center; gap: 14px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 55%, transparent);
+          color: color-mix(in oklab, var(--ink) 55%, transparent);
         }
         .about-eyebrow__dot {
           width: 4px; height: 4px; border-radius: 99px;
@@ -346,18 +368,18 @@ export function Ch01About() {
           font-size: clamp(48px, 8.4vw, 132px);
           line-height: 0.92;
           letter-spacing: -0.025em;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-title em {
           font-style: italic;
-          color: color-mix(in oklab, var(--bone) 92%, var(--vermilion, #D46A2E));
+          color: color-mix(in oklab, var(--ink) 92%, var(--vermilion, #D46A2E));
         }
         .about-deck {
           margin: 32px 0 0;
           max-width: 720px;
           font-size: clamp(18px, 1.6vw, 22px);
           line-height: 1.55;
-          color: color-mix(in oklab, var(--bone) 72%, transparent);
+          color: color-mix(in oklab, var(--ink) 72%, transparent);
         }
 
         /* ── Epigraph ───────────────────────────────────── */
@@ -381,13 +403,13 @@ export function Ch01About() {
           font-size: clamp(28px, 4.4vw, 64px);
           line-height: 1.08;
           letter-spacing: -0.012em;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-epigraph figcaption {
           margin-top: 18px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 55%, transparent);
+          color: color-mix(in oklab, var(--ink) 55%, transparent);
         }
 
         /* ── Two-column layout ──────────────────────────── */
@@ -411,7 +433,7 @@ export function Ch01About() {
         .about-rail__label {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 50%, transparent);
+          color: color-mix(in oklab, var(--ink) 50%, transparent);
         }
         .about-rail__list {
           list-style: none; padding: 0; margin: 0;
@@ -423,20 +445,20 @@ export function Ch01About() {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: 19px;
           letter-spacing: -0.005em;
-          color: color-mix(in oklab, var(--bone) 38%, transparent);
+          color: color-mix(in oklab, var(--ink) 38%, transparent);
           transition: color .45s ease, transform .45s ease;
         }
         .about-rail__dot {
           width: 8px; height: 8px; border-radius: 99px;
-          background: color-mix(in oklab, var(--bone) 22%, transparent);
+          background: color-mix(in oklab, var(--ink) 22%, transparent);
           transition: background .35s ease, transform .35s ease, box-shadow .35s ease;
         }
-        .about-rail__item.is-passed { color: color-mix(in oklab, var(--bone) 65%, transparent); }
+        .about-rail__item.is-passed { color: color-mix(in oklab, var(--ink) 65%, transparent); }
         .about-rail__item.is-passed .about-rail__dot {
-          background: color-mix(in oklab, var(--vermilion, #D46A2E) 60%, var(--bone));
+          background: color-mix(in oklab, var(--vermilion, #D46A2E) 60%, var(--ink));
         }
         .about-rail__item.is-active {
-          color: var(--bone); transform: translateX(2px);
+          color: var(--ink); transform: translateX(2px);
         }
         .about-rail__item.is-active .about-rail__dot {
           background: var(--vermilion, #D46A2E);
@@ -445,7 +467,7 @@ export function Ch01About() {
         }
         .about-rail__track {
           position: absolute; left: 3px; top: 38px; bottom: 0; width: 2px;
-          background: color-mix(in oklab, var(--bone) 12%, transparent);
+          background: color-mix(in oklab, var(--ink) 12%, transparent);
           overflow: hidden;
         }
         .about-rail__progress {
@@ -478,14 +500,14 @@ export function Ch01About() {
         }
         .about-para.is-lit {
           opacity: 1;
-          color: var(--bone);
+          color: var(--ink);
           transform: translateZ(0);
         }
         .about-beat__body.is-lit {
-          color: color-mix(in oklab, var(--bone) 96%, transparent);
+          color: color-mix(in oklab, var(--ink) 96%, transparent);
         }
         .about-beat__lede.is-lit {
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-beat__pull.is-lit {
           box-shadow: -2px 0 0 0 var(--vermilion, #D46A2E);
@@ -499,7 +521,7 @@ export function Ch01About() {
         .about-beat__head {
           display: flex; align-items: baseline; gap: 16px;
           padding-bottom: 14px;
-          border-bottom: 1px solid color-mix(in oklab, var(--bone) 12%, transparent);
+          border-bottom: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
         }
         .about-beat__no {
           font-family: var(--font-serif, "Instrument Serif", serif);
@@ -510,7 +532,7 @@ export function Ch01About() {
         .about-beat__era {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 55%, transparent);
+          color: color-mix(in oklab, var(--ink) 55%, transparent);
         }
         .about-beat__title {
           margin: 26px 0 14px;
@@ -519,21 +541,21 @@ export function Ch01About() {
           font-size: clamp(40px, 5.2vw, 76px);
           line-height: 1.0;
           letter-spacing: -0.02em;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-beat__lede {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-style: italic;
           font-size: clamp(20px, 2vw, 26px);
           line-height: 1.35;
-          color: color-mix(in oklab, var(--bone) 80%, transparent);
+          color: color-mix(in oklab, var(--ink) 80%, transparent);
           margin: 0 0 22px;
         }
         .about-beat__body {
           font-family: var(--font-sans, system-ui, sans-serif);
           font-size: clamp(18px, 1.45vw, 21px);
           line-height: 1.7;
-          color: color-mix(in oklab, var(--bone) 78%, transparent);
+          color: color-mix(in oklab, var(--ink) 78%, transparent);
         }
         .about-beat__pull {
           margin: 28px 0 0;
@@ -543,7 +565,7 @@ export function Ch01About() {
           font-style: italic;
           font-size: clamp(22px, 2.4vw, 30px);
           line-height: 1.25;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-beat__pull span {
           font-size: 1.2em; color: var(--vermilion, #D46A2E);
@@ -556,11 +578,11 @@ export function Ch01About() {
         }
         .about-tags li {
           padding: 6px 12px;
-          border: 1px solid color-mix(in oklab, var(--bone) 22%, transparent);
+          border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
           border-radius: 999px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 70%, transparent);
+          color: color-mix(in oklab, var(--ink) 70%, transparent);
         }
 
         /* ── Metrics ─────────────────────────────────────── */
@@ -569,8 +591,8 @@ export function Ch01About() {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 1px;
-          background: color-mix(in oklab, var(--bone) 14%, transparent);
-          border: 1px solid color-mix(in oklab, var(--bone) 14%, transparent);
+          background: color-mix(in oklab, var(--ink) 14%, transparent);
+          border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
         }
         @media (min-width: 880px) {
           .about-metrics { grid-template-columns: repeat(4, 1fr); }
@@ -579,17 +601,17 @@ export function Ch01About() {
           position: relative;
           display: flex; flex-direction: column; gap: 14px;
           padding: 32px 28px 28px;
-          background: color-mix(in oklab, var(--ink, #14110F) 50%, transparent);
+          background: color-mix(in oklab, var(--bone, #F8F5EF) 92%, transparent);
           text-decoration: none; color: inherit;
           transition: background .35s ease, transform .35s ease;
           overflow: hidden;
         }
         .about-metric::before {
           content: ""; position: absolute; inset: 0;
-          background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--vermilion, #D46A2E) 12%, transparent));
+          background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--vermilion, #D46A2E) 10%, transparent));
           opacity: 0; transition: opacity .35s ease;
         }
-        .about-metric:hover { background: color-mix(in oklab, var(--ink, #14110F) 70%, transparent); }
+        .about-metric:hover { background: color-mix(in oklab, var(--bone, #F8F5EF) 100%, transparent); }
         .about-metric:hover::before { opacity: 1; }
         .about-metric__value {
           position: relative; z-index: 1;
@@ -597,20 +619,20 @@ export function Ch01About() {
           font-size: clamp(56px, 6.4vw, 96px);
           line-height: 0.95;
           letter-spacing: -0.02em;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-metric__suffix { color: var(--vermilion, #D46A2E); margin-left: 2px; }
         .about-metric__label {
           position: relative; z-index: 1;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 65%, transparent);
+          color: color-mix(in oklab, var(--ink) 65%, transparent);
         }
         .about-metric__cue {
           position: relative; z-index: 1;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 45%, transparent);
+          color: color-mix(in oklab, var(--ink) 45%, transparent);
           opacity: 0; transform: translateY(4px);
           transition: opacity .3s ease, transform .3s ease;
         }
@@ -620,14 +642,14 @@ export function Ch01About() {
           margin-top: 18px;
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.18em;
-          color: color-mix(in oklab, var(--bone) 45%, transparent);
+          color: color-mix(in oklab, var(--ink) 45%, transparent);
         }
 
         /* ── Coda (Beyond Ed & Work) ─────────────────────── */
         .about-coda {
           margin-top: 160px;
           padding-top: 80px;
-          border-top: 1px solid color-mix(in oklab, var(--bone) 12%, transparent);
+          border-top: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
         }
         .about-coda__head { max-width: 1100px; }
         .about-coda__title {
@@ -637,7 +659,7 @@ export function Ch01About() {
           font-size: clamp(36px, 6vw, 84px);
           line-height: 1.0;
           letter-spacing: -0.02em;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-coda__lede {
           margin: 28px 0 0;
@@ -646,7 +668,7 @@ export function Ch01About() {
           font-style: italic;
           font-size: clamp(20px, 2vw, 28px);
           line-height: 1.35;
-          color: color-mix(in oklab, var(--bone) 78%, transparent);
+          color: color-mix(in oklab, var(--ink) 78%, transparent);
         }
         .about-pillars {
           margin-top: 64px;
@@ -660,7 +682,7 @@ export function Ch01About() {
         .about-pillar {
           padding: 28px 28px 30px;
           background: color-mix(in oklab, var(--bone, #F8F5EF) 70%, transparent);
-          border: 1px solid color-mix(in oklab, var(--bone) 10%, transparent);
+          border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
           border-radius: 4px;
         }
         .about-pillar__no {
@@ -673,13 +695,13 @@ export function Ch01About() {
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: clamp(24px, 2.4vw, 32px);
           line-height: 1;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-pillar__body {
           margin-top: 14px;
           font-size: 17px;
           line-height: 1.6;
-          color: color-mix(in oklab, var(--bone) 75%, transparent);
+          color: color-mix(in oklab, var(--ink) 75%, transparent);
         }
         .about-values {
           list-style: none; padding: 0; margin: 72px 0 0;
@@ -694,7 +716,7 @@ export function Ch01About() {
           font-style: italic;
           font-size: clamp(20px, 2vw, 26px);
           line-height: 1.3;
-          color: var(--bone);
+          color: var(--ink);
         }
         .about-values__quote {
           position: absolute; left: 0; top: -8px;
@@ -709,14 +731,14 @@ export function Ch01About() {
         .about-horizon__era {
           font-family: var(--font-mono, ui-monospace, monospace);
           font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
-          color: color-mix(in oklab, var(--bone) 55%, transparent);
+          color: color-mix(in oklab, var(--ink) 55%, transparent);
         }
         .about-horizon p {
           margin-top: 12px;
           font-family: var(--font-serif, "Instrument Serif", serif);
           font-size: clamp(22px, 2.6vw, 36px);
           line-height: 1.2;
-          color: var(--bone);
+          color: var(--ink);
         }
 
         @media (prefers-reduced-motion: reduce) {

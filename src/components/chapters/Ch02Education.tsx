@@ -2,24 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
 
-/* Your live "education" table uses institution/field/start_date/end_date/
-   status/highlights — not school/span/state/points. This maps the real
-   columns onto what this component reads, same fix as the Projects section. */
-function normalizeEducation(e: any) {
-  return {
-    ...e,
-    school: e.school || e.institution,
-    span: e.span || (e.start_date || e.end_date ? `${e.start_date || ""} — ${e.end_date || ""}` : e.era),
-    state: e.state || e.status,
-    points: e.points && e.points.length ? e.points : e.highlights,
-    degree: e.field ? `${e.degree}${e.degree ? ", " : ""}${e.field}` : e.degree,
-  };
-}
-
 export function Ch02Education() {
-  const { education, sectionContent } = usePortfolio();
-  const entries = (education?.length ? education : []).map(normalizeEducation);
-  const sc = sectionContent.education || {};
+  const { education } = usePortfolio();
+  const entries = education?.length ? education : [];
 
   const [activeIdx, setActiveIdx] = useState(0);
   const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
@@ -43,10 +28,8 @@ export function Ch02Education() {
     return () => io.disconnect();
   }, []);
 
-  const sectionNumber = sc.number || "02";
-  const sectionKicker = sc.kicker || "Academic Archive";
-  const sectionTitle = sc.title || "The Academic Archive.";
-  const sectionIntro = sc.intro || "An analytics-meets-people thesis, built one degree at a time.";
+  const sectionNumber = "02";
+  const sectionKicker = "Academic Archive";
 
   return (
     <section id="education" data-mood="ink" className="mr-edu chapter-pad">
@@ -55,8 +38,8 @@ export function Ch02Education() {
           <div className="mr-edu__eyebrow">
             /{sectionNumber} — {sectionKicker}
           </div>
-          <h2 className="mr-edu__title">{sectionTitle}</h2>
-          <p className="mr-edu__intro">{sectionIntro}</p>
+          <h2 className="mr-edu__title">The Academic Archive.</h2>
+          <p className="mr-edu__intro">An analytics-meets-people thesis, built one degree at a time.</p>
         </header>
 
         <div className="mr-edu__grid">
@@ -136,18 +119,17 @@ export function Ch02Education() {
 const css = `
 .mr-edu {
   position: relative;
-  color: var(--bone);
-  background-color: var(--ink);
-  background-image:
+  color: var(--ink);
+  background:
     radial-gradient(900px 600px at 12% -10%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 60%),
-    radial-gradient(700px 500px at 100% 110%, color-mix(in oklab, var(--bone) 7%, transparent), transparent 60%);
+    radial-gradient(700px 500px at 100% 110%, color-mix(in oklab, var(--ink) 7%, transparent), transparent 60%);
 }
 .mr-edu::before {
   content: "";
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--bone) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--bone) 5%, transparent) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
   mask-image: radial-gradient(ellipse at 50% 30%, #000 35%, transparent 80%);
@@ -243,7 +225,7 @@ const css = `
   border-color: color-mix(in oklab, var(--vermilion) 70%, transparent);
 }
 .mr-edu__rail-item.is-active {
-  color: var(--bone);
+  color: var(--ink);
   transform: translateX(2px);
 }
 .mr-edu__rail-item.is-active .mr-edu__rail-dot {

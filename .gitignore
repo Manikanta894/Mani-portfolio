@@ -30,3 +30,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment
+.env
+
+# Build output
+.vercel/output/
+
+# Old backup copies
+Mani-portfolio-merged/
+merged-repo/

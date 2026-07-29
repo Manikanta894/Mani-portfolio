@@ -8,6 +8,10 @@ const STAT_TARGETS: Record<string, string> = {
   "Awards": "#awards",
   "Certifications": "#credentials",
   "Research Papers": "#research",
+  "Conference Presentations": "#awards",
+  "Journal Publications": "#publications",
+  "Programs Completed": "#credentials",
+  "Learning Hours": "#credentials",
   "Skills Acquired": "#ecosystem",
 };
 
@@ -58,10 +62,9 @@ function StatTile({ label, value, delay, onSelect }: { label: string; value: num
           onSelect?.(label);
           if (target) scrollToHash(target);
         }}
-        className="group relative flex h-full w-full flex-col justify-between border border-bone/12 bg-bone/[0.03] p-6 text-left transition-all duration-500 hover:border-vermilion/50 hover:bg-bone/[0.05]"
+        className="group relative flex h-full w-full flex-col justify-between rounded-xl border border-bone/10 bg-bone/[0.02] p-6 text-left transition-all duration-500 hover:-translate-y-0.5 hover:border-vermilion/40 hover:bg-bone/[0.04]"
       >
-        <span aria-hidden className="absolute left-0 top-0 h-[2px] w-0 bg-vermilion transition-all duration-500 group-hover:w-full" />
-        <div className="text-mono text-eyebrow uppercase tracking-[0.24em] text-bone/75 transition-colors group-hover:text-bone">
+        <div className="text-mono text-eyebrow uppercase tracking-[0.24em] text-bone/50 transition-colors group-hover:text-bone/75">
           {label}
         </div>
         <div className="mt-8 flex items-end justify-between gap-2">
@@ -78,24 +81,8 @@ function StatTile({ label, value, delay, onSelect }: { label: string; value: num
   );
 }
 
-/* Same palette as Research/Skills sections, so a cert's category ties
-   back visually to where that skill lives elsewhere on the site. */
-const CRED_CATEGORY_COLORS: Record<string, string> = {
-  "analytics": "#E0533D",
-  "ai": "#7C5CFF",
-  "artificial intelligence": "#7C5CFF",
-  "people & hr": "#3DA9FC",
-  "hr": "#3DA9FC",
-  "business": "#F2B33D",
-  "research": "#7C5CFF",
-};
-function credCategoryColor(cat?: string) {
-  return CRED_CATEGORY_COLORS[(cat || "").toLowerCase().trim()] || "var(--vermilion)";
-}
-
 export function Ch08Credentials() {
-  const { certifications, awards, sectionContent } = usePortfolio();
-  const sc = sectionContent.credentials || {};
+  const { certifications, awards } = usePortfolio();
   const [open, setOpen] = useState<any>(null);
   const [openAward, setOpenAward] = useState<any>(null);
   const [tab, setTab] = useState<"certs" | "honors">("certs");
@@ -120,26 +107,27 @@ export function Ch08Credentials() {
     };
   }, [open]);
 
-  const sectionNumber = sc.number || "07";
-  const sectionLabel = sc.label || "Curated · Verified · Continuous";
-  const sectionTitle = sc.title || "Professional Certifications";
-  const stats = sc.stats || [
-    { label: "Awards", value: awardsList.length || 4 },
-    { label: "Certifications", value: list.length || 10 },
-    { label: "Research Papers", value: 8 },
+  const stats = [
+    { label: "Awards", value: awardsList.length || 6 },
+    { label: "Certifications", value: list.length || 14 },
+    { label: "Research Papers", value: 10 },
+    { label: "Conference Presentations", value: 3 },
+    { label: "Journal Publications", value: 4 },
+    { label: "Programs Completed", value: 8 },
+    { label: "Learning Hours", value: 420 },
     { label: "Skills Acquired", value: 38 },
   ];
 
   return (
-    <section id="credentials" data-mood="ink" className="relative chapter-pad grain">
+    <section id="credentials" data-mood="graphite" className="relative chapter-pad grain">
       <div className="mx-auto max-w-6xl">
         <header className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-8">
             <div className="text-mono text-meta text-bone/55">
-              /{sectionNumber} — {sectionLabel}
+              /07 — Curated · Verified · Continuous
             </div>
             <h2 className="text-display mt-5 text-[clamp(2.8rem,7vw,5.8rem)] leading-[0.95] text-bone">
-              <MaskReveal>{sectionTitle}</MaskReveal>
+              <MaskReveal>Professional Certifications</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 flex items-end justify-start md:col-span-4 md:justify-end">
@@ -153,7 +141,7 @@ export function Ch08Credentials() {
 
         {/* Achievement Dashboard */}
         <div className="mt-24 grid grid-cols-2 gap-3 md:mt-32 md:grid-cols-4">
-          {(stats as any[]).map((s: any, i: number) => (
+          {stats.map((s, i) => (
             <StatTile
               key={s.label}
               label={s.label}
@@ -215,28 +203,20 @@ export function Ch08Credentials() {
               transition={{ duration: 0.3 }}
             >
               <ul className="divide-y divide-bone/15 border-y border-bone/15">
-                {(showAllCerts ? list : list.slice(0, 6)).map((c: any) => {
-                  const accent = credCategoryColor(c.category);
-                  return (
-                  <li key={c.credential_id || c.id} className="group relative">
-                    <span aria-hidden className="absolute left-0 top-0 h-full w-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: accent }} />
+                {(showAllCerts ? list : list.slice(0, 6)).map((c: any) => (
+                  <li key={c.credentialId || c.id}>
                     <button
                       type="button"
                       onClick={() => setOpen(c)}
-                      className="grid w-full grid-cols-12 items-baseline gap-4 py-4 pl-4 text-left transition-colors hover:bg-bone/[0.04]"
+                      className="group grid w-full grid-cols-12 items-baseline gap-4 py-4 text-left transition-colors hover:bg-bone/[0.04]"
                     >
-                      <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{c.date || c.year}</span>
-                      <span className="col-span-10 md:col-span-6 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">
-                        <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: accent }} />
-                        {c.title || c.name}
-                      </span>
-                      <span className="hidden md:col-span-2 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{c.issuer}</span>
-                      <span className="hidden md:col-span-2 md:block text-mono text-eyebrow uppercase tracking-[0.14em] text-bone/35 truncate">{c.category}</span>
+                      <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{c.year}</span>
+                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">{c.name}</span>
+                      <span className="hidden md:col-span-3 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{c.issuer}</span>
                       <span className="hidden md:col-span-1 md:block text-mono text-right text-eyebrow uppercase tracking-[0.16em] text-bone/45 group-hover:text-vermilion">open →</span>
                     </button>
                   </li>
-                  );
-                })}
+                ))}
               </ul>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 {list.length > 6 && (
@@ -262,27 +242,20 @@ export function Ch08Credentials() {
               transition={{ duration: 0.3 }}
             >
               <ul className="divide-y divide-bone/15 border-y border-bone/15">
-                {awardsList.map((a: any) => {
-                  const accent = credCategoryColor(a.category);
-                  return (
-                  <li key={a.title || a.id} className="group relative">
-                    <span aria-hidden className="absolute left-0 top-0 h-full w-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: accent }} />
+                {awardsList.map((a: any) => (
+                  <li key={a.title || a.id}>
                     <button
                       type="button"
                       onClick={() => setOpenAward(a)}
-                      className="grid w-full grid-cols-12 items-baseline gap-4 py-4 pl-4 text-left transition-colors hover:bg-bone/[0.04]"
+                      className="group grid w-full grid-cols-12 items-baseline gap-4 py-4 text-left transition-colors hover:bg-bone/[0.04]"
                     >
                       <span className="col-span-2 md:col-span-1 text-mono text-eyebrow tabular-nums text-bone/55">{a.year}</span>
-                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">
-                        <span aria-hidden className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: accent }} />
-                        {a.title}
-                      </span>
+                      <span className="col-span-10 md:col-span-7 text-[0.98rem] leading-snug text-bone group-hover:text-vermilion">{a.title}</span>
                       <span className="hidden md:col-span-3 md:block text-mono text-eyebrow uppercase tracking-[0.16em] text-bone/55">{a.org}</span>
                       <span className="hidden md:col-span-1 md:block text-mono text-right text-eyebrow uppercase tracking-[0.16em] text-bone/45 group-hover:text-vermilion">open →</span>
                     </button>
                   </li>
-                  );
-                })}
+                ))}
               </ul>
               <div className="mt-8 text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/45">
                 // curated · selective · the milestones worth pinning
@@ -292,7 +265,7 @@ export function Ch08Credentials() {
         </AnimatePresence>
       </div>
 
-      {/* Cert Modal — clean, image-forward */}
+      {/* Cert Modal */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -311,71 +284,82 @@ export function Ch08Credentials() {
               exit={{ opacity: 0, y: 18, scale: 0.98 }}
               transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-bone/15 bg-graphite shadow-[0_30px_80px_-20px_oklch(0_0_0/0.6)]"
+              className="relative z-10 grid max-h-[88vh] w-full max-w-3xl grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-bone/15 bg-graphite shadow-[0_30px_80px_-20px_oklch(0_0_0/0.6)]"
             >
-              {/* Header */}
-              <div className="flex shrink-0 items-center justify-between gap-4 border-b border-bone/12 px-6 py-4">
+              <div className="flex items-center justify-between gap-4 border-b border-bone/12 bg-bone/[0.03] px-6 py-4">
                 <div className="text-mono flex items-center gap-3 text-eyebrow uppercase tracking-[0.18em] text-bone/65">
-                  <span className="text-vermilion">{open.issuer || open.tag}</span>
+                  <span className="text-vermilion">{open.tag}</span>
                   <span className="text-bone/35">·</span>
-                  <span>{open.date || open.year}</span>
-                  {open.verified && (
-                    <>
-                      <span className="text-bone/35">·</span>
-                      <span className="text-emerald-300/95">Verified</span>
-                    </>
-                  )}
+                  <span>{open.year}</span>
+                  <span className="text-bone/35">·</span>
+                  <span>{open.level}</span>
                 </div>
                 <button type="button" aria-label="Close" onClick={() => setOpen(null)} className="text-mono rounded-full border border-bone/20 px-3 py-1 text-eyebrow uppercase tracking-[0.18em] text-bone/75 transition-colors hover:border-bone hover:text-bone">Close · esc</button>
               </div>
-
-              {/* Body */}
-              <div className="overflow-y-auto px-6 py-7 sm:px-10 sm:py-10">
-                <h3 className="text-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.1] text-bone">{open.title || open.name}</h3>
-
-                {/* Certificate image - auto-sizing */}
-                {(open.image_url || open.logo) && (
-                  <div className="mt-6 overflow-hidden rounded-xl border border-bone/15 bg-gradient-to-b from-bone/[0.03] to-transparent">
-                    <img
-                      src={open.image_url || open.logo}
-                      alt={`${open.title || open.name} certificate`}
-                      className="h-auto w-full cursor-pointer object-contain transition-transform duration-300 hover:scale-[1.02]"
-                      onClick={() => window.open(open.image_url || open.logo, "_blank")}
-                      loading="lazy"
-                    />
-                  </div>
-                )}
-
-                {/* No image placeholder */}
-                {!open.image_url && !open.logo && (
-                  <div className="mt-6 flex aspect-[4/3] items-center justify-center rounded-xl border border-dashed border-bone/20 bg-bone/[0.02]">
-                    <div className="text-center">
+              <div className="overflow-y-auto px-6 py-7 sm:px-9 sm:py-10">
+                <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">{open.issuer}</div>
+                <h3 className="text-display mt-3 text-[clamp(1.7rem,3vw,2.3rem)] leading-[1.1] text-bone">{open.name}</h3>
+                <div className="text-mono mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-eyebrow uppercase tracking-[0.16em] text-bone/65">
+                  <span className="inline-flex items-center gap-1.5 text-emerald-300/95">
+                    <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400/95" />
+                    {open.verified ? "Verified credential" : "Pending verification"}
+                  </span>
+                  <span>ID · {open.credentialId}</span>
+                  <span>{open.hours} learning hours</span>
+                </div>
+                <p className="text-serif mt-7 text-[clamp(1.02rem,1.35vw,1.18rem)] leading-[1.6] text-bone/82">{open.description}</p>
+                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-bone/15 bg-gradient-to-br from-bone/[0.04] to-transparent p-5">
+                    <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">Certificate preview</div>
+                    <div className="mt-3 flex h-[calc(100%-1.5rem)] flex-col items-center justify-center text-center">
                       <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">{open.issuer}</div>
-                      <div className="text-display mt-2 text-[1.2rem] leading-[1.1] text-bone/60">{open.title || open.name}</div>
-                      <div className="text-mono mt-2 text-eyebrow uppercase tracking-[0.18em] text-bone/35">{open.credential_id || "credential"}</div>
+                      <div className="text-display mt-3 text-[1.3rem] leading-[1.1] text-bone/90">{open.name}</div>
+                      <div className="text-mono mt-3 text-eyebrow uppercase tracking-[0.18em] text-bone/45">{open.credentialId}</div>
                     </div>
                   </div>
-                )}
-
-                {/* Action row */}
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {(open.url || open.verifyHref) && (
-                    <a
-                      href={open.url || open.verifyHref}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="text-mono inline-flex items-center gap-2 rounded-lg border border-vermilion/60 bg-vermilion/10 px-5 py-3 text-eyebrow uppercase tracking-[0.18em] text-bone transition-colors hover:bg-vermilion/20"
-                    >
-                      Verify ↗
+                  <div className="flex flex-col gap-3">
+                    <a href={open.verifyHref} target="_blank" rel="noreferrer noopener" className="text-mono flex items-center justify-between rounded-lg border border-vermilion/60 bg-vermilion/10 px-4 py-3 text-eyebrow uppercase tracking-[0.18em] text-bone transition-colors hover:bg-vermilion/20">
+                      Official verification ↗ <span className="text-bone/65">external</span>
                     </a>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setOpen(null)}
-                    className="text-mono inline-flex items-center gap-2 rounded-lg border border-bone/20 px-5 py-3 text-eyebrow uppercase tracking-[0.18em] text-bone/70 transition-colors hover:border-bone/50 hover:text-bone"
-                  >
-                      Back to list
-                  </button>
+                    <div className="rounded-lg border border-bone/12 bg-bone/[0.02] p-4">
+                      <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">Technology stack</div>
+                      <ul className="mt-3 flex flex-wrap gap-1.5">
+                        {(open.stack || []).map((s: string) => (
+                          <li key={s} className="text-mono border border-bone/20 px-2 py-1 text-eyebrow uppercase tracking-[0.14em] text-bone/85">{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2">
+                  <div className="rounded-lg border border-bone/12 bg-bone/[0.02] p-5">
+                    <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">Learning outcomes</div>
+                    <ul className="mt-3 space-y-2 text-[0.92rem] leading-[1.55] text-bone/82">
+                      {(open.outcomes || []).map((o: string) => (
+                        <li key={o} className="flex gap-2"><span className="mt-2 inline-block h-1 w-1 rounded-full bg-vermilion" /><span>{o}</span></li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-lg border border-bone/12 bg-bone/[0.02] p-5">
+                    <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-vermilion">Skills developed</div>
+                    <ul className="mt-3 flex flex-wrap gap-1.5">
+                      {(open.skills || []).map((s: string) => (
+                        <li key={s} className="text-mono border border-bone/20 px-2.5 py-1 text-eyebrow uppercase tracking-[0.14em] text-bone/85">{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-7 grid grid-cols-1 gap-2 border-t border-bone/12 pt-5 sm:grid-cols-3">
+                  {[
+                    { label: "Projects", items: open.related?.projects ?? [], href: "#work" },
+                    { label: "Research", items: open.related?.research ?? [], href: "#research" },
+                    { label: "Experience", items: open.related?.experience ?? [], href: "#experience" },
+                  ].map((g) => (
+                    <a key={g.label} href={g.href} onClick={() => setOpen(null)} className="block rounded-lg border border-bone/12 bg-bone/[0.02] p-4 transition-colors hover:border-vermilion/60">
+                      <div className="text-mono text-eyebrow uppercase tracking-[0.2em] text-bone/55">Related {g.label}</div>
+                      <div className="mt-2 text-[0.85rem] leading-[1.4] text-bone/85">{g.items.length ? g.items.join(" · ") : "Explore section →"}</div>
+                    </a>
+                  ))}
                 </div>
               </div>
             </motion.div>

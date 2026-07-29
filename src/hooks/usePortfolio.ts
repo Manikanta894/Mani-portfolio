@@ -26,7 +26,6 @@ export interface PortfolioData {
   pageSeo: any[];
   media: any[];
   siteSettings: any[];
-  sectionContent: Record<string, any>;
 }
 
 // Every chapter/chrome component calls usePortfolio() independently (15+ call
@@ -83,10 +82,7 @@ export default function usePortfolio() {
   const pageSeo = resource("pageSeo", () => api.getPageSeo(), [] as any[]);
   const media = resource("media", () => api.getMedia(), [] as any[]);
   const siteSettings = resource("siteSettings", () => api.getSiteSettings(), [] as any[]);
-  const sectionContent = resource("sectionContent", () => api.getSectionContent(), [] as any[]);
 
-  // sectionContent is optional — if the table doesn't exist or the API fails,
-  // the site should still render with hardcoded fallbacks.
   const all = [
     profile, education, experience, projects, research, publications, certifications, seo,
     aboutBeats, aboutMilestones, aboutMetrics, awards, capabilityDomains, capabilities,
@@ -122,16 +118,6 @@ export default function usePortfolio() {
     pageSeo: pluck(pageSeo, []),
     media: pluck(media, []),
     siteSettings: pluck(siteSettings, []),
-    sectionContent: (() => {
-      const rows = pluck(sectionContent, []);
-      const map: Record<string, any> = {};
-      for (const row of rows) {
-        if (row.section_key && row.content) {
-          map[row.section_key] = row.content;
-        }
-      }
-      return map;
-    })(),
   };
 
   return {

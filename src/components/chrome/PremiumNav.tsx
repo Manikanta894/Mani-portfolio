@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import usePortfolio from "@/hooks/usePortfolio";
+
 /**
  * PremiumNav — floating glass pill (desktop) + bottom floating bar (mobile).
  * Tracks the active chapter via IntersectionObserver and animates a soft
@@ -18,8 +19,8 @@ const FALLBACK_ITEMS: Item[] = [
   { id: "ecosystem",  label: "Skills",      n: "05" },
   { id: "research",   label: "Research",    n: "06" },
   { id: "credentials",label: "Credentials", n: "07" },
-  { id: "linkedin",   label: "Connect",     n: "08" },
-  { id: "philosophy", label: "Manifesto",   n: "09" },
+  { id: "philosophy", label: "Manifesto",   n: "08" },
+  { id: "linkedin",   label: "Connect",     n: "09" },
   { id: "contact",    label: "Contact",     n: "10" },
   { id: "beyond-me",  label: "Beyond",      n: "11" },
 ];
@@ -27,13 +28,11 @@ const FALLBACK_ITEMS: Item[] = [
 export function PremiumNav() {
   const { navigationItems } = usePortfolio();
   const navItems: Item[] = navigationItems?.length > 0
-    ? navigationItems
-        .filter((ni: any) => ni.visible !== false)
-        .map((ni: any) => ({
-          id: ni.section_id,
-          label: ni.label,
-          n: ni.n || "00",
-        }))
+    ? navigationItems.map((ni: any) => ({
+        id: ni.section_id,
+        label: ni.label,
+        n: ni.n || "00",
+      }))
     : FALLBACK_ITEMS;
 
   const [active, setActive] = useState<string>("cover");
@@ -421,7 +420,7 @@ const css = `
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.015em;
-  color: currentColor;
+  color: color-mix(in oklab, currentColor 72%, transparent);
   text-decoration: none;
   transition: color .35s ease, transform .35s ease;
   white-space: nowrap;
@@ -473,6 +472,8 @@ const css = `
   font-size: 11px !important;
   letter-spacing: 0.18em !important;
 }
+.mr-nav__theme .mr-theme-dial__label { min-width: 68px !important; }
+
 /* ───────────── MOBILE BOTTOM BAR ───────────── */
 .mr-nav-mobile {
   position: fixed;

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import portraitCutout from "@/assets/portrait-cutout.png";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -15,38 +14,22 @@ export function Ch00Cover() {
     "HR Analytics", "Business Analytics", "AI Strategy", "Research", "Power BI", "People Analytics",
   ];
   const heroMeta = (profile?.hero_meta as any[]) || [
+    { label: "Published Papers", value: "04", type: "text" },
     { label: "MBA", value: "MBA · '27", sub: "HR & Business Analytics", type: "cohort" },
     { label: "Availability", value: "Available", sub: "for collaborations", type: "status" },
   ];
-  const tagline = profile?.tagline || "Turning workforce & business data into <em>decisions leaders can act on</em>.";
+  const tagline = profile?.tagline || "Building the future of work through <em>AI, analytics & human insight</em>.";
   const welcomeText = profile?.welcome_text || "Welcome to my Portfolio.";
   const ctas = (profile?.ctas as any[]) || [
-    { label: "Download Resume", href: profile?.resume_url || "https://manikantar.in/resume.pdf", type: "primary", download: true },
-    { label: "Explore Journey", href: "#about", type: "ghost" },
+    { label: "Explore Journey", href: "#about", type: "primary" },
     { label: "Let's Connect", href: "#contact", type: "ghost" },
+    { label: "Download Resume", href: "https://manikantar.in/resume.pdf", type: "ghost", download: true },
   ];
   const location = profile?.location || "Bengaluru · India";
-  const targetRoles = (profile?.target_roles as string[]) || ["HR Analyst", "Talent Acquisition Analyst", "People Analytics"];
 
 const [portraitAwake] = useState(true);
 const [awake] = useState(true);
 const [entered] = useState(true);
-
-const heroMx = useMotionValue(0);
-const heroMy = useMotionValue(0);
-const heroRx = useTransform(heroMy, [-0.5, 0.5], [9, -9]);
-const heroRy = useTransform(heroMx, [-0.5, 0.5], [-12, 12]);
-const heroSrx = useSpring(heroRx, { stiffness: 120, damping: 14 });
-const heroSry = useSpring(heroRy, { stiffness: 120, damping: 14 });
-const onHeroMove = (e: React.MouseEvent<HTMLDivElement>) => {
-  const rect = e.currentTarget.getBoundingClientRect();
-  heroMx.set((e.clientX - rect.left) / rect.width - 0.5);
-  heroMy.set((e.clientY - rect.top) / rect.height - 0.5);
-};
-const onHeroLeave = () => {
-  heroMx.set(0);
-  heroMy.set(0);
-};
 
   // Broadcast "hero ready" so global chrome (nav) can fade in only after the intro.
   useEffect(() => {
@@ -65,42 +48,21 @@ const onHeroLeave = () => {
 
       <div className="relative mx-auto grid min-h-screen w-full max-w-[1480px] grid-cols-12 items-center gap-6 px-4 sm:px-6 md:px-8 lg:px-16 py-10 lg:py-0 lg:h-screen">
         {/* LEFT · PORTRAIT */}
-        <div
-          className={`col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left ${portraitAwake ? "is-awake" : ""}`}
-          onMouseMove={onHeroMove}
-          onMouseLeave={onHeroLeave}
-          style={{ perspective: 1000 }}
-        >
+        <div className={`col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left ${portraitAwake ? "is-awake" : ""}`}>
           <div aria-hidden className={`hero-watermark ${portraitAwake ? "is-awake" : ""}`}>MR</div>
           <div className="hero-halo" aria-hidden />
-          <motion.div style={{ rotateX: heroSrx, rotateY: heroSry, transformStyle: "preserve-3d" }}>
-            <div ref={portraitRef} className="hero-portrait">
-              <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
-            </div>
-          </motion.div>
+          <div ref={portraitRef} className="hero-portrait">
+            <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
+          </div>
         </div>
 
         {/* RIGHT · NAME + HIERARCHY */}
         <div className={`col-span-12 lg:col-span-7 relative hero-right ${awake ? "is-awake" : ""} ${entered ? "is-entered" : ""}`}>
-          <p className="hero-greeting" style={{ transitionDelay: entered ? "40ms" : "0ms" }}>
-            {welcomeText}
-          </p>
-
           <div className="hero-eyebrow" style={{ transitionDelay: entered ? "120ms" : "0ms" }}>
             <span className="hero-eyebrow-dot" />
             {location}
             <span className="hero-eyebrow-sep" />
             Edition · 2026
-          </div>
-
-          <div className="hero-target" style={{ transitionDelay: entered ? "160ms" : "0ms" }}>
-            <span className="hero-target-label">Open to</span>
-            {targetRoles.map((r: string, i: number) => (
-              <span key={r} className="hero-target-pill">
-                {r}
-                {i < targetRoles.length - 1 && <span className="hero-target-dot" aria-hidden>·</span>}
-              </span>
-            ))}
           </div>
 
           <h1 className="hero-name" aria-label="Manikanta R">
@@ -112,6 +74,11 @@ const onHeroLeave = () => {
               <span className="hero-name-period" aria-hidden>.</span>
             </span>
           </h1>
+
+          <p className="hero-welcome" style={{ transitionDelay: entered ? "200ms" : "0ms" }}>
+            {welcomeText}
+          </p>
+
 
           <div className="hero-rule" style={{ transitionDelay: entered ? "320ms" : "0ms" }} />
 
@@ -180,13 +147,13 @@ const onHeroLeave = () => {
 
 const css = `
 .hero-stage {
-  --hero-ink: #F5F1EB;
-  --hero-ink-2: #C8C2B8;
-  --hero-paper: #0E0E10;
-  --hero-paper-2: #17171A;
-  --hero-mute: #8F887F;
-  --hero-rule: rgba(245,241,235,0.10);
-  --hero-accent: var(--vermilion, #D46A2E);
+  --hero-ink: #181818;
+  --hero-ink-2: #555555;
+  --hero-paper: #F8F5EF;
+  --hero-paper-2: #FFFFFF;
+  --hero-mute: #777777;
+  --hero-rule: rgba(24,24,24,0.12);
+  --hero-accent: #D46A2E;
   background: linear-gradient(180deg, var(--hero-paper) 0%, var(--hero-paper-2) 100%);
   color: var(--hero-ink);
   font-family: var(--font-sans);
@@ -195,8 +162,8 @@ const css = `
 .hero-bg {
   position: absolute; inset: 0;
   background:
-    radial-gradient(900px 600px at 22% 38%, rgba(245,241,235,0.06), transparent 70%),
-    radial-gradient(700px 500px at 88% 80%, rgba(245,241,235,0.04), transparent 70%);
+    radial-gradient(900px 600px at 22% 38%, rgba(20,17,15,0.06), transparent 70%),
+    radial-gradient(700px 500px at 88% 80%, rgba(20,17,15,0.04), transparent 70%);
   pointer-events: none;
 }
 
@@ -216,8 +183,7 @@ const css = `
 
 /* Hide secondary UI until visitor "enters" */
 .hero-right .hero-eyebrow,
-.hero-right .hero-target,
-.hero-right .hero-greeting,
+.hero-right .hero-welcome,
 .hero-right .hero-rule,
 .hero-right .hero-skills li,
 .hero-right .hero-tagline,
@@ -228,8 +194,7 @@ const css = `
   transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
 }
 .hero-right.is-entered .hero-eyebrow,
-.hero-right.is-entered .hero-target,
-.hero-right.is-entered .hero-greeting,
+.hero-right.is-entered .hero-welcome,
 .hero-right.is-entered .hero-rule,
 .hero-right.is-entered .hero-skills li,
 .hero-right.is-entered .hero-tagline,
@@ -237,15 +202,6 @@ const css = `
 .hero-right.is-entered .hero-meta {
   opacity: 1;
   transform: translateY(0);
-}
-
-.hero-greeting {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 20px;
-  color: var(--hero-ink-2);
-  margin: 0 0 18px;
 }
 .hero-right .hero-ctas { pointer-events: none; }
 .hero-right.is-entered .hero-ctas { pointer-events: auto; }
@@ -274,7 +230,7 @@ const css = `
   width: clamp(420px, 42vw, 620px);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in oklab, var(--hero-accent) 16%, rgba(245,241,235,0.10)), rgba(245,241,235,0) 70%);
+  background: radial-gradient(closest-side, rgba(20,17,15,0.10), rgba(20,17,15,0) 70%);
   filter: blur(20px);
   pointer-events: none;
   transform: translateY(-3%);
@@ -294,9 +250,9 @@ const css = `
     0 0 0 1px color-mix(in oklab, var(--hero-ink) 12%, transparent),
     0 0 0 6px color-mix(in oklab, var(--hero-paper) 88%, transparent),
     0 0 0 7px color-mix(in oklab, var(--hero-ink) 10%, transparent),
-    0 1px 0 rgba(245,241,235,0.12) inset,
-    0 30px 60px -20px rgba(0,0,0,0.6),
-    0 80px 120px -40px rgba(0,0,0,0.45);
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 30px 60px -20px rgba(20,17,15,0.35),
+    0 80px 120px -40px rgba(20,17,15,0.25);
   clip-path: circle(0% at 50% 50%);
   transition:
     clip-path 1100ms cubic-bezier(.22,.7,.2,1) 120ms,
@@ -329,7 +285,9 @@ const css = `
 .hero-portrait::after {
   content: "";
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 65%, rgba(20,14,8,0.22) 100%);
+  background:
+    radial-gradient(60% 50% at 50% 18%, rgba(255,245,230,0.22), transparent 70%),
+    linear-gradient(180deg, rgba(20,17,15,0) 60%, rgba(20,17,15,0.18) 100%);
   pointer-events: none;
 }
 
@@ -337,7 +295,7 @@ const css = `
   width: 112%; height: 112%;
   object-fit: cover; object-position: 50% 18%;
   position: absolute; left: -6%; top: -6%;
-  filter: grayscale(0.05) contrast(1.02) saturate(1.08) brightness(1.03);
+  filter: grayscale(0.15) contrast(1.02);
 }
 
 @keyframes hero-float {
@@ -357,60 +315,24 @@ const css = `
 .hero-eyebrow-dot {
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--hero-accent);
-  box-shadow: 0 0 0 4px rgba(212,106,46,0.25);
+  box-shadow: 0 0 0 4px rgba(107,102,96,0.15);
 }
 .hero-eyebrow-sep { width: 22px; height: 1px; background: var(--hero-rule); }
-
-.hero-target {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 22px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-}
-.hero-target-label {
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--hero-mute);
-  margin-right: 2px;
-}
-.hero-target-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--hero-ink);
-  font-weight: 500;
-}
-.hero-target-pill::before {
-  content: "";
-  display: inline-block;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--hero-accent);
-  margin-right: 2px;
-}
-.hero-target-dot { color: var(--hero-mute); margin-left: 8px; font-weight: 400; }
 
 .hero-name {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(48px, 7.2vw, 128px);
-  line-height: 0.95;
+  font-size: clamp(64px, 9.6vw, 152px);
+  line-height: 0.9;
   letter-spacing: -0.03em;
   color: var(--hero-ink);
   margin: 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: 0.22em;
+  flex-direction: column;
 }
 .hero-name-row { display: inline-flex; align-items: baseline; white-space: nowrap; }
-.hero-name-row--two { margin-top: 0; padding-left: 0; }
+.hero-name-row--two { margin-top: -0.14em; padding-left: 0.04em; }
 .hero-letter-anchor { display: inline-block; }
 .hero-letter--R { font-size: 1.02em; }
 .hero-name-period { color: var(--hero-accent); margin-left: 0.06em; font-style: italic; }
@@ -545,7 +467,7 @@ const css = `
   --hero-paper-2: #17171A;
   --hero-mute: #8F887F;
   --hero-rule: rgba(245,241,235,0.10);
-  --hero-accent: var(--vermilion, #D46A2E);
+  --hero-accent: #D46A2E;
 }
 .dark .hero-portrait img { filter: grayscale(0.15) contrast(1.05) brightness(1.05); }
 .dark .hero-watermark { mix-blend-mode: screen; }

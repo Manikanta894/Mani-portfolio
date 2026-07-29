@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowUpRight, ArrowUp, Mail, Linkedin, Github, Instagram, Facebook } from "lucide-react";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -18,8 +18,7 @@ export function SiteFooter() {
   const { profile, socialLinks, siteSettings } = usePortfolio();
 
   // Get footer data from profile
-  const blurbFallback = "Still learning, still building — one dataset, one decision, one <em>quiet Tuesday</em> at a time.";
-  const blurb = profile?.blurb || blurbFallback;
+  const blurb = profile?.blurb || "Building the future of work — one model, one paper, one decision at a time.";
   const name = profile?.name || "Manikanta R";
   const role = profile?.role || "MBA — HR & Business Analytics";
   const location = profile?.location || "Bengaluru, India";
@@ -34,6 +33,8 @@ export function SiteFooter() {
 
   const rootRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [sub, setSub] = useState<"idle" | "ok">("idle");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const el = rootRef.current;
@@ -45,6 +46,14 @@ export function SiteFooter() {
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  const onSubscribe = (e: FormEvent) => {
+    e.preventDefault();
+    if (!email.includes("@")) return;
+    setSub("ok");
+    setEmail("");
+    window.setTimeout(() => setSub("idle"), 3200);
+  };
 
   const onTop = () => {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -61,7 +70,9 @@ export function SiteFooter() {
 
       <div className="mr-footer__inner">
         {/* Closing statement */}
-        <p className="mr-footer__closing" dangerouslySetInnerHTML={{ __html: blurb }} />
+        <p className="mr-footer__closing">
+          {blurb}
+        </p>
 
         <div className="mr-footer__rule" aria-hidden />
 
@@ -95,32 +106,74 @@ export function SiteFooter() {
             </div>
           </section>
 
-          {/* Links — merged into one compact inline row */}
-          {(quickLinks.length > 0 || professionalLinks.length > 0) && (
-            <nav className="mr-footer__col mr-footer__linksCol" aria-label="Links">
-              <div className="mr-footer__kicker">Links</div>
-              <div className="mr-footer__inlineLinks">
+          {/* Quick links */}
+          {quickLinks.length > 0 && (
+            <nav className="mr-footer__col" aria-label="Quick links">
+              <div className="mr-footer__kicker">Quick links</div>
+              <ul className="mr-footer__list">
                 {quickLinks.map((l: any) => (
-                  <a key={l.id || l.platform} href={l.url} className="mr-footer__link">
-                    {l.label}
-                  </a>
+                  <li key={l.id || l.platform}>
+                    <a href={l.url} className="mr-footer__link">{l.label}</a>
+                  </li>
                 ))}
-                {professionalLinks.map((l: any) => (
-                  <a
-                    key={l.id || l.platform}
-                    href={l.url}
-                    className="mr-footer__link mr-footer__link--ext"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span>{l.label}</span>
-                    <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
-                  </a>
-                ))}
-              </div>
+              </ul>
             </nav>
           )}
 
+          {/* Professional links */}
+          {professionalLinks.length > 0 && (
+            <nav className="mr-footer__col" aria-label="Professional links">
+              <div className="mr-footer__kicker">Elsewhere</div>
+              <ul className="mr-footer__list">
+                {professionalLinks.map((l: any) => (
+                  <li key={l.id || l.platform}>
+                    <a
+                      href={l.url}
+                      className="mr-footer__link mr-footer__link--ext"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>{l.label}</span>
+                      <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
+          {/* Newsletter */}
+          <section className="mr-footer__col mr-footer__news" aria-labelledby="news-h">
+            <div id="news-h" className="mr-footer__kicker">The dispatch</div>
+            <p className="mr-footer__news-copy">
+              Occasional notes on research, analytics and the work in progress.
+            </p>
+            <form className="mr-footer__form" onSubmit={onSubscribe} noValidate>
+              <label htmlFor="footer-email" className="sr-only">Email address</label>
+              <div className="mr-footer__field">
+                <Mail aria-hidden className="mr-footer__field-icon" />
+                <input
+                  id="footer-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="you@domain.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mr-footer__input"
+                />
+                <button type="submit" className="mr-footer__submit" aria-label="Subscribe">
+                  Subscribe
+                </button>
+              </div>
+              <div
+                aria-live="polite"
+                className={`mr-footer__hint ${sub === "ok" ? "is-ok" : ""}`}
+              >
+                {sub === "ok" ? "Thank you — you're on the list." : "No spam. Unsubscribe anytime."}
+              </div>
+            </form>
+          </section>
         </div>
 
         <div className="mr-footer__rule" aria-hidden />
@@ -150,7 +203,7 @@ const css = `
   padding: 0;
   background:
     radial-gradient(120% 80% at 50% 0%,
-      color-mix(in oklab, var(--vermilion) 10%, transparent) 0%,
+      color-mix(in oklab, var(--vermilion) 6%, transparent) 0%,
       transparent 65%),
     color-mix(in oklab, var(--bone) 92%, var(--ink) 8%);
   color: var(--ink);
@@ -160,19 +213,11 @@ const css = `
   transform: translateY(12px);
   transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1);
 }
-.mr-footer::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--vermilion) 50%, transparent);
-  opacity: 0.7;
-}
 .mr-footer.is-in { opacity: 1; transform: translateY(0); }
 .dark .mr-footer {
   background:
     radial-gradient(120% 80% at 50% 0%,
-      color-mix(in oklab, var(--vermilion) 13%, transparent) 0%,
+      color-mix(in oklab, var(--vermilion) 9%, transparent) 0%,
       transparent 65%),
     color-mix(in oklab, var(--bone) 96%, transparent);
 }
@@ -205,16 +250,17 @@ const css = `
 
 .mr-footer__grid {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: clamp(24px, 4vw, 48px);
-  padding: clamp(28px, 4vw, 44px) 0;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
+  gap: clamp(28px, 4vw, 56px);
+  padding: clamp(40px, 5vw, 64px) 0;
 }
-@media (max-width: 640px) {
-  .mr-footer__grid { grid-template-columns: 1fr; gap: 28px; }
+@media (max-width: 960px) {
+  .mr-footer__grid { grid-template-columns: 1fr 1fr; }
+  .mr-footer__news { grid-column: 1 / -1; }
 }
-.mr-footer__linksCol { align-self: start; }
-.mr-footer__inlineLinks { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 6px; }
-.mr-footer__inlineLinks .mr-footer__link { display: inline-flex; }
+@media (max-width: 560px) {
+  .mr-footer__grid { grid-template-columns: 1fr; gap: 36px; }
+}
 
 .mr-footer__col { min-width: 0; }
 

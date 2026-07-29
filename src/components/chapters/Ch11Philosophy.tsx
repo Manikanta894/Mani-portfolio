@@ -3,20 +3,17 @@ import { useRef } from "react";
 import { useScroll, useTransform, motion } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
-import { CHAPTER_NUMBERS } from "@/lib/chapterNumbers";
 
 export function Ch11Philosophy() {
-  const { profile, sectionContent } = usePortfolio();
-  const sc = sectionContent.philosophy || {};
-  const philosophyFromProfile = profile?.philosophy;
-  const philosophyData = philosophyFromProfile || sc || {
-    number: sc.number || "08",
-    title: sc.title || "Personal Philosophy",
-    quote: sc.quote || "I don't trust a story until the numbers agree with it, and I don't trust the numbers until I understand the people behind them. That's the whole job, really.",
-    pillars: sc.pillars || [
-      { n: "01", name: "Evidence Over Instinct", body: "I built my first dashboard because I didn't trust my own gut about which days were actually busy. That habit stuck — test the belief, don't just defend it." },
-      { n: "02", name: "People Behind the Numbers", body: "A number that ignores the person it describes isn't insight, it's noise. Every model I build has to answer for someone's actual day at work." },
-      { n: "03", name: "Built the Hard Way", body: "Retail shifts, then certifications, then an MBA — in that order, not the other way around. I don't think that's a disadvantage. I think it's why I check my work twice." },
+  const { profile } = usePortfolio();
+  const philosophyData = profile?.philosophy || {
+    number: "08",
+    title: "Personal Philosophy",
+    quote: "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions. The analytics came later. The discipline came from necessity. The direction came from paying attention.",
+    pillars: [
+      { n: "01", name: "Self-Built", body: "Balanced full-time work alongside every academic and research milestone — no shortcuts, no inheritance of access." },
+      { n: "02", name: "Disciplined", body: "Studied after shifts. Researched on weekends. Built the habit before the credentials caught up." },
+      { n: "03", name: "Long-Term", body: "Building a five-year foundation, not chasing a quarter. Compounding over performing." },
     ],
   };
 
@@ -28,7 +25,7 @@ export function Ch11Philosophy() {
     <section id="philosophy" data-mood="ink" className="relative chapter-pad grain" ref={ref}>
       <div className="mx-auto max-w-6xl">
         <div className="text-mono text-meta text-bone/55">
-          /{CHAPTER_NUMBERS.philosophy} · Personal Philosophy
+          /{philosophyData.number} · Personal Philosophy
         </div>
         <h2 className="sr-only">Personal Philosophy</h2>
 

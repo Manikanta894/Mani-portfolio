@@ -68,6 +68,21 @@ export function ChapterRail() {
   );
 }
 
+export function AvailabilityPill() {
+  const { profile } = usePortfolio();
+  const location = profile?.location || "Bengaluru";
+  const status = profile?.availability_status || "Available";
+  return (
+    <div className="fixed right-4 top-4 z-40 flex items-center gap-2 text-mono text-bone mix-blend-difference">
+      <span className="relative flex h-1.5 w-1.5">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-vermilion opacity-75 pulse-dot" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-vermilion" />
+      </span>
+      <span className="text-eyebrow">{status} · {location}</span>
+    </div>
+  );
+}
+
 export function LiveClock() {
   const [time, setTime] = useState("");
   useEffect(() => {

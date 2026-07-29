@@ -70,7 +70,7 @@ const beyond = {
 };
 
 const philosophy = {
-  number: "08",
+  number: "11",
   title: "Personal Philosophy",
   quote: "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions. The analytics came later. The discipline came from necessity. The direction came from paying attention.",
   pillars: [
@@ -380,106 +380,6 @@ async function seed() {
       if (error) console.error("Capability error:", error.message);
     }
     console.log("✅ Capabilities seeded");
-
-    // ── SECTION CONTENT ──────────────────────────────────────────────
-    const sectionContentRows = [
-      {
-        section_key: "education",
-        content: {
-          number: "02",
-          kicker: "Academic Archive",
-          title: "The Academic Archive.",
-          intro: "An analytics-meets-people thesis, built one degree at a time.",
-        },
-      },
-      {
-        section_key: "experience",
-        content: {
-          number: "03",
-          label: "From the retail floor to research",
-          title: "The Journey That Built Me",
-          lede: "Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.",
-          closing_quote: "The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.",
-          closing_link: "Continue to research ↓",
-          evolution: ["Operations", "Customer Experience", "Leadership", "Business Thinking", "Analytics", "Research", "AI & Business Strategy"],
-        },
-      },
-      {
-        section_key: "research",
-        content: {
-          number: "06",
-          label: "Working papers · Frontier topics",
-          title: "Research & Innovation Lab",
-          lede: "A working research lab, not a list. Featured studies below open in place — the full archive sits beneath, fully searchable.",
-          orcid_url: "https://orcid.org/0009-0005-2576-8731",
-          orcid_label: "ORCID",
-          read_more_label: "Read more papers →",
-          show_less_label: "Show less ↑",
-          archive_prefix: "full archive on",
-          archive_label: "ORCID",
-        },
-      },
-      {
-        section_key: "work",
-        content: {
-          number: "04",
-          label: "Featured · Library · Case-driven",
-          title: "Strategic Projects & Innovation",
-          lede: "Three case studies upfront — the full project library sits beneath, fully searchable. Built to scale from six projects to sixty without a redesign.",
-          hint: "projects · tap any row to expand",
-          read_more_label: "Read more →",
-          show_less_label: "Show less ←",
-        },
-      },
-      {
-        section_key: "ecosystem",
-        content: {
-          number: "05",
-          kicker: "Capabilities · Connected · Live",
-          title: "Professional Operating System",
-          intro: "Not a skills list — an operating system. Every capability shows where it was learned, where it was applied, and how it connects across research, projects, certifications and experience.",
-          source: "Mirrored from LinkedIn · single source of truth",
-        },
-      },
-      {
-        section_key: "credentials",
-        content: {
-          number: "07",
-          label: "Curated · Verified · Continuous",
-          title: "Professional Certifications",
-          stats: [
-            { label: "Awards", value: 6 },
-            { label: "Certifications", value: 14 },
-            { label: "Research Papers", value: 10 },
-            { label: "Conference Presentations", value: 3 },
-            { label: "Journal Publications", value: 4 },
-            { label: "Programs Completed", value: 8 },
-            { label: "Learning Hours", value: 420 },
-            { label: "Skills Acquired", value: 38 },
-          ],
-        },
-      },
-      {
-        section_key: "philosophy",
-        content: {
-          number: "08",
-          title: "Personal Philosophy",
-          quote: "I didn't start with a plan. I started with curiosity about why businesses worked the way they did — and a notebook full of questions. The analytics came later. The discipline came from necessity. The direction came from paying attention.",
-          pillars: [
-            { n: "01", name: "Self-Built", body: "Balanced full-time work alongside every academic and research milestone — no shortcuts, no inheritance of access." },
-            { n: "02", name: "Disciplined", body: "Studied after shifts. Researched on weekends. Built the habit before the credentials caught up." },
-            { n: "03", name: "Long-Term", body: "Building a five-year foundation, not chasing a quarter. Compounding over performing." },
-          ],
-        },
-      },
-    ];
-    for (const row of sectionContentRows) {
-      const { error } = await supabase
-        .from("section_content")
-        .upsert(row, { onConflict: "section_key" });
-      if (error) console.error("Section content error:", error.message);
-    }
-    console.log("✅ Section content seeded");
 
     console.log("\n🎉 Seeding complete!");
   } catch (err) {

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { useLenis } from "@/lib/hooks";
-import { LiveClock, CornerStamp } from "@/components/chrome/Chrome";
+import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Chrome";
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
@@ -19,9 +19,10 @@ import { Ch06Work } from "@/components/chapters/Ch06Work";
 import { Ch07Ecosystem } from "@/components/chapters/Ch07Ecosystem";
 import { Ch08Credentials } from "@/components/chapters/Ch08Credentials";
 import Ch09LinkedIn from "@/components/chapters/Ch09LinkedIn";
+import { Ch10Journal } from "@/components/chapters/Ch10Journal";
 import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
+import { Ch13BeyondMe } from "@/components/chapters/Ch13BeyondMe";
 import { Ch12Contact } from "@/components/chapters/Ch12Contact";
-import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 
 
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [introDone, setIntroDone] = useState(() => {
+    // Check if intro was already seen this session
     if (typeof window !== "undefined") {
       return sessionStorage.getItem("mr-intro-seen") === "true";
     }
@@ -118,6 +120,7 @@ function Index() {
       <ReadingProgress />
       <PremiumNav />
       
+      <AvailabilityPill />
       <LiveClock />
       <CornerStamp />
 
@@ -130,11 +133,12 @@ function Index() {
       <Ch07Ecosystem />
       <Ch05Research />
       <Ch08Credentials />
-      <Ch09LinkedIn />
       <Ch11Philosophy />
+      <Ch09LinkedIn />
+      <Ch10Journal />
       <Ch12Contact />
-      <Ch14BeyondNotes />
-      
+      <Ch13BeyondMe />
+
       <SiteFooter />
 
       {/*

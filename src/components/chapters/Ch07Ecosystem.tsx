@@ -10,14 +10,17 @@ type Domain = string;
 const FALLBACK_STAGES = ["Learning", "Practicing", "Applying", "Researching", "Teaching", "Leading"];
 const FALLBACK_DOMAINS: any[] = [
   { id: "Analytics", label: "Analytics", accent: "#E0533D", angle: -90, sort_order: 0 },
-  { id: "Artificial Intelligence", label: "AI & ML", accent: "#7C5CFF", angle: -18, sort_order: 1 },
-  { id: "People & HR", label: "People & HR", accent: "#3DA9FC", angle: 54, sort_order: 2 },
-  { id: "Business", label: "Business", accent: "#F2B33D", angle: 126, sort_order: 3 },
-  { id: "Research", label: "Research", accent: "#7C5CFF", angle: 198, sort_order: 4 },
+  { id: "Artificial Intelligence", label: "AI & ML", accent: "#7C5CFF", angle: -45, sort_order: 1 },
+  { id: "People & HR", label: "People & HR", accent: "#3DA9FC", angle: 0, sort_order: 2 },
+  { id: "Business", label: "Business", accent: "#F2B33D", angle: 45, sort_order: 3 },
+  { id: "Leadership", label: "Leadership", accent: "#E0533D", angle: 90, sort_order: 4 },
+  { id: "Research", label: "Research", accent: "#7C5CFF", angle: 135, sort_order: 5 },
+  { id: "Technology", label: "Technology", accent: "#3DA9FC", angle: 180, sort_order: 6 },
+  { id: "Visualization", label: "Visualization", accent: "#F2B33D", angle: 225, sort_order: 7 },
 ];
 const FALLBACK_STATS: any[] = [
-  { sort_order: 0, label: "Capabilities", value: 16, hint: "tracked" },
-  { sort_order: 1, label: "Domains", value: 5, hint: "interconnected" },
+  { sort_order: 0, label: "Capabilities", value: 33, hint: "tracked" },
+  { sort_order: 1, label: "Domains", value: 8, hint: "interconnected" },
 ];
 
 const SECTION = {
@@ -28,8 +31,6 @@ const SECTION = {
     "Not a skills list — an operating system. Every capability shows where it was learned, where it was applied, and how it connects across research, projects, certifications and experience.",
   source: "Mirrored from LinkedIn · single source of truth",
 };
-
-// SECTION will be overridden by sectionContent.ecosystem if available
 
 // Cross-link anchors to other chapters
 const LINKS: Record<string, string> = {
@@ -45,24 +46,13 @@ function stageIndex(s: string) {
 }
 
 export function Ch07Ecosystem() {
-  const { capabilities: apiCaps, capabilityDomains: apiDomains, ecosystemStats: apiStats, sectionContent } = usePortfolio();
-  const sc = sectionContent.ecosystem || {};
+  const { capabilities: apiCaps, capabilityDomains: apiDomains, ecosystemStats: apiStats } = usePortfolio();
 
   // Use API data if available, fall back to hardcoded fallbacks
   const effectiveCaps: Capability[] = (apiCaps?.length ? apiCaps : []) as Capability[];
   const effectiveDomains = apiDomains?.length ? apiDomains : FALLBACK_DOMAINS;
   const effectiveStats = apiStats?.length ? apiStats : FALLBACK_STATS;
   const STAGES = FALLBACK_STAGES;
-
-  // Merge sectionContent overrides into SECTION
-  const section = {
-    ...SECTION,
-    ...(sc.number ? { number: sc.number } : {}),
-    ...(sc.kicker ? { kicker: sc.kicker } : {}),
-    ...(sc.title ? { title: sc.title } : {}),
-    ...(sc.intro ? { intro: sc.intro } : {}),
-    ...(sc.source ? { source: sc.source } : {}),
-  };
 
   const [active, setActive] = useState<Capability | null>(null);
   const [hoverDomain, setHoverDomain] = useState<Domain | null>(null);
@@ -101,17 +91,17 @@ export function Ch07Ecosystem() {
         <header className="mb-14 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-7">
             <div className="text-mono text-meta text-bone/55">
-              /{section.number} — {section.kicker}
+              /{SECTION.number} — {SECTION.kicker}
             </div>
             <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.95] text-bone">
-              <MaskReveal>{section.title}</MaskReveal>
+              <MaskReveal>{SECTION.title}</MaskReveal>
             </h2>
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <Reveal>
-              <p className="text-bone/75">{section.intro}</p>
+              <p className="text-bone/75">{SECTION.intro}</p>
               <p className="mt-4 text-mono text-eyebrow uppercase tracking-[0.15em] text-bone/45">
-                {section.source}
+                {SECTION.source}
               </p>
             </Reveal>
           </div>
@@ -122,6 +112,131 @@ export function Ch07Ecosystem() {
           {effectiveStats.map((s: any, i: number) => (
             <DashTile key={s.label} {...s} delay={i * 60} />
           ))}
+        </div>
+
+        {/* Capability Architecture — radial */}
+        <div className="relative hidden overflow-hidden border border-bone/15 bg-ink md:block">
+          <div className="absolute left-4 top-4 z-10 text-mono text-eyebrow text-bone/45">
+            Capability Architecture · {effectiveCaps.length} skills · {effectiveDomains.length} domains
+          </div>
+          <div className="absolute right-4 top-4 z-10 text-mono text-eyebrow text-bone/45">
+            {hoverDomain ? `focus · ${hoverDomain}` : "hover a domain · click a skill"}
+          </div>
+
+          <svg viewBox={`0 0 ${W} ${H}`} className="block h-[78vh] w-full select-none">
+            <defs>
+              <radialGradient id="core" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="oklch(0.962 0.012 85)" stopOpacity="0.18" />
+                <stop offset="100%" stopColor="oklch(0.962 0.012 85)" stopOpacity="0" />
+              </radialGradient>
+              {effectiveDomains.map((d: any) => (
+                <radialGradient key={d.id} id={`glow-${d.id.replace(/\s|&/g, "")}`} cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor={d.accent} stopOpacity="0.55" />
+                  <stop offset="100%" stopColor={d.accent} stopOpacity="0" />
+                </radialGradient>
+              ))}
+            </defs>
+
+            {/* concentric rings */}
+            {[R, R * 0.72, R * 0.42].map((r, i) => (
+              <circle
+                key={i}
+                cx={cx}
+                cy={cy}
+                r={r}
+                fill="none"
+                stroke="oklch(0.962 0.012 85 / 0.08)"
+                strokeDasharray="2 6"
+              />
+            ))}
+
+            {/* core glow */}
+            <circle cx={cx} cy={cy} r={150} fill="url(#core)" />
+
+            {/* domain → capability connections */}
+            {effectiveDomains.map((d: any) => {
+              const rad = (d.angle * Math.PI) / 180;
+              const dx = cx + Math.cos(rad) * R;
+              const dy = cy + Math.sin(rad) * R;
+              const focused = hoverDomain === d.id;
+              return (
+                <line
+                  key={`l-${d.id}`}
+                  x1={cx}
+                  y1={cy}
+                  x2={dx}
+                  y2={dy}
+                  stroke={focused ? d.accent : "oklch(0.962 0.012 85 / 0.18)"}
+                  strokeWidth={focused ? 1.2 : 0.6}
+                  style={{ transition: "all 320ms" }}
+                />
+              );
+            })}
+
+            {/* sub-capability arcs around each domain */}
+            {effectiveDomains.map((d: any) => {
+              const rad = (d.angle * Math.PI) / 180;
+              const dx = cx + Math.cos(rad) * R;
+              const dy = cy + Math.sin(rad) * R;
+              const items = byDomain.get(d.id) ?? [];
+              const focused = hoverDomain === d.id;
+              const spread = 110;
+              return (
+                <g key={`grp-${d.id}`}>
+                  {items.map((cap: any, i: number) => {
+                    const t = items.length === 1 ? 0 : (i / (items.length - 1) - 0.5);
+                    const sa = ((d.angle + t * spread) * Math.PI) / 180;
+                    const rr = R + 70;
+                    const sx = cx + Math.cos(sa) * rr;
+                    const sy = cy + Math.sin(sa) * rr;
+                    const dim = hoverDomain && hoverDomain !== d.id;
+                    return (
+                      <g
+                        key={cap.id}
+                        style={{ opacity: dim ? 0.18 : 1, transition: "opacity 280ms" }}
+                        className="cursor-pointer"
+                        onClick={() => setActive(cap as Capability)}
+                        onMouseEnter={() => setHoverDomain(d.id)}
+                        onMouseLeave={() => setHoverDomain(null)}
+                      >
+                        <line x1={dx} y1={dy} x2={sx} y2={sy} stroke={focused ? d.accent : "oklch(0.962 0.012 85 / 0.12)"} strokeWidth={focused ? 0.9 : 0.5} />
+                        <circle cx={sx} cy={sy} r={focused ? 4.5 : 3.5} fill={d.accent} />
+                        <text x={sx + (Math.cos(sa) >= 0 ? 8 : -8)} y={sy + 3} textAnchor={Math.cos(sa) >= 0 ? "start" : "end"} fontFamily="JetBrains Mono, monospace" fontSize={9.5} fill="oklch(0.962 0.012 85 / 0.85)">{cap.name}</text>
+                      </g>
+                    );
+                  })}
+                </g>
+              );
+            })}
+
+            {/* domain bubbles */}
+            {effectiveDomains.map((d: any) => {
+              const rad = (d.angle * Math.PI) / 180;
+              const dx = cx + Math.cos(rad) * R;
+              const dy = cy + Math.sin(rad) * R;
+              const focused = hoverDomain === d.id;
+              return (
+                <g key={d.id} onMouseEnter={() => setHoverDomain(d.id)} onMouseLeave={() => setHoverDomain(null)} onClick={() => setOpenCat(d.id)} className="cursor-pointer">
+                  <circle cx={dx} cy={dy} r={focused ? 44 : 36} fill={`url(#glow-${d.id.replace(/\s|&/g, "")})`} />
+                  <circle cx={dx} cy={dy} r={focused ? 22 : 18} fill="oklch(0.13 0.008 60)" stroke={d.accent} strokeWidth={focused ? 1.5 : 1} style={{ transition: "all 280ms" }} />
+                  <text x={dx} y={dy + 36} textAnchor="middle" fontFamily="Bricolage Grotesque, sans-serif" fontSize={12} fontWeight={500} fill="oklch(0.962 0.012 85)">{d.label}</text>
+                  <text x={dx} y={dy + 50} textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize={9} fill="oklch(0.962 0.012 85 / 0.5)">{(byDomain.get(d.id) ?? []).length} capabilities</text>
+                </g>
+              );
+            })}
+
+            {/* center identity */}
+            <g>
+              <circle cx={cx} cy={cy} r={56} fill="oklch(0.13 0.008 60)" stroke="oklch(0.962 0.012 85 / 0.4)" />
+              <text x={cx} y={cy - 4} textAnchor="middle" fontFamily="Instrument Serif, serif" fontSize={22} fill="oklch(0.962 0.012 85)">Manikanta R</text>
+              <text x={cx} y={cy + 16} textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize={9} fill="oklch(0.962 0.012 85 / 0.55)">operating system</text>
+            </g>
+          </svg>
+
+          <div className="border-t border-bone/15 px-4 py-2.5 text-mono text-eyebrow text-bone/50">
+            Live · interconnected · synced with LinkedIn
+            <span className="float-right text-bone/35">// click any skill to open the panel</span>
+          </div>
         </div>
 
         {/* Mobile: expandable category groups (no graph) */}
@@ -165,7 +280,7 @@ export function Ch07Ecosystem() {
             <h3 className="text-display text-[clamp(1.5rem,3vw,2.4rem)] text-bone">Capability Groups</h3>
             <div className="text-mono text-eyebrow text-bone/50">{effectiveDomains.length} domains · {effectiveCaps.length} capabilities</div>
           </header>
-          <div className="grid grid-cols-1 gap-px overflow-hidden border border-bone/15 bg-bone/10 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-px overflow-hidden border border-bone/15 bg-bone/10 lg:grid-cols-4">
             {effectiveDomains.map((d: any) => {
               const items = byDomain.get(d.id) ?? [];
               return (
@@ -190,56 +305,24 @@ export function Ch07Ecosystem() {
           </div>
         </div>
 
-        {/* Expertise stages — connected progression */}
+        {/* Expertise stages — horizontal */}
         <div className="mt-20">
-          <header className="mb-10 flex flex-col gap-1">
-            <h3 className="text-display text-[clamp(1.8rem,3.6vw,3rem)] text-bone">Expertise Stages</h3>
-            <p className="text-mono text-eyebrow tracking-[0.12em] text-bone/50">A progression, not a progress bar — each stage builds on the last</p>
+          <header className="mb-6 flex items-end justify-between">
+            <h3 className="text-display text-[clamp(1.5rem,3vw,2.4rem)] text-bone">Expertise Stages</h3>
+            <div className="text-mono text-eyebrow text-bone/50">Learning → Leading · evolution, not progress bars</div>
           </header>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {STAGES.filter((s) => effectiveCaps.some((c: any) => c.stage === s)).map((s, si, filteredStages) => {
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
+            {STAGES.map((s) => {
               const items = effectiveCaps.filter((c: any) => c.stage === s);
-              const colors = ["#E0533D", "#D46A2E", "#F2B33D", "#3DA9FC", "#7C5CFF", "#E0533D"];
-              const color = colors[STAGES.indexOf(s) % colors.length];
               return (
-                <div key={s} className="group relative">
-                  {/* Connector line */}
-                  {si < filteredStages.length - 1 && (
-                    <div className="absolute -right-2 top-6 hidden h-px w-4 bg-gradient-to-r from-bone/30 to-transparent md:block" />
-                  )}
-                  <div className="relative rounded-sm border border-bone/12 bg-gradient-to-b from-bone/[0.03] to-transparent p-5 transition-all duration-300 hover:border-bone/30 hover:from-bone/[0.06]">
-                    {/* Stage badge */}
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-mono text-xs font-bold tabular-nums"
-                        style={{ background: `${color}22`, color }}
-                      >
-                        {String(STAGES.indexOf(s) + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-display text-xl tracking-tight text-bone">{s}</span>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="my-3 h-px w-full bg-gradient-to-r from-bone/15 to-transparent" />
-
-                    {/* Skills */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {items.slice(0, 5).map((c: any) => (
-                        <button
-                          key={c.id}
-                          onClick={() => setActive(c as Capability)}
-                          className="rounded-sm border border-bone/15 px-2 py-1 text-[10px] uppercase tracking-[0.08em] text-bone/70 transition-all duration-200 hover:border-vermilion/50 hover:text-vermilion hover:shadow-[0_0_12px_-4px_var(--vermilion)]"
-                        >
-                          {c.name}
-                        </button>
-                      ))}
-                      {items.length > 5 && (
-                        <span className="inline-flex items-center rounded-sm border border-dashed border-bone/20 px-2 py-1 text-[10px] text-bone/40">
-                          +{items.length - 5}
-                        </span>
-                      )}
-                    </div>
+                <div key={s} className="border border-bone/15 p-4">
+                  <div className="text-mono text-eyebrow uppercase tracking-[0.15em] text-bone/45">{String(stageIndex(s) + 1).padStart(2, "0")}</div>
+                  <div className="text-display mt-1 text-lg text-bone">{s}</div>
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {items.slice(0, 6).map((c: any) => (
+                      <button key={c.id} onClick={() => setActive(c as Capability)} className="border border-bone/15 px-1.5 py-0.5 text-eyebrow text-bone/75 transition-colors hover:border-bone/40 hover:text-bone">{c.name}</button>
+                    ))}
+                    {items.length > 6 && <span className="text-mono text-eyebrow text-bone/45">+{items.length - 6}</span>}
                   </div>
                 </div>
               );

@@ -175,13 +175,6 @@ class ApiService {
   getSiteSettings() {
     return this.request("/site-settings");
   }
-
-  // ==========================
-  // SECTION CONTENT (all hardcoded text via JSONB)
-  // ==========================
-  getSectionContent() {
-    return this.request("/section-content");
-  }
 }
 
 export default new ApiService();

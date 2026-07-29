@@ -10,7 +10,7 @@ import usePortfolio from "@/hooks/usePortfolio";
 export function Ch13BeyondMe() {
   const { profile } = usePortfolio();
   const beyondData = profile?.beyond || {
-    number: "",
+    number: "11",
     kicker: "Final Chapter",
     title: "Beyond My Portfolio",
     lede: "If you've read this far, you already know what I've done. This chapter is the quieter one — about why I keep doing it, and the person who shows up when no one is watching.",
@@ -40,16 +40,16 @@ export function Ch13BeyondMe() {
   };
 
   return (
-    <section id="beyond-me" data-mood="ink" className="relative chapter-pad grain overflow-hidden" aria-labelledby="beyond-me-title">
+    <section id="beyond-me" data-mood="bone" className="relative chapter-pad grain overflow-hidden" aria-labelledby="beyond-me-title">
       <div aria-hidden className="mr-beyond__ambient" />
       <div className="relative mx-auto max-w-3xl">
-        <div className="text-mono text-meta text-bone/55">/{beyondData.number} \u2014 {beyondData.kicker}</div>
+        <div className="text-mono text-meta text-ink/55">/{beyondData.number} \u2014 {beyondData.kicker}</div>
         <h2 id="beyond-me-title" className="text-display mt-5 leading-[0.95] text-[clamp(2.6rem,7vw,5.6rem)]">
           <MaskReveal><span className="italic">Beyond</span></MaskReveal>
           <MaskReveal><span> My Portfolio</span></MaskReveal>
         </h2>
         <Reveal>
-          <p className="mt-10 text-display text-[clamp(1.25rem,2vw,1.65rem)] leading-[1.45] text-bone/85">{beyondData.lede}</p>
+          <p className="mt-10 text-display text-[clamp(1.25rem,2vw,1.65rem)] leading-[1.45] text-ink/85">{beyondData.lede}</p>
         </Reveal>
         <div className="mr-beyond__rule mt-14" aria-hidden />
         <div className="mt-14 space-y-20">
@@ -65,7 +65,7 @@ export function Ch13BeyondMe() {
         <div className="mr-beyond__rule mt-24" aria-hidden />
         <Reveal>
           <div className="mt-16">
-            <div className="text-mono text-meta uppercase tracking-[0.22em] text-bone/55">Marginalia \u00B7 small personal moments</div>
+            <div className="text-mono text-meta uppercase tracking-[0.22em] text-ink/55">Marginalia \u00B7 small personal moments</div>
             <dl className="mt-8 grid grid-cols-1 gap-x-10 gap-y-5 sm:grid-cols-2">
               {(beyondData.moments || []).map((m: any) => (
                 <div key={m.k} className="mr-beyond__moment"><dt>{m.k}</dt><dd>{m.v}</dd></div>
@@ -75,10 +75,10 @@ export function Ch13BeyondMe() {
         </Reveal>
         <Reveal>
           <div className="mt-28 text-center">
-            <p className="text-display italic text-[clamp(1.6rem,3.6vw,3.1rem)] leading-[1.2] text-bone/95">
-              <span className="mr-beyond__pull">“</span>{beyondData.closing}<span className="mr-beyond__pull">”</span>
+            <p className="text-display italic text-[clamp(1.6rem,3.6vw,3.1rem)] leading-[1.2] text-ink/95">
+              <span className="mr-beyond__pull">\u201C</span>{beyondData.closing}<span className="mr-beyond__pull">\u201D</span>
             </p>
-            <p className="mt-8 text-mono text-meta uppercase tracking-[0.32em] text-bone/45">{beyondData.closingNote}</p>
+            <p className="mt-8 text-mono text-meta uppercase tracking-[0.32em] text-ink/45">{beyondData.closingNote}</p>
           </div>
         </Reveal>
       </div>
@@ -88,16 +88,16 @@ export function Ch13BeyondMe() {
 }
 
 const css = `
-.mr-beyond__ambient { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(60% 40% at 22% 18%, color-mix(in oklab, var(--vermilion) 8%, transparent), transparent 70%), radial-gradient(50% 35% at 82% 78%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 72%), radial-gradient(70% 50% at 50% 100%, color-mix(in oklab, var(--bone) 10%, transparent), transparent 75%); mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%); }
-.mr-beyond__rule { height: 1px; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--bone) 26%, transparent) 50%, transparent 100%); }
+.mr-beyond__ambient { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(60% 40% at 22% 18%, color-mix(in oklab, var(--vermilion) 8%, transparent), transparent 70%), radial-gradient(50% 35% at 82% 78%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 72%), radial-gradient(70% 50% at 50% 100%, color-mix(in oklab, var(--ink) 10%, transparent), transparent 75%); mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%); }
+.mr-beyond__rule { height: 1px; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--ink) 26%, transparent) 50%, transparent 100%); }
 .mr-beyond__movement { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-.mr-beyond__heading { display: flex; align-items: baseline; gap: 18px; font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.15; color: var(--bone); }
-.mr-beyond__heading-num { font-family: var(--font-mono); font-style: normal; font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--vermilion); padding-top: 0.4em; }
-.mr-beyond__prose p { font-family: var(--font-display); font-size: clamp(1.2rem, 1.6vw, 1.4rem); line-height: 1.7; color: color-mix(in oklab, var(--bone) 88%, transparent); margin: 0; }
+.mr-beyond__heading { display: flex; align-items: baseline; gap: 18px; font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.15; color: var(--ink); }
+.mr-beyond__heading-num { font-family: var(--font-mono); font-style: normal; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--vermilion); padding-top: 0.4em; }
+.mr-beyond__prose p { font-family: var(--font-display); font-size: clamp(1.05rem, 1.45vw, 1.22rem); line-height: 1.7; color: color-mix(in oklab, var(--ink) 88%, transparent); margin: 0; }
 .mr-beyond__prose p + p { margin-top: 1.1em; }
 .mr-beyond__prose p::first-letter { font-family: var(--font-display); font-style: italic; }
-.mr-beyond__moment { display: grid; grid-template-columns: 1fr; gap: 4px; padding-bottom: 14px; border-bottom: 1px dashed color-mix(in oklab, var(--bone) 16%, transparent); }
-.mr-beyond__moment dt { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: color-mix(in oklab, var(--bone) 55%, transparent); }
-.mr-beyond__moment dd { margin: 0; font-family: var(--font-display); font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.45; color: var(--bone); }
+.mr-beyond__moment { display: grid; grid-template-columns: 1fr; gap: 4px; padding-bottom: 14px; border-bottom: 1px dashed color-mix(in oklab, var(--ink) 16%, transparent); }
+.mr-beyond__moment dt { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: color-mix(in oklab, var(--ink) 55%, transparent); }
+.mr-beyond__moment dd { margin: 0; font-family: var(--font-display); font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.45; color: var(--ink); }
 .mr-beyond__pull { color: var(--vermilion); font-style: normal; padding: 0 0.15em; opacity: 0.85; }
 `;
