@@ -196,7 +196,10 @@ export function Ch00Cover() {
     { label: "Download Resume", href: "https://manikantar.in/resume.pdf", type: "ghost", download: true },
   ];
   const location = profile?.location || "Bengaluru · India";
-  const companies = (profile?.hero_companies as string[]) || ["Infosys", "Deloitte", "KPMG", "PwC"];
+  const companies = (profile?.hero_companies as { name: string; role: string; current?: boolean }[]) || [
+    { name: "Fizzy Goblet", role: "Senior Fashion Consultant", current: true },
+    { name: "RCM", role: "Inventory Manager", current: false },
+  ];
 
   const [entered] = useState(true);
 
@@ -246,7 +249,6 @@ export function Ch00Cover() {
         <svg className="hero-status-linkedin" viewBox="0 0 20 20" fill="currentColor" width="12" height="12" aria-hidden>
           <path d="M16 0H4C1.8 0 0 1.8 0 4v12c0 2.2 1.8 4 4 4h12c2.2 0 4-1.8 4-4V4c0-2.2-1.8-4-4-4zM6 17H3V8h3v9zM4.5 6.3c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zM17 17h-3v-5.3c0-1.3-.5-2-1.5-2s-1.5.7-1.5 2V17H8V8h3v1.2c.5-.8 1.5-1.4 2.5-1.4 1.8 0 3.5 1.1 3.5 3.8V17z" />
         </svg>
-        <span className="hero-status-linkedin-text">2k+</span>
         <span className="hero-status-sep" aria-hidden />
         <span className="hero-status-loc">{location}</span>
       </div>
@@ -353,15 +355,23 @@ export function Ch00Cover() {
             ))}
           </div>
 
-          {/* Trust bar */}
-          <div className="hero-trust" style={{ transitionDelay: entered ? "1100ms" : "0ms" }}>
-            <span className="hero-trust-label">Experience at</span>
-            <div className="hero-trust-logos">
-              {companies.map((c: string) => (
-                <span key={c} className="hero-trust-logo">{c}</span>
-              ))}
+          {/* Experience strip */}
+          {companies.length > 0 && (
+            <div className="hero-trust" style={{ transitionDelay: entered ? "1100ms" : "0ms" }}>
+              <div className="hero-trust-track">
+                {companies.map((c: { name: string; role: string; current?: boolean }, i: number) => (
+                  <div key={c.name} className={`hero-trust-card ${c.current ? "is-current" : ""}`}>
+                    <div className="hero-trust-card-inner">
+                      <div className="hero-trust-card-badge">{c.current ? "Current" : "Previous"}</div>
+                      <span className="hero-trust-card-name">{c.name}</span>
+                      <span className="hero-trust-card-role">{c.role}</span>
+                    </div>
+                    {i < companies.length - 1 && <div className="hero-trust-card-connector" aria-hidden />}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -867,40 +877,97 @@ const css = `
 }
 .hero-cta--ghost:hover::before { transform: translateY(0); opacity: 1; }
 
-/* Trust bar */
+/* Trust bar — Experience strip */
 .hero-trust {
-  display: flex;
-  align-items: center;
-  gap: 14px;
   margin-top: 32px;
   padding-top: 22px;
   border-top: 1px solid var(--hero-rule);
 }
-.hero-trust-label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--hero-mute);
-  white-space: nowrap;
-}
-.hero-trust-logos {
+.hero-trust-track {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
+  align-items: stretch;
 }
-.hero-trust-logo {
-  font-family: var(--font-grotesk);
-  font-size: clamp(0.78rem, 0.9vw, 0.88rem);
-  font-weight: 500;
-  letter-spacing: 0.08em;
+.hero-trust-card {
+  position: relative;
+  flex: 1 1 180px;
+  max-width: 240px;
+}
+.hero-trust-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--hero-paper) 50%, transparent);
+  border: 1px solid color-mix(in oklab, var(--hero-ink) 8%, transparent);
+  backdrop-filter: blur(8px);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease, background .35s ease;
+  cursor: default;
+}
+.hero-trust-card-inner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -16px rgba(20,17,15,0.25);
+  border-color: color-mix(in oklab, var(--hero-accent) 25%, transparent);
+  background: color-mix(in oklab, var(--hero-paper) 70%, transparent);
+}
+.hero-trust-card.is-current .hero-trust-card-inner {
+  border-color: color-mix(in oklab, var(--hero-accent) 18%, transparent);
+  background: color-mix(in oklab, var(--hero-accent) 4%, var(--hero-paper));
+}
+.hero-trust-card.is-current .hero-trust-card-inner:hover {
+  border-color: color-mix(in oklab, var(--hero-accent) 40%, transparent);
+  box-shadow: 0 12px 28px -16px color-mix(in oklab, var(--hero-accent) 60%, transparent);
+}
+.hero-trust-card-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  align-self: flex-start;
+  line-height: 1;
+  background: color-mix(in oklab, var(--hero-ink) 8%, transparent);
   color: color-mix(in oklab, var(--hero-ink) 50%, transparent);
-  opacity: 0.7;
-  transition: opacity .3s ease, color .3s ease;
+  transition: background .3s ease, color .3s ease;
 }
-.hero-trust-logo:hover {
-  opacity: 1;
+.hero-trust-card.is-current .hero-trust-card-badge {
+  background: color-mix(in oklab, var(--hero-accent) 15%, transparent);
+  color: var(--hero-accent);
+}
+.hero-trust-card-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1rem, 1.1vw, 1.15rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--hero-ink);
+}
+.hero-trust-card-role {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: color-mix(in oklab, var(--hero-ink) 50%, transparent);
+  line-height: 1.3;
+}
+.hero-trust-card-connector {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .hero-trust-card-connector {
+    display: block;
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    width: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--hero-ink) 12%, transparent), transparent);
+    transform: translateY(-50%);
+  }
 }
 
 /* Scroll indicator */
