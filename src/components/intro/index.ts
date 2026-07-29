@@ -1,3 +1,4 @@
+export { NameRevealIntro } from "./NameRevealIntro";
 export { CinematicIntro } from "./CinematicIntro";
 export { AmbientParticles } from "./AmbientParticles";
 export { default as MRMonogram } from "./MRMonogram";

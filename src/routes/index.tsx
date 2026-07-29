@@ -6,7 +6,7 @@ import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Ch
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
-import { CinematicIntro } from "@/components/intro/CinematicIntro";
+import { NameRevealIntro } from "@/components/intro/NameRevealIntro";
 
 
 import { Ch00Cover } from "@/components/chapters/Ch00Cover";
@@ -99,7 +99,7 @@ function Index() {
   };
 
   if (!introDone) {
-    return <CinematicIntro onComplete={handleIntroComplete} />;
+    return <NameRevealIntro onComplete={handleIntroComplete} />;
   }
 
   if (loading) {
