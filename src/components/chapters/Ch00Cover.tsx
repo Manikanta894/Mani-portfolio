@@ -112,8 +112,6 @@ function HeroGridBg() {
 }
 
 export function Ch00Cover() {
-  const row1Ref = useRef<HTMLSpanElement>(null);
-  const row2Ref = useRef<HTMLSpanElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
 
   const { profile } = usePortfolio();
@@ -122,9 +120,9 @@ export function Ch00Cover() {
     "HR Analytics", "Business Analytics", "AI Strategy", "Research", "Power BI", "People Analytics",
   ];
   const heroMeta = (profile?.hero_meta as any[]) || [
-    { label: "Published Papers", value: "04", type: "text" },
-    { label: "Experience", value: "6+ Years", sub: "Analytics · Operations · Research", type: "cohort" },
+    { label: "Total Experience", value: "6+ Years", sub: "Analytics · Operations · Research", type: "cohort" },
     { label: "MBA", value: "MBA · '27", sub: "HR & Business Analytics", type: "cohort" },
+    { label: "Certifications", value: "12+", sub: "HR · AI · Analytics", type: "text" },
     { label: "Availability", value: "Available", sub: "for opportunities", type: "status" },
   ];
   const tagline = profile?.tagline || "Building the future of work through <em>AI, analytics & human insight</em>.";
@@ -201,14 +199,8 @@ const [entered] = useState(true);
             Edition · 2026
           </div>
 
-          <h1 className="hero-name" aria-label="Manikanta R">
-            <span ref={row1Ref} className="hero-name-row">
-              <span className="hero-letter-anchor">Manikanta</span>
-            </span>
-            <span ref={row2Ref} className="hero-name-row hero-name-row--two">
-              <span className="hero-letter-anchor hero-letter--R">R</span>
-              <span className="hero-name-period" aria-hidden>.</span>
-            </span>
+          <h1 className="hero-name hero-name--inline" aria-label="Manikanta R">
+            Manikanta<span className="hero-name-period">&nbsp;</span>R<span className="hero-name-period">.</span>
           </h1>
 
           <p className="hero-welcome" style={{ transitionDelay: entered ? "200ms" : "0ms" }}>
@@ -552,14 +544,12 @@ const css = `
   letter-spacing: -0.03em;
   color: var(--hero-ink);
   margin: 0;
-  display: flex;
-  flex-direction: column;
 }
-.hero-name-row { display: inline-flex; align-items: baseline; white-space: nowrap; }
-.hero-name-row--two { margin-top: -0.14em; padding-left: 0.04em; }
-.hero-letter-anchor { display: inline-block; }
-.hero-letter--R { font-size: 1.02em; }
-.hero-name-period { color: var(--hero-accent); margin-left: 0.06em; font-style: italic; }
+.hero-name--inline {
+  white-space: nowrap;
+  display: inline;
+}
+.hero-name-period { color: var(--hero-accent); font-style: italic; }
 
 .hero-welcome {
   margin: 28px 0 0;
