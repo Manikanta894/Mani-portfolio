@@ -22,7 +22,6 @@ import Ch09LinkedIn from "@/components/chapters/Ch09LinkedIn";
 import { Ch10Journal } from "@/components/chapters/Ch10Journal";
 import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
 import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
-import { Ch12Contact } from "@/components/chapters/Ch12Contact";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 
 
@@ -151,7 +150,6 @@ function Index() {
       <Ch11Philosophy />
       <Ch09LinkedIn />
       <Ch10Journal />
-      <Ch12Contact />
       <Ch14BeyondNotes />
 
       <SiteFooter />
