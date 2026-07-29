@@ -2,10 +2,118 @@ import { useEffect, useRef, useState } from "react";
 import portraitCutout from "@/assets/portrait-cutout.png";
 import usePortfolio from "@/hooks/usePortfolio";
 
+function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
+  const [display, setDisplay] = useState("0");
+  const ref = useRef<HTMLSpanElement>(null);
+  const num = parseInt(value.replace(/[^0-9]/g, ""));
+  const isNumeric = !isNaN(num);
+
+  useEffect(() => {
+    if (!isNumeric || !ref.current) { setDisplay(value); return; }
+    const el = ref.current;
+    let start = 0;
+    const duration = 1200;
+    const step = 16;
+    const totalSteps = duration / step;
+    const increment = num / totalSteps;
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= num) { setDisplay(value + suffix); clearInterval(timer); }
+      else setDisplay(Math.floor(start).toString() + suffix);
+    }, step);
+    return () => clearInterval(timer);
+  }, [value, suffix, isNumeric, num]);
+
+  return <span ref={ref}>{display}</span>;
+}
+
+function HeroGridBg() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let W: number, H: number;
+    const resize = () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const step = 48;
+    let dots: { x: number; y: number; phase: number }[] = [];
+    const rebuild = () => {
+      dots = [];
+      for (let x = 0; x < W; x += step)
+        for (let y = 0; y < H; y += step)
+          dots.push({ x, y, phase: Math.random() * Math.PI * 2 });
+    };
+    rebuild();
+
+    let raf = 0;
+    const draw = (t: number) => {
+      ctx.clearRect(0, 0, W, H);
+
+      const isDark = document.querySelector(".dark") !== null;
+      const baseColor = isDark ? "245,241,235" : "20,17,15";
+
+      for (const d of dots) {
+        const pulse = 0.3 + 0.7 * Math.abs(Math.sin(t * 0.0006 + d.phase));
+        const size = 1.0 * pulse;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${baseColor},${0.04 * pulse})`;
+        ctx.fill();
+      }
+
+      const midX = Math.floor(W / step / 2) * step;
+      const midY = Math.floor(H / step / 2) * step;
+      for (const d of dots) {
+        const dx = d.x - midX;
+        const dy = d.y - midY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 80) continue;
+        for (const e of dots) {
+          if (e === d) continue;
+          const ex = e.x - d.x;
+          const ey = e.y - d.y;
+          const ed = Math.sqrt(ex * ex + ey * ey);
+          if (ed < step * 1.1 && ed > 0) {
+            const o = 0.08 * (1 - ed / (step * 1.1));
+            ctx.beginPath();
+            ctx.moveTo(d.x, d.y);
+            ctx.lineTo(e.x, e.y);
+            ctx.strokeStyle = `rgba(${baseColor},${o})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
+
+    window.addEventListener("resize", () => { resize(); rebuild(); });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0 opacity-60" />;
+}
+
 export function Ch00Cover() {
   const row1Ref = useRef<HTMLSpanElement>(null);
   const row2Ref = useRef<HTMLSpanElement>(null);
-  const portraitRef = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
 
   const { profile } = usePortfolio();
@@ -28,8 +136,6 @@ export function Ch00Cover() {
   ];
   const location = profile?.location || "Bengaluru · India";
 
-const [portraitAwake] = useState(true);
-const [awake] = useState(true);
 const [entered] = useState(true);
 
   // Broadcast "hero ready" so global chrome (nav) can fade in only after the intro.
@@ -38,6 +144,7 @@ const [entered] = useState(true);
     window.dispatchEvent(new CustomEvent("mr-hero-entered"));
   }, [entered]);
 
+  const metrics = heroMeta;
 
   return (
     <section
@@ -45,20 +152,48 @@ const [entered] = useState(true);
       data-chapter="00"
       className="hero-stage relative min-h-screen w-full overflow-hidden"
     >
+      <HeroGridBg />
       <div className="hero-bg" aria-hidden />
+
+      {/* Status bar */}
+      <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
+        <span className="hero-status-dot" />
+        <span>Open to Opportunities</span>
+        <span className="hero-status-sep" aria-hidden />
+        <span className="hero-status-loc">{location}</span>
+      </div>
 
       <div className="relative mx-auto grid min-h-screen w-full max-w-[1480px] grid-cols-12 items-center gap-6 px-4 sm:px-6 md:px-8 lg:px-16 py-10 lg:py-0 lg:h-screen">
         {/* LEFT · PORTRAIT */}
-        <div className={`col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left ${portraitAwake ? "is-awake" : ""}`}>
-          <div aria-hidden className={`hero-watermark ${portraitAwake ? "is-awake" : ""}`}>MR</div>
+        <div className="col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left is-awake">
+          <div aria-hidden className="hero-watermark is-awake">MR</div>
           <div className="hero-halo" aria-hidden />
-          <div ref={portraitRef} className="hero-portrait">
+          <div className="hero-portrait is-awake">
             <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
+            <div className="hero-portrait-ring" aria-hidden />
+          </div>
+
+          {/* Metrics cards below portrait on mobile, side panel on desktop */}
+          <div className="hero-metrics-strip">
+            {metrics.slice(0, 4).map((m: any, i: number) => (
+              <div key={i} className="hero-metric" style={{ transitionDelay: entered ? `${800 + i * 80}ms` : "0ms" }}>
+                <span className="hero-metric-value">
+                  {m.type === "status" ? (
+                    <span className="hero-metric-avail">{m.value}</span>
+                  ) : (
+                    <AnimatedCounter value={m.value} />
+                  )}
+                </span>
+                <span className="hero-metric-label">
+                  {m.type === "cohort" ? m.sub : m.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* RIGHT · NAME + HIERARCHY */}
-        <div className={`col-span-12 lg:col-span-7 relative hero-right ${awake ? "is-awake" : ""} ${entered ? "is-entered" : ""}`}>
+        <div className={`col-span-12 lg:col-span-7 relative hero-right is-awake ${entered ? "is-entered" : ""}`}>
           <div className="hero-eyebrow" style={{ transitionDelay: entered ? "120ms" : "0ms" }}>
             <span className="hero-eyebrow-dot" />
             {location}
@@ -80,7 +215,6 @@ const [entered] = useState(true);
             {welcomeText}
           </p>
 
-
           <div className="hero-rule" style={{ transitionDelay: entered ? "320ms" : "0ms" }} />
 
           <ul className="hero-skills">
@@ -91,10 +225,9 @@ const [entered] = useState(true);
             ))}
           </ul>
 
-          <p ref={taglineRef} className="hero-tagline" style={{ transitionDelay: entered ? "0ms" : "0ms" }}
+          <p ref={taglineRef} className="hero-tagline" style={{ transitionDelay: entered ? "560ms" : "0ms" }}
             dangerouslySetInnerHTML={{ __html: tagline }}
           />
-
 
           <div className="hero-ctas" style={{ transitionDelay: entered ? "900ms" : "0ms" }}>
             {ctas.map((cta: any, i: number) => (
@@ -120,26 +253,8 @@ const [entered] = useState(true);
               </a>
             ))}
           </div>
-
-          <div className="hero-meta" style={{ transitionDelay: entered ? "1040ms" : "0ms" }}>
-            {heroMeta.map((m: any, i: number) => (
-              <span key={i}>
-                {m.type === "cohort" ? (
-                  <><b>{m.value}</b> {m.sub}</>
-                ) : m.type === "status" ? (
-                  <><b>{m.value}</b> {m.sub}</>
-                ) : (
-                  <><b>{m.value}</b> {m.label}</>
-                )}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
-
-      {/* Camera-focus spotlight reveal */}
-
-      {/* Welcome rotator — appears after name settles, dismisses into the hero */}
 
       <style>{css}</style>
     </section>
@@ -163,33 +278,67 @@ const css = `
 .hero-bg {
   position: absolute; inset: 0;
   background:
-    radial-gradient(900px 600px at 22% 38%, rgba(20,17,15,0.06), transparent 70%),
+    radial-gradient(900px 600px at 22% 38%, rgba(212,106,46,0.07), transparent 70%),
     radial-gradient(700px 500px at 88% 80%, rgba(20,17,15,0.04), transparent 70%);
   pointer-events: none;
+  z-index: 1;
 }
 
-/* Veil during intro */
-.hero-left,
-.hero-right {
-  filter: blur(14px) saturate(0.6);
-  opacity: 0.45;
-  transition: filter 900ms cubic-bezier(.2,.7,.2,1) 80ms,
-              opacity 900ms cubic-bezier(.2,.7,.2,1) 80ms;
+/* Status bar */
+.hero-status-bar {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px 8px 16px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-mute);
+  background: color-mix(in oklab, var(--hero-paper) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--hero-ink) 10%, transparent);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px);
+  transition: opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);
+  animation: hero-settle 1s ease forwards 0.15s;
+  pointer-events: none;
 }
-.hero-left.is-awake,
-.hero-right.is-awake {
-  filter: blur(0) saturate(1);
-  opacity: 1;
+@keyframes hero-settle {
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.hero-status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34,197,94,0.5);
+  animation: hero-pulse-dot 2s ease-in-out infinite;
+}
+@keyframes hero-pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(34,197,94,0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 14px rgba(34,197,94,0.3); }
+}
+.hero-status-sep {
+  width: 1px; height: 14px;
+  background: color-mix(in oklab, var(--hero-ink) 14%, transparent);
+}
+.hero-status-loc {
+  color: color-mix(in oklab, var(--hero-mute) 70%, transparent);
 }
 
-/* Hide secondary UI until visitor "enters" */
+/* Fade-in on enter */
 .hero-right .hero-eyebrow,
 .hero-right .hero-welcome,
 .hero-right .hero-rule,
 .hero-right .hero-skills li,
 .hero-right .hero-tagline,
-.hero-right .hero-ctas,
-.hero-right .hero-meta {
+.hero-right .hero-ctas {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
@@ -199,8 +348,7 @@ const css = `
 .hero-right.is-entered .hero-rule,
 .hero-right.is-entered .hero-skills li,
 .hero-right.is-entered .hero-tagline,
-.hero-right.is-entered .hero-ctas,
-.hero-right.is-entered .hero-meta {
+.hero-right.is-entered .hero-ctas {
   opacity: 1;
   transform: translateY(0);
 }
@@ -223,6 +371,7 @@ const css = `
   user-select: none;
   pointer-events: none;
   mix-blend-mode: multiply;
+  z-index: 0;
 }
 .hero-watermark.is-awake { opacity: 0.022; transform: translateY(0); }
 
@@ -231,41 +380,53 @@ const css = `
   width: clamp(420px, 42vw, 620px);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(20,17,15,0.10), rgba(20,17,15,0) 70%);
-  filter: blur(20px);
+  background: radial-gradient(closest-side, rgba(212,106,46,0.08), rgba(212,106,46,0) 70%);
+  filter: blur(30px);
   pointer-events: none;
   transform: translateY(-3%);
 }
 
-/* Portrait iris reveal — opens during the morph so the portrait
-   feels born from the same transformation as the monogram. */
 .hero-portrait {
   position: relative;
-  width: clamp(360px, 36vw, 520px);
+  width: clamp(320px, 34vw, 480px);
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
   isolation: isolate;
-  transform: translateY(-3%);
+  transform: translateY(-3%) scale(1);
   box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--hero-ink) 12%, transparent),
-    0 0 0 6px color-mix(in oklab, var(--hero-paper) 88%, transparent),
-    0 0 0 7px color-mix(in oklab, var(--hero-ink) 10%, transparent),
-    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 0 0 1px color-mix(in oklab, var(--hero-ink) 10%, transparent),
+    0 0 0 5px color-mix(in oklab, var(--hero-paper) 90%, transparent),
+    0 0 0 6px color-mix(in oklab, var(--hero-accent) 20%, transparent),
+    0 1px 0 rgba(255,255,255,0.5) inset,
     0 30px 60px -20px rgba(20,17,15,0.35),
     0 80px 120px -40px rgba(20,17,15,0.25);
-  clip-path: circle(0% at 50% 50%);
-  transition:
-    clip-path 1100ms cubic-bezier(.22,.7,.2,1) 120ms,
-    transform 1200ms cubic-bezier(.22,.7,.2,1) 120ms;
-}
-.hero-left.is-awake .hero-portrait {
-  clip-path: circle(52% at 50% 50%);
-  transform: translateY(-3%) scale(1);
   animation: hero-float 9s ease-in-out 1300ms infinite;
+  z-index: 2;
 }
 
-/* Subtle rim light — a thin highlight ring on the upper-left */
+/* Glowing accent ring */
+.hero-portrait-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    rgba(212,106,46,0) 60deg,
+    rgba(212,106,46,0.35) 120deg,
+    rgba(212,106,46,0) 200deg,
+    transparent 360deg);
+  mask: radial-gradient(circle, transparent 49.5%, #000 50.5%);
+  -webkit-mask: radial-gradient(circle, transparent 49.5%, #000 50.5%);
+  pointer-events: none;
+  z-index: 3;
+  animation: hero-ring-spin 8s linear infinite;
+}
+@keyframes hero-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Rim light */
 .hero-portrait::before {
   content: "";
   position: absolute; inset: -1px;
@@ -287,21 +448,83 @@ const css = `
   content: "";
   position: absolute; inset: 0;
   background:
-    radial-gradient(60% 50% at 50% 18%, rgba(255,245,230,0.22), transparent 70%),
-    linear-gradient(180deg, rgba(20,17,15,0) 60%, rgba(20,17,15,0.18) 100%);
+    radial-gradient(60% 50% at 50% 18%, rgba(255,245,230,0.18), transparent 70%),
+    linear-gradient(180deg, rgba(20,17,15,0) 60%, rgba(20,17,15,0.15) 100%);
   pointer-events: none;
+  z-index: 1;
 }
 
 .hero-portrait img {
   width: 112%; height: 112%;
   object-fit: cover; object-position: 50% 18%;
   position: absolute; left: -6%; top: -6%;
-  filter: grayscale(0.15) contrast(1.02);
+  filter: grayscale(0.1) contrast(1.04);
 }
 
 @keyframes hero-float {
   0%, 100% { transform: translateY(-3%); }
   50%      { transform: translateY(calc(-3% - 10px)); }
+}
+
+/* Metrics strip below portrait */
+.hero-metrics-strip {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 3;
+  width: 100%;
+  max-width: 380px;
+}
+.hero-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 12px;
+  min-width: 80px;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--hero-paper) 75%, transparent);
+  border: 1px solid color-mix(in oklab, var(--hero-ink) 8%, transparent);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: hero-metric-in 0.6s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.hero-metric:nth-child(1) { animation-delay: 0.8s; }
+.hero-metric:nth-child(2) { animation-delay: 0.9s; }
+.hero-metric:nth-child(3) { animation-delay: 1.0s; }
+.hero-metric:nth-child(4) { animation-delay: 1.1s; }
+@keyframes hero-metric-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-metric-value {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+  line-height: 1;
+  color: var(--hero-accent);
+}
+.hero-metric-avail {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-style: normal;
+  letter-spacing: 0.08em;
+  color: #22c55e;
+}
+.hero-metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hero-mute);
+  text-align: center;
+  line-height: 1.2;
 }
 
 .hero-eyebrow {
@@ -351,11 +574,10 @@ const css = `
 }
 .hero-welcome em { color: var(--hero-ink); font-style: italic; }
 
-
 .hero-rule {
   margin-top: 28px;
   height: 1px;
-  background: linear-gradient(90deg, var(--hero-ink) 0%, var(--hero-ink) 60px, var(--hero-rule) 60px, var(--hero-rule) 100%);
+  background: linear-gradient(90deg, var(--hero-accent) 0%, var(--hero-accent) 60px, var(--hero-rule) 60px, var(--hero-rule) 100%);
 }
 
 .hero-skills { display: flex; flex-wrap: wrap; gap: 10px 12px; margin: 22px 0 0; padding: 0; list-style: none; }
@@ -380,7 +602,6 @@ const css = `
   transform: translateY(-2px);
   box-shadow: 0 10px 22px -16px color-mix(in oklab, var(--hero-ink) 60%, transparent);
 }
-
 
 .hero-tagline {
   margin: 22px 0 0;
@@ -421,16 +642,16 @@ const css = `
 }
 .hero-cta--primary {
   color: var(--hero-paper);
-  border: 1px solid var(--hero-ink);
-  background: var(--hero-ink);
-  box-shadow: 0 12px 24px -16px color-mix(in oklab, var(--hero-ink) 80%, transparent);
+  border: 1px solid var(--hero-accent);
+  background: linear-gradient(135deg, var(--hero-accent), #c05a20);
+  box-shadow: 0 12px 24px -16px color-mix(in oklab, var(--hero-accent) 80%, transparent);
 }
 .hero-cta--primary::before {
-  background: linear-gradient(120deg, var(--hero-ink) 0%, var(--hero-ink-2) 100%);
+  background: linear-gradient(135deg, #c05a20, #a84d18);
   transform: translateY(101%);
   opacity: 0;
 }
-.hero-cta--primary:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -18px color-mix(in oklab, var(--hero-ink) 90%, transparent); }
+.hero-cta--primary:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -18px color-mix(in oklab, var(--hero-accent) 90%, transparent); }
 .hero-cta--primary:hover::before { transform: translateY(0); opacity: 1; }
 
 .hero-cta--ghost {
@@ -449,18 +670,7 @@ const css = `
 }
 .hero-cta--ghost:hover::before { transform: translateY(0); opacity: 1; }
 
-.hero-meta {
-  display: flex; flex-wrap: wrap; gap: 18px 26px;
-  margin-top: 32px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--hero-mute);
-}
-.hero-meta b { color: var(--hero-ink); font-weight: 500; }
-
-
+/* Dark mode overrides */
 .dark .hero-stage {
   --hero-ink: #F5F1EB;
   --hero-ink-2: #C8C2B8;
@@ -473,15 +683,26 @@ const css = `
 .dark .hero-portrait img { filter: grayscale(0.15) contrast(1.05) brightness(1.05); }
 .dark .hero-watermark { mix-blend-mode: screen; }
 .dark .hero-watermark.is-awake { opacity: 0.03; }
+.dark .hero-status-bar {
+  background: color-mix(in oklab, var(--hero-ink) 10%, transparent);
+  border-color: color-mix(in oklab, var(--hero-ink) 12%, transparent);
+}
+.dark .hero-metric {
+  background: color-mix(in oklab, var(--hero-ink) 8%, transparent);
+  border-color: color-mix(in oklab, var(--hero-ink) 10%, transparent);
+}
 
 @media (max-width: 1024px) {
   .hero-name { font-size: clamp(54px, 13vw, 108px); }
   .hero-watermark { font-size: 40vw; }
+  .hero-metrics-strip { position: relative; bottom: auto; margin-top: 16px; }
 }
 @media (max-width: 640px) {
   .hero-name { font-size: clamp(46px, 14vw, 80px); }
   .hero-tagline { font-size: 17px; }
   .hero-welcome { font-size: 19px; }
+  .hero-status-bar { font-size: 9px; padding: 6px 14px 6px 12px; top: 16px; gap: 8px; }
+  .hero-metrics-strip { gap: 4px; }
+  .hero-metric { min-width: 68px; padding: 8px 10px; }
 }
-
 `;
