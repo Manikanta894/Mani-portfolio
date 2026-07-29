@@ -1,7 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import portrait from "@/assets/portrait.jpg";
 import { Reveal } from "@/components/motion/primitives";
 import usePortfolio from "@/hooks/usePortfolio";
@@ -42,42 +40,6 @@ async function fetchFeaturedArticles(): Promise<JournalArticle[]> {
   } catch {
     return [];
   }
-}
-
-function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const num = parseInt(value.replace(/[^0-9]/g, ""));
-  const isNumeric = !isNaN(num);
-
-  return (
-    <span ref={ref}>
-      {inView && isNumeric ? (
-        <CounterDisplay target={num} suffix={suffix || ""} />
-      ) : isNumeric ? (
-        "0"
-      ) : (
-        value
-      )}
-    </span>
-  );
-}
-
-function CounterDisplay({ target, suffix }: { target: number; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const doneRef = useRef(false);
-  if (inView && !doneRef.current) {
-    doneRef.current = true;
-    let start = 0;
-    const step = Math.max(1, Math.floor(target / 60));
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { start = target; clearInterval(timer); }
-      if (ref.current) ref.current.textContent = start.toString();
-    }, 16);
-  }
-  return <span ref={ref}>{target}</span>;
 }
 
 function JournalBlock() {
@@ -166,21 +128,6 @@ export default function Ch09LinkedIn() {
               View verified profile <Arrow />
             </a>
           </article>
-
-          <div className="li-stats">
-            <div className="li-stat">
-              <span className="li-stat__num"><AnimatedCounter value="847" suffix="+" /></span>
-              <span className="li-stat__label">Connections</span>
-            </div>
-            <div className="li-stat">
-              <span className="li-stat__num"><AnimatedCounter value="12" suffix="+" /></span>
-              <span className="li-stat__label">Publications</span>
-            </div>
-            <div className="li-stat">
-              <span className="li-stat__num"><AnimatedCounter value="5" suffix="k+" /></span>
-              <span className="li-stat__label">Post Impressions</span>
-            </div>
-          </div>
         </div>
 
         <div className="li-block">
@@ -271,50 +218,6 @@ const css = `
 .li-meta { border-left: 1px solid color-mix(in oklab, currentColor 18%, transparent); padding-left: 12px; }
 .li-meta dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in oklab, currentColor 55%, transparent); }
 .li-meta dd { margin: 4px 0 0; font-size: 14px; }
-
-/* Stats row */
-.li-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 8px;
-}
-.li-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 20px 16px;
-  border-radius: 16px;
-  background: color-mix(in oklab, var(--bone) 4%, transparent);
-  border: 1px solid color-mix(in oklab, currentColor 10%, transparent);
-  backdrop-filter: blur(8px);
-  transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
-}
-.li-stat:hover {
-  border-color: color-mix(in oklab, var(--vermilion) 25%, transparent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -12px rgba(212,106,46,0.12);
-}
-.li-stat__num {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(1.6rem, 2.4vw, 2rem);
-  line-height: 1;
-  color: var(--vermilion);
-}
-.li-stat__label {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, currentColor 50%, transparent);
-}
-@media (max-width: 640px) {
-  .li-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .li-stat { padding: 14px 8px; }
-}
 
 .li-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; background: color-mix(in oklab, var(--ink) 70%, transparent); color: var(--bone); font-size: 13.5px; letter-spacing: 0.02em; text-decoration: none; border: 1px solid color-mix(in oklab, currentColor 18%, transparent); transition: transform .25s ease, background .25s ease, box-shadow .25s ease; }
 .dark .li-cta { background: var(--bone); color: var(--ink); }
