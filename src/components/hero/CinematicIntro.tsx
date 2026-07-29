@@ -103,9 +103,9 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
     const fontSize = Math.min(W * 0.3, 260);
     const offY = H * 0.5;
 
-    // M sampled at right (where DOM M slides to), R at left
-    const mPts = sampleLetter(ctx, "M", W * 0.66, offY, fontSize, W, H);
-    const rPts = sampleLetter(ctx, "R", W * 0.34, offY, fontSize, W, H);
+    // M ends left (crosses from right), R ends right (crosses from left) — forming MR
+    const mPts = sampleLetter(ctx, "M", W * 0.38, offY, fontSize, W, H);
+    const rPts = sampleLetter(ctx, "R", W * 0.62, offY, fontSize, W, H);
 
     interface P {
       x: number; y: number;
@@ -267,6 +267,7 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
       <AnimatePresence>
         {scene === "letters" && (
           <>
+            {/* M — slides from right, crosses center to left → forms M in "MR" */}
             <motion.span
               className="absolute select-none"
               style={{
@@ -280,18 +281,19 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
                 backgroundClip: "text",
                 filter: "drop-shadow(0 0 18px rgba(100,140,220,0.25))",
               }}
-              initial={go ? { x: 120, opacity: 0 } : { x: 120, opacity: 0 }}
-              animate={go ? { x: 24, opacity: 1 } : {}}
-              exit={{ x: 80, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(3px)", transition: { duration: 0.3 } }}
+              initial={go ? { x: 140, opacity: 0 } : { x: 140, opacity: 0 }}
+              animate={go ? { x: -44, opacity: 1 } : {}}
+              exit={{ x: -100, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(3px)", transition: { duration: 0.3 } }}
               transition={
                 go
-                  ? { x: { duration: 0.75, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.35, delay: 0.05 } }
+                  ? { x: { duration: 0.85, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.35, delay: 0.05 } }
                   : {}
               }
             >
               M
             </motion.span>
 
+            {/* R — slides from left, crosses center to right → forms R in "MR" */}
             <motion.span
               className="absolute select-none"
               style={{
@@ -305,12 +307,12 @@ export function CinematicIntro({ onDone }: { onDone: () => void }) {
                 backgroundClip: "text",
                 filter: "drop-shadow(0 0 18px rgba(100,140,220,0.25))",
               }}
-              initial={go ? { x: -120, opacity: 0 } : { x: -120, opacity: 0 }}
-              animate={go ? { x: -24, opacity: 1 } : {}}
-              exit={{ x: -80, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(3px)", transition: { duration: 0.3 } }}
+              initial={go ? { x: -140, opacity: 0 } : { x: -140, opacity: 0 }}
+              animate={go ? { x: 44, opacity: 1 } : {}}
+              exit={{ x: 100, opacity: 0, filter: "drop-shadow(0 0 40px rgba(100,140,220,0.6)) blur(3px)", transition: { duration: 0.3 } }}
               transition={
                 go
-                  ? { x: { duration: 0.75, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.35, delay: 0.05 } }
+                  ? { x: { duration: 0.85, ease: [0.22, 0.8, 0.22, 1] }, opacity: { duration: 0.35, delay: 0.05 } }
                   : {}
               }
             >
