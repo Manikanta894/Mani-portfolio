@@ -10,7 +10,6 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 
   useEffect(() => {
     if (!isNumeric || !ref.current) { setDisplay(value); return; }
-    const el = ref.current;
     let start = 0;
     const duration = 1200;
     const step = 16;
@@ -25,6 +24,69 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   }, [value, suffix, isNumeric, num]);
 
   return <span ref={ref}>{display}</span>;
+}
+
+function RoleCarousel() {
+  const roles = ["HR Analytics", "People Analytics", "AI Strategy", "Data-Driven HR"];
+  const [index, setIndex] = useState(0);
+  const [display, setDisplay] = useState(roles[0]);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setIndex((i) => (i + 1) % roles.length);
+        setFading(false);
+      }, 300);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!fading) setDisplay(roles[index]);
+  }, [index, fading]);
+
+  return (
+    <span className={`hero-role ${fading ? "is-fading" : ""}`}>
+      {display}
+    </span>
+  );
+}
+
+const METRIC_ICONS: Record<string, React.ReactNode> = {
+  experience: (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" className="hero-metric-icon">
+      <circle cx="10" cy="5" r="3" />
+      <path d="M4 18c1-5 3-8 6-8s5 3 6 8" />
+    </svg>
+  ),
+  mba: (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" className="hero-metric-icon">
+      <path d="M10 2L2 6l8 4 8-4-8-4z" />
+      <path d="M2 10l8 4 8-4" />
+      <path d="M2 14l8 4 8-4" />
+    </svg>
+  ),
+  certifications: (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" className="hero-metric-icon">
+      <circle cx="10" cy="10" r="7" />
+      <path d="M7 10l2 2 4-4" />
+    </svg>
+  ),
+  availability: (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" className="hero-metric-icon">
+      <circle cx="10" cy="10" r="7" />
+      <path d="M10 6v4l3 3" />
+    </svg>
+  ),
+};
+
+function getIconKey(label: string): string {
+  if (/experience/i.test(label)) return "experience";
+  if (/mba/i.test(label)) return "mba";
+  if (/cert/i.test(label)) return "certifications";
+  return "availability";
 }
 
 function HeroGridBg() {
@@ -113,6 +175,7 @@ function HeroGridBg() {
 
 export function Ch00Cover() {
   const taglineRef = useRef<HTMLParagraphElement>(null);
+  const portraitWrapRef = useRef<HTMLDivElement>(null);
 
   const { profile } = usePortfolio();
 
@@ -133,10 +196,33 @@ export function Ch00Cover() {
     { label: "Download Resume", href: "https://manikantar.in/resume.pdf", type: "ghost", download: true },
   ];
   const location = profile?.location || "Bengaluru · India";
+  const companies = (profile?.hero_companies as string[]) || ["Infosys", "Deloitte", "KPMG", "PwC"];
 
-const [entered] = useState(true);
+  const [entered] = useState(true);
 
-  // Broadcast "hero ready" so global chrome (nav) can fade in only after the intro.
+  // Parallax
+  useEffect(() => {
+    if (!portraitWrapRef.current) return;
+    const el = portraitWrapRef.current;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const rect = el.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const viewCenter = window.innerHeight / 2;
+        const offset = (center - viewCenter) * -0.03;
+        el.style.setProperty("--parallax-y", `${offset}px`);
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   useEffect(() => {
     if (!entered) return;
     window.dispatchEvent(new CustomEvent("mr-hero-entered"));
@@ -157,24 +243,39 @@ const [entered] = useState(true);
       <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
         <span className="hero-status-dot" />
         <span>Open to Opportunities</span>
+        <svg className="hero-status-linkedin" viewBox="0 0 20 20" fill="currentColor" width="12" height="12" aria-hidden>
+          <path d="M16 0H4C1.8 0 0 1.8 0 4v12c0 2.2 1.8 4 4 4h12c2.2 0 4-1.8 4-4V4c0-2.2-1.8-4-4-4zM6 17H3V8h3v9zM4.5 6.3c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zM17 17h-3v-5.3c0-1.3-.5-2-1.5-2s-1.5.7-1.5 2V17H8V8h3v1.2c.5-.8 1.5-1.4 2.5-1.4 1.8 0 3.5 1.1 3.5 3.8V17z" />
+        </svg>
+        <span className="hero-status-linkedin-text">2k+</span>
         <span className="hero-status-sep" aria-hidden />
         <span className="hero-status-loc">{location}</span>
       </div>
 
       <div className="relative mx-auto grid min-h-screen w-full max-w-[1480px] grid-cols-12 items-center gap-6 px-4 sm:px-6 md:px-8 lg:px-16 py-10 lg:py-0 lg:h-screen">
         {/* LEFT · PORTRAIT */}
-        <div className="col-span-12 lg:col-span-5 relative flex items-center justify-center hero-left is-awake">
+        <div className="col-span-12 lg:col-span-5 relative flex items-center justify-center flex-col hero-left is-awake">
           <div aria-hidden className="hero-watermark is-awake">MR</div>
           <div className="hero-halo" aria-hidden />
-          <div className="hero-portrait is-awake">
-            <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
-            <div className="hero-portrait-ring" aria-hidden />
+          <div ref={portraitWrapRef} className="hero-portrait-wrap">
+            <div className="hero-portrait-glow" aria-hidden />
+            <div className="hero-portrait is-awake">
+              <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
+            </div>
           </div>
 
-          {/* Metrics cards below portrait on mobile, side panel on desktop */}
+          {/* Social proof */}
+          <div className="hero-proof">
+            <span className="hero-proof-mark" aria-hidden>&#10018;</span>
+            <span className="hero-proof-text">"One of the sharpest analysts I've mentored — combines technical depth with real business instinct."</span>
+          </div>
+
+          {/* Metrics cards below portrait */}
           <div className="hero-metrics-strip">
             {metrics.slice(0, 4).map((m: any, i: number) => (
               <div key={i} className="hero-metric" style={{ transitionDelay: entered ? `${800 + i * 80}ms` : "0ms" }}>
+                <span className="hero-metric-icon-wrap">
+                  {METRIC_ICONS[getIconKey(m.label)] || METRIC_ICONS.availability}
+                </span>
                 <span className="hero-metric-value">
                   {m.type === "status" ? (
                     <span className="hero-metric-avail">{m.value}</span>
@@ -206,6 +307,12 @@ const [entered] = useState(true);
           <p className="hero-welcome" style={{ transitionDelay: entered ? "200ms" : "0ms" }}>
             {welcomeText}
           </p>
+
+          {/* Role carousel */}
+          <div className="hero-role-row" style={{ transitionDelay: entered ? "260ms" : "0ms" }}>
+            <span className="hero-role-label">Specializing in </span>
+            <RoleCarousel />
+          </div>
 
           <div className="hero-rule" style={{ transitionDelay: entered ? "320ms" : "0ms" }} />
 
@@ -245,7 +352,25 @@ const [entered] = useState(true);
               </a>
             ))}
           </div>
+
+          {/* Trust bar */}
+          <div className="hero-trust" style={{ transitionDelay: entered ? "1100ms" : "0ms" }}>
+            <span className="hero-trust-label">Experience at</span>
+            <div className="hero-trust-logos">
+              {companies.map((c: string) => (
+                <span key={c} className="hero-trust-logo">{c}</span>
+              ))}
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="hero-scroll-indicator" aria-hidden>
+        <span className="hero-scroll-label">Scroll</span>
+        <svg className="hero-scroll-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square">
+          <path d="M7 1v12M3 9l4 4 4-4" />
+        </svg>
       </div>
 
       <style>{css}</style>
@@ -297,7 +422,6 @@ const css = `
   border: 1px solid color-mix(in oklab, var(--hero-ink) 10%, transparent);
   backdrop-filter: blur(12px);
   opacity: 0;
-  transform: translateX(-50%) translateY(-6px);
   transition: opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);
   animation: hero-settle 1s ease forwards 0.15s;
   pointer-events: none;
@@ -316,6 +440,14 @@ const css = `
   0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(34,197,94,0.5); }
   50% { opacity: 0.6; box-shadow: 0 0 14px rgba(34,197,94,0.3); }
 }
+.hero-status-linkedin {
+  color: #0a66c2;
+  margin-left: 2px;
+}
+.hero-status-linkedin-text {
+  color: color-mix(in oklab, var(--hero-mute) 80%, transparent);
+  font-size: 9px;
+}
 .hero-status-sep {
   width: 1px; height: 14px;
   background: color-mix(in oklab, var(--hero-ink) 14%, transparent);
@@ -327,20 +459,24 @@ const css = `
 /* Fade-in on enter */
 .hero-right .hero-eyebrow,
 .hero-right .hero-welcome,
+.hero-right .hero-role-row,
 .hero-right .hero-rule,
 .hero-right .hero-skills li,
 .hero-right .hero-tagline,
-.hero-right .hero-ctas {
+.hero-right .hero-ctas,
+.hero-right .hero-trust {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
 }
 .hero-right.is-entered .hero-eyebrow,
 .hero-right.is-entered .hero-welcome,
+.hero-right.is-entered .hero-role-row,
 .hero-right.is-entered .hero-rule,
 .hero-right.is-entered .hero-skills li,
 .hero-right.is-entered .hero-tagline,
-.hero-right.is-entered .hero-ctas {
+.hero-right.is-entered .hero-ctas,
+.hero-right.is-entered .hero-trust {
   opacity: 1;
   transform: translateY(0);
 }
@@ -378,44 +514,52 @@ const css = `
   transform: translateY(-3%);
 }
 
-.hero-portrait {
+/* Portrait wrapper — enables glow ring behind image */
+.hero-portrait-wrap {
   position: relative;
   width: clamp(320px, 34vw, 480px);
   aspect-ratio: 1;
+  transform: translateY(-3%);
+  --parallax-y: 0px;
+}
+.hero-portrait-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    rgba(212,106,46,0) 50deg,
+    rgba(212,106,46,0.3) 110deg,
+    rgba(212,106,46,0) 190deg,
+    transparent 360deg);
+  mask: radial-gradient(circle, transparent 46%, #000 47%, #000 53%, transparent 54%);
+  -webkit-mask: radial-gradient(circle, transparent 46%, #000 47%, #000 53%, transparent 54%);
+  pointer-events: none;
+  animation: hero-glow-spin 10s linear infinite;
+  z-index: 0;
+}
+@keyframes hero-glow-spin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-portrait {
+  position: relative;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   overflow: hidden;
   isolation: isolate;
-  transform: translateY(-3%) scale(1);
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--hero-ink) 10%, transparent),
     0 0 0 5px color-mix(in oklab, var(--hero-paper) 90%, transparent),
-    0 0 0 6px color-mix(in oklab, var(--hero-accent) 20%, transparent),
+    0 0 0 6px color-mix(in oklab, var(--hero-accent) 18%, transparent),
     0 1px 0 rgba(255,255,255,0.5) inset,
     0 30px 60px -20px rgba(20,17,15,0.35),
     0 80px 120px -40px rgba(20,17,15,0.25);
   animation: hero-float 9s ease-in-out 1300ms infinite;
-  z-index: 2;
-}
-
-/* Glowing accent ring */
-.hero-portrait-ring {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg,
-    transparent 0deg,
-    rgba(212,106,46,0) 60deg,
-    rgba(212,106,46,0.35) 120deg,
-    rgba(212,106,46,0) 200deg,
-    transparent 360deg);
-  mask: radial-gradient(circle, transparent 49.5%, #000 50.5%);
-  -webkit-mask: radial-gradient(circle, transparent 49.5%, #000 50.5%);
-  pointer-events: none;
-  z-index: 3;
-  animation: hero-ring-spin 8s linear infinite;
-}
-@keyframes hero-ring-spin {
-  to { transform: rotate(360deg); }
+  z-index: 1;
+  transform: translateY(var(--parallax-y, 0px));
+  transition: transform 0.1s linear;
 }
 
 /* Rim light */
@@ -435,7 +579,6 @@ const css = `
   z-index: 2;
   opacity: 0.85;
 }
-
 .hero-portrait::after {
   content: "";
   position: absolute; inset: 0;
@@ -445,7 +588,6 @@ const css = `
   pointer-events: none;
   z-index: 1;
 }
-
 .hero-portrait img {
   width: 112%; height: 112%;
   object-fit: cover; object-position: 50% 18%;
@@ -454,16 +596,37 @@ const css = `
 }
 
 @keyframes hero-float {
-  0%, 100% { transform: translateY(-3%); }
-  50%      { transform: translateY(calc(-3% - 10px)); }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(calc(0% - 10px)); }
+}
+
+/* Social proof quote */
+.hero-proof {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 18px;
+  max-width: 300px;
+  opacity: 0;
+  animation: hero-settle 1s ease forwards 0.5s;
+}
+.hero-proof-mark {
+  color: var(--hero-accent);
+  font-size: 0.7rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+.hero-proof-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(0.78rem, 1vw, 0.88rem);
+  line-height: 1.4;
+  color: var(--hero-ink-2);
+  opacity: 0.75;
 }
 
 /* Metrics strip below portrait */
 .hero-metrics-strip {
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
@@ -471,12 +634,13 @@ const css = `
   z-index: 3;
   width: 100%;
   max-width: 380px;
+  margin-top: 16px;
 }
 .hero-metric {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
   padding: 10px 12px;
   min-width: 80px;
   border-radius: 10px;
@@ -487,13 +651,18 @@ const css = `
   transform: translateY(6px);
   animation: hero-metric-in 0.6s cubic-bezier(.2,.7,.2,1) forwards;
 }
-.hero-metric:nth-child(1) { animation-delay: 0.8s; }
-.hero-metric:nth-child(2) { animation-delay: 0.9s; }
-.hero-metric:nth-child(3) { animation-delay: 1.0s; }
-.hero-metric:nth-child(4) { animation-delay: 1.1s; }
+.hero-metric:nth-child(1) { animation-delay: 1.0s; }
+.hero-metric:nth-child(2) { animation-delay: 1.1s; }
+.hero-metric:nth-child(3) { animation-delay: 1.2s; }
+.hero-metric:nth-child(4) { animation-delay: 1.3s; }
 @keyframes hero-metric-in {
   to { opacity: 1; transform: translateY(0); }
 }
+.hero-metric-icon-wrap {
+  color: var(--hero-accent);
+  opacity: 0.7;
+}
+.hero-metric-icon { width: 18px; height: 18px; display: block; }
 .hero-metric-value {
   font-family: var(--font-display);
   font-style: italic;
@@ -564,8 +733,46 @@ const css = `
 }
 .hero-welcome em { color: var(--hero-ink); font-style: italic; }
 
+/* Role carousel */
+.hero-role-row {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.06em;
+  color: var(--hero-mute);
+}
+.hero-role-label {
+  color: var(--hero-mute);
+}
+.hero-role {
+  color: var(--hero-accent);
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  position: relative;
+}
+.hero-role::after {
+  content: "";
+  display: inline-block;
+  width: 4px; height: 1.1em;
+  margin-left: 3px;
+  background: var(--hero-accent);
+  vertical-align: text-bottom;
+  animation: hero-caret 0.9s steps(1) infinite;
+}
+@keyframes hero-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.hero-role.is-fading {
+  opacity: 0;
+  transform: translateY(-2px);
+}
+
 .hero-rule {
-  margin-top: 28px;
+  margin-top: 22px;
   height: 1px;
   background: linear-gradient(90deg, var(--hero-accent) 0%, var(--hero-accent) 60px, var(--hero-rule) 60px, var(--hero-rule) 100%);
 }
@@ -660,7 +867,77 @@ const css = `
 }
 .hero-cta--ghost:hover::before { transform: translateY(0); opacity: 1; }
 
-/* Dark mode overrides */
+/* Trust bar */
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hero-rule);
+}
+.hero-trust-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hero-mute);
+  white-space: nowrap;
+}
+.hero-trust-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.hero-trust-logo {
+  font-family: var(--font-grotesk);
+  font-size: clamp(0.78rem, 0.9vw, 0.88rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: color-mix(in oklab, var(--hero-ink) 50%, transparent);
+  opacity: 0.7;
+  transition: opacity .3s ease, color .3s ease;
+}
+.hero-trust-logo:hover {
+  opacity: 1;
+  color: var(--hero-ink);
+}
+
+/* Scroll indicator */
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  animation: hero-scroll-in 1s ease forwards 2s;
+  pointer-events: none;
+}
+@keyframes hero-scroll-in {
+  to { opacity: 1; }
+}
+.hero-scroll-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--hero-mute);
+}
+.hero-scroll-chevron {
+  color: var(--hero-mute);
+  animation: hero-scroll-bounce 2s ease-in-out infinite;
+}
+@keyframes hero-scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* Dark mode */
 .dark .hero-stage {
   --hero-ink: #F5F1EB;
   --hero-ink-2: #C8C2B8;
@@ -681,11 +958,13 @@ const css = `
   background: color-mix(in oklab, var(--hero-ink) 8%, transparent);
   border-color: color-mix(in oklab, var(--hero-ink) 10%, transparent);
 }
+.dark .hero-proof-text { color: var(--hero-ink-2); }
 
 @media (max-width: 1024px) {
   .hero-name { font-size: clamp(54px, 13vw, 108px); }
   .hero-watermark { font-size: 40vw; }
-  .hero-metrics-strip { position: relative; bottom: auto; margin-top: 16px; }
+  .hero-metrics-strip { position: relative; bottom: auto; }
+  .hero-trust { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 @media (max-width: 640px) {
   .hero-name { font-size: clamp(46px, 14vw, 80px); }
@@ -694,5 +973,7 @@ const css = `
   .hero-status-bar { font-size: 9px; padding: 6px 14px 6px 12px; top: 16px; gap: 8px; }
   .hero-metrics-strip { gap: 4px; }
   .hero-metric { min-width: 68px; padding: 8px 10px; }
+  .hero-proof { display: none; }
+  .hero-trust { margin-top: 22px; }
 }
 `;
