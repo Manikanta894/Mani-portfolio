@@ -27,7 +27,9 @@ const FALLBACK_ITEMS: Item[] = [
 export function PremiumNav() {
   const { navigationItems } = usePortfolio();
   const navItems: Item[] = navigationItems?.length > 0
-    ? navigationItems.map((ni: any) => ({
+    ? navigationItems
+        .filter((ni: any) => ni.section_id !== "contact")
+        .map((ni: any) => ({
         id: ni.section_id,
         label: ni.label,
         n: ni.n || "00",

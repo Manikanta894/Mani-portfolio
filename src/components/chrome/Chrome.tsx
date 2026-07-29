@@ -12,7 +12,9 @@ const FALLBACK_SECTIONS = [
 export function ChapterRail() {
   const { navigationItems } = usePortfolio();
   const sections = navigationItems?.length > 0
-    ? navigationItems.map((ni: any) => ({ id: ni.section_id, n: ni.n || "00", label: ni.label }))
+    ? navigationItems
+        .filter((ni: any) => ni.section_id !== "contact")
+        .map((ni: any) => ({ id: ni.section_id, n: ni.n || "00", label: ni.label }))
     : FALLBACK_SECTIONS;
 
   const [active, setActive] = useState("cover");

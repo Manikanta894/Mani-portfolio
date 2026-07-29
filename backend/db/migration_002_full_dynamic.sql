@@ -119,8 +119,7 @@ INSERT INTO navigation_items (n, label, section_id, sort_order) VALUES
   ('09', 'LinkedIn', 'linkedin', 9),
   ('10', 'Journal', 'journal', 10),
   ('11', 'Philosophy', 'philosophy', 11),
-  ('12', 'Contact', 'contact', 12),
-  ('13', 'Beyond', 'beyond-me', 13)
+  ('12', 'Beyond', 'beyond-me', 12)
 ON CONFLICT DO NOTHING;
 
 -- Insert default social links

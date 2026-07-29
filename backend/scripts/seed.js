@@ -90,7 +90,7 @@ const dispatch = {
 const footer = {
   blurb: "Building the future of work — one model, one paper, one decision at a time.",
   practice: "HR Analytics · AI Strategy · People Data",
-  navigate: ["About", "Education", "Experience", "Awards", "Research", "Publications", "Projects", "Skills", "Certifications", "LinkedIn", "Blog", "Newsletter", "Contact"],
+  navigate: ["About", "Education", "Experience", "Awards", "Research", "Publications", "Projects", "Skills", "Certifications", "LinkedIn", "Blog", "Newsletter"],
   signature: "Built with intention · Bengaluru, IN",
   copyright: "© 2026 Manikanta R · manikantar.in",
 };
@@ -108,7 +108,6 @@ const chapters = [
   { n: "09", label: "LinkedIn", id: "linkedin" },
   { n: "10", label: "Journal", id: "journal" },
   { n: "11", label: "Philosophy", id: "philosophy" },
-  { n: "12", label: "Contact", id: "contact" },
 ];
 
 const contactInfo = {
