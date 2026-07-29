@@ -6,7 +6,7 @@ import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Ch
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
-import { NameRevealIntro } from "@/components/intro/NameRevealIntro";
+import { NameReveal } from "@/components/hero/NameReveal";
 
 
 import { Ch00Cover } from "@/components/chapters/Ch00Cover";
@@ -31,9 +31,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [introDone, setIntroDone] = useState(() => {
-    // Check if intro was already seen this session
     if (typeof window !== "undefined") {
-      return sessionStorage.getItem("mr-intro-seen") === "true";
+      return sessionStorage.getItem("mr-hero-played") === "1";
     }
     return false;
   });
@@ -94,12 +93,15 @@ function Index() {
       };
 
   const handleIntroComplete = () => {
-    sessionStorage.setItem("mr-intro-seen", "true");
     setIntroDone(true);
   };
 
   if (!introDone) {
-    return <NameRevealIntro onComplete={handleIntroComplete} />;
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0a0c]">
+        <NameReveal className="w-full h-full" onSettled={handleIntroComplete} />
+      </div>
+    );
   }
 
   if (loading) {
