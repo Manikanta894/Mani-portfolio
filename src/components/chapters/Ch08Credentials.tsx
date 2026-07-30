@@ -4,13 +4,18 @@ import { motion, AnimatePresence } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 
 const VERIFY_URLS: Record<string, string> = {
-  "7ecccae8-e822-4152-a131-46765d5805a2": "https://learn.microsoft.com/training/achievements/7ecccae8-e822-4152-a131-46765d5805a2",
-  "88CMB5YRUYEN": "https://coursera.org/verify/88CMB5YRUYEN",
-  "82TJOP4XGX1S": "https://coursera.org/verify/82TJOP4XGX1S",
-  "AV8QI58AJF1A": "https://coursera.org/verify/AV8QI58AJF1A",
+  "7ecccae8-e822-4152-a131-46765d5805a2": "https://www.credly.com/badges/7ecccae8-e822-4152-a131-46765d5805a2",
+  "01981cbc-8e58-4e61-852d-4eae53b5b2ec": "https://unstop.com/certificate-preview/01981cbc-8e58-4e61-852d-4eae53b5b2ec",
+  "xovin-vaheb-satep-rupot-pobeg": "https://badger.learning.sap.com/verify/xovin-vaheb-satep-rupot-pobeg",
   "5499a92f2b1b43e48d7669830509294e": "https://courses.edx.org/certificates/5499a92f2b1b43e48d7669830509294e",
+  "88CMB5YRUYEN": "https://www.coursera.org/account/accomplishments/verify/88CMB5YRUYEN",
+  "82TJOP4XGX1S": "https://www.coursera.org/account/accomplishments/verify/82TJOP4XGX1S",
   "436df506e92242839860108d9683f921": "https://courses.edx.org/certificates/436df506e92242839860108d9683f921",
-  "USUFXDSL": "https://verify.mygreatlearning.com/USUFXDSL",
+  "AV8QI58AJF1A": "https://www.coursera.org/account/accomplishments/verify/AV8QI58AJF1A",
+  "guSpiFbzKFwS5Wu7M": "https://www.theforage.com/completion-certificates/9PBTqmSxAf6zZTseP/io9DzWKe3PTsiS6GG",
+  "B6mz7r6dbckaPPLz5": "https://www.theforage.com/completion-certificates/MBA4MnZTNFEoJZGnk/ETGMhLB5eCrYjcH8o",
+  "USUFXDSL": "https://www.mygreatlearning.com/certificate/USUFXDSL",
+  "42": "https://certx.in/certificate/36a28147-6eed-47a5-8342-e5f926ebba61",
 };
 
 function getVerifyUrl(cert: any) {
