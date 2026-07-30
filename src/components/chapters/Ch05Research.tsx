@@ -1,7 +1,24 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
+
+function apaCite(p: any) {
+  const authors = (p.authors || "Manikanta R").split(",").map((a: string) => a.trim());
+  const last = authors.length > 1 ? `& ${authors.pop()}` : authors[0];
+  const authorStr = authors.length > 1 ? `${authors.join(", ")}, ${last}` : last;
+  const year = p.year || "2026";
+  const journal = p.journal ? ` ${p.journal}` : "";
+  const vol = p.volume ? `, ${p.volume}` : "";
+  const issue = p.issue ? `(${p.issue})` : "";
+  const pages = p.pages ? `, ${p.pages}` : "";
+  const doi = p.doi ? `. https://doi.org/${p.doi}` : "";
+  return `${authorStr} (${year}). ${p.title}.${journal}${vol}${issue}${pages}${doi}`;
+}
+
+function copyToClipboard(text: string) {
+  navigator.clipboard?.writeText(text);
+}
 
 const ORCID_URL = "https://orcid.org/0009-0005-2576-8731";
 const SSRN_URL = "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252";
@@ -9,6 +26,19 @@ const SSRN_URL = "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=96462
 function OrcidIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 8h2.2c1.8 0 3 .8 3 2.5s-1.2 2.5-3 2.5H8V8zm2.2 3.8c1 0 1.6-.5 1.6-1.3S11.2 9.2 10.2 9.2H9.3v2.6h.9zM8 14.5h2.5l1.5 2.5h1.5l-1.6-2.6c.9-.3 1.5-1.1 1.5-2 0-1.5-1-2.4-2.8-2.4H8v6.5z" fill="currentColor"/></svg>); }
 function SsrnIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h8M7 17h6"/></svg>); }
 function DocIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>); }
+
+function CopyCitationBtn({ paper }: { paper: any }) {
+  const [copied, setCopied] = useState(false);
+  const cite = useMemo(() => apaCite(paper), [paper]);
+  return (
+    <button
+      onClick={() => { copyToClipboard(cite); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono tracking-[0.04em] border border-ink/15 text-ink/50 hover:border-ink/40 hover:text-ink transition-colors"
+    >
+      {copied ? "Copied!" : "Copy APA"}
+    </button>
+  );
+}
 
 export function Ch05Research() {
   const { research } = usePortfolio();
@@ -133,6 +163,7 @@ export function Ch05Research() {
                               DOI
                             </a>
                           )}
+                          <CopyCitationBtn paper={p} />
                         </div>
                       </div>
                     </motion.div>

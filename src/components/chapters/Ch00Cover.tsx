@@ -26,30 +26,36 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   return <span ref={ref}>{display}</span>;
 }
 
-function RoleCarousel() {
-  const roles = ["HR Analytics", "People Analytics", "AI Strategy", "Data-Driven HR"];
+function RoleCarousel({ roles }: { roles: string[] }) {
   const [index, setIndex] = useState(0);
-  const [display, setDisplay] = useState(roles[0]);
-  const [fading, setFading] = useState(false);
+  const [char, setChar] = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    const current = roles[index % roles.length];
     const timer = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setIndex((i) => (i + 1) % roles.length);
-        setFading(false);
-      }, 300);
-    }, 2500);
+      if (!deleting) {
+        if (char < current.length) {
+          setChar((c) => c + 1);
+        } else {
+          setTimeout(() => setDeleting(true), 1500);
+        }
+      } else {
+        if (char > 0) {
+          setChar((c) => c - 1);
+        } else {
+          setDeleting(false);
+          setIndex((i) => (i + 1) % roles.length);
+        }
+      }
+    }, deleting ? 35 : 60);
     return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!fading) setDisplay(roles[index]);
-  }, [index, fading]);
+  }, [char, deleting, index, roles]);
 
   return (
-    <span className={`hero-role ${fading ? "is-fading" : ""}`}>
-      {display}
+    <span className="hero-role">
+      {roles[index % roles.length].slice(0, char)}
+      <span className="hero-role-caret">|</span>
     </span>
   );
 }
@@ -303,7 +309,9 @@ export function Ch00Cover() {
           {/* Role carousel */}
           <div className="hero-role-row" style={{ transitionDelay: entered ? "260ms" : "0ms" }}>
             <span className="hero-role-label">Specializing in </span>
-            <RoleCarousel />
+            <RoleCarousel roles={
+              profile?.target_roles?.length ? profile.target_roles : ["HR Analytics", "People Analytics", "AI Strategy"]
+            } />
           </div>
 
           <div className="hero-rule" style={{ transitionDelay: entered ? "320ms" : "0ms" }} />
@@ -716,25 +724,15 @@ const css = `
 .hero-role {
   color: var(--hero-accent);
   font-weight: 500;
-  transition: opacity 0.3s ease;
-  position: relative;
 }
-.hero-role::after {
-  content: "";
+.hero-role-caret {
   display: inline-block;
-  width: 4px; height: 1.1em;
-  margin-left: 3px;
-  background: var(--hero-accent);
-  vertical-align: text-bottom;
-  animation: hero-caret 0.9s steps(1) infinite;
+  color: var(--hero-accent);
+  animation: hero-caret 0.8s steps(1) infinite;
 }
 @keyframes hero-caret {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
-}
-.hero-role.is-fading {
-  opacity: 0;
-  transform: translateY(-2px);
 }
 
 .hero-rule {

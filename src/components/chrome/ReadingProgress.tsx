@@ -18,10 +18,10 @@ export function ReadingProgress() {
     };
   }, []);
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[2px] bg-transparent">
+    <div className="pointer-events-none fixed left-0 top-0 bottom-0 z-[60] w-[3px] bg-transparent hidden md:block">
       <div
-        className="h-full origin-left bg-vermilion transition-[width] duration-100"
-        style={{ width: `${p * 100}%`, boxShadow: "0 0 12px var(--vermilion)" }}
+        className="w-full bg-gradient-to-b from-vermilion to-vermilion/20 transition-[height] duration-200"
+        style={{ height: `${p * 100}%`, boxShadow: p > 0.01 ? "0 0 8px var(--vermilion)" : "none" }}
       />
     </div>
   );
