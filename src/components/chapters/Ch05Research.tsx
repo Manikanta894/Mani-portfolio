@@ -2,218 +2,148 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
-import { MaskReveal, Reveal } from "@/components/motion/primitives";
 
-function copy(text: string) {
-  if (typeof navigator !== "undefined" && navigator.clipboard) navigator.clipboard.writeText(text);
-}
+const ORCID_URL = "https://orcid.org/0009-0005-2576-8731";
+const SSRN_URL = "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=7670815";
 
-/* ---------- compact paper row ---------- */
-function PaperRow({ paper, index }: { paper: any; index: number }) {
-  const [open, setOpen] = useState(false);
+function OrcidIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 8h2.2c1.8 0 3 .8 3 2.5s-1.2 2.5-3 2.5H8V8zm2.2 3.8c1 0 1.6-.5 1.6-1.3S11.2 9.2 10.2 9.2H9.3v2.6h.9zM8 14.5h2.5l1.5 2.5h1.5l-1.6-2.6c.9-.3 1.5-1.1 1.5-2 0-1.5-1-2.4-2.8-2.4H8v6.5z" fill="currentColor"/></svg>); }
+function SsrnIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h8M7 17h6"/></svg>); }
+function DocIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>); }
 
-  return (
-    <Reveal delay={index * 0.04}>
-      <div className="border-b border-ink/12">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="grid w-full grid-cols-12 items-baseline gap-4 py-5 text-left transition-colors hover:bg-ink/[0.03]"
-        >
-          <span className="col-span-2 md:col-span-1 text-mono text-meta tabular-nums text-graphite/65">
-            {paper.year}
-          </span>
-          <span className="col-span-10 md:col-span-7 text-[1rem] leading-snug md:text-[1.05rem]">
-            {paper.title}
-          </span>
-          <span className="hidden md:col-span-3 md:block text-mono text-eyebrow text-graphite/55 truncate">
-            {paper.journal}
-          </span>
-          <span className="col-span-12 md:col-span-1 text-right md:text-right">
-            <span
-              className={`inline-block border px-1.5 py-0.5 text-mono text-eyebrow ${
-                paper.status === "Published"
-                  ? "border-vermilion/50 text-vermilion"
-                  : "border-ink/25 text-graphite"
-              }`}
-            >
-              {paper.status}
-            </span>
-          </span>
-        </button>
-
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden"
-            >
-              <div className="pb-8 pt-2 md:pb-10">
-                <div className="grid grid-cols-12 gap-6">
-                  <div className="col-span-12 md:col-span-8 space-y-4">
-                    <p className="text-[0.95rem] leading-relaxed text-graphite">
-                      {paper.abstract}
-                    </p>
-                    {paper.findings?.length > 0 && (
-                      <div>
-                        <div className="text-mono text-eyebrow text-graphite/55 mb-2">
-                          KEY FINDINGS
-                        </div>
-                        <ul className="space-y-1.5">
-                          {paper.findings.slice(0, 3).map((f: string, i: number) => (
-                            <li key={i} className="text-[0.9rem] leading-relaxed">
-                              <span className="text-vermilion mr-2">—</span>
-                              {f}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  <aside className="col-span-12 md:col-span-4 space-y-4 border-l border-ink/10 md:pl-6">
-                    <div className="flex flex-wrap gap-2 text-mono text-eyebrow">
-                      {paper.url && (
-                        <a
-                          href={paper.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="border border-ink/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
-                        >
-                          ↗ Publication
-                        </a>
-                      )}
-                      {paper.doi && (
-                        <a
-                          href={`https://doi.org/${paper.doi}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="border border-ink/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
-                        >
-                          DOI
-                        </a>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => copy(paper.citation?.apa || "")}
-                        className="border border-ink/25 px-2 py-1 hover:border-vermilion hover:text-vermilion"
-                      >
-                        Copy APA
-                      </button>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(paper.keywords || []).slice(0, 5).map((k: string) => (
-                        <span
-                          key={k}
-                          className="border border-ink/20 px-2 py-0.5 text-mono text-eyebrow"
-                        >
-                          {k}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="text-mono text-eyebrow text-graphite/55 space-y-1">
-                      <div className="flex justify-between gap-2">
-                        <span>Read</span>
-                        <span>{paper.readTime || paper.reading_time || ""}</span>
-                      </div>
-                      {paper.references !== undefined && (
-                        <div className="flex justify-between gap-2">
-                          <span>Refs</span>
-                          <span>{paper.references}</span>
-                        </div>
-                      )}
-                    </div>
-                  </aside>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </Reveal>
-  );
-}
-
-/* ---------- main ---------- */
 export function Ch05Research() {
-  const { research, researchThemes } = usePortfolio();
-  const [showAll, setShowAll] = useState(false);
+  const { research } = usePortfolio();
+  const papers = (research?.length ? research : []).sort((a: any, b: any) => Number(b.year) - Number(a.year));
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  const ordered = useMemo(
-    () =>
-      [...(research || [])].sort((a: any, b: any) => {
-        if (!!b.featured !== !!a.featured) return Number(!!b.featured) - Number(!!a.featured);
-        return Number(b.year) - Number(a.year);
-      }),
-    [research],
-  );
-
-  const visible = showAll ? ordered : ordered.slice(0, 5);
+  const stats = useMemo(() => ({
+    total: papers.length,
+    published: papers.filter((p: any) => p.status === "Published" || !p.status).length,
+    journals: [...new Set(papers.map((p: any) => p.journal).filter(Boolean))].length,
+  }), [papers]);
 
   return (
-    <section id="research" data-mood="warm" className="relative chapter-pad">
-      <div className="mx-auto max-w-6xl">
-        <header className="mb-14 grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-7">
-            <div className="text-mono text-meta text-graphite/60">
-              /05 — Working papers · Frontier topics
-            </div>
-            <h2 className="text-display mt-4 text-[clamp(2.6rem,6.2vw,5.5rem)] leading-[0.96]">
-              <MaskReveal>Research & Innovation Lab</MaskReveal>
-            </h2>
+    <section id="research" className="relative chapter-pad text-ink">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <header className="mb-14">
+          <div className="flex items-center gap-3 text-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
+            <span className="text-vermilion font-medium">06</span>
+            <span className="w-8 h-px bg-ink/20" />
+            Research & Innovation
           </div>
-          <div className="col-span-12 md:col-span-5 md:pt-6">
-            <Reveal>
-              <p className="text-[1.05rem] leading-relaxed text-graphite">
-                A working research lab, not a list. Featured studies below open in place — the full archive sits beneath, fully searchable.
-              </p>
-            </Reveal>
-          </div>
+          <h2 className="font-display font-normal text-[clamp(3.2rem,7vw,6rem)] leading-[0.92] tracking-[-0.02em]">
+            Research Lab
+          </h2>
+          <p className="mt-5 text-[1.05rem] text-ink/55 max-w-[52ch]">
+            Published research across AI in HR, workforce analytics, and organizational behavior.
+          </p>
         </header>
 
-        {/* compact paper list */}
-        <div className="border-t border-ink/15">
-          {visible.map((p: any, i: number) => (
-            <PaperRow key={p.id || i} paper={p} index={i} />
+        {/* Profile badges */}
+        <div className="flex flex-wrap gap-3 mb-12">
+          <a href={ORCID_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl border border-ink/10 bg-white/50 backdrop-blur-sm hover:border-[#A6CE39]/40 transition-colors group">
+            <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#A6CE3920", color: "#7DA128" }}>
+              <OrcidIcon />
+            </span>
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.12em] font-mono text-ink/40">ORCID</div>
+              <div className="text-sm font-medium group-hover:text-[#7DA128] transition-colors">0009-0005-2576-8731</div>
+            </div>
+          </a>
+          <a href={SSRN_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl border border-ink/10 bg-white/50 backdrop-blur-sm hover:border-[#154A7A]/40 transition-colors group">
+            <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#154A7A15", color: "#154A7A" }}>
+              <SsrnIcon />
+            </span>
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.12em] font-mono text-ink/40">SSRN</div>
+              <div className="text-sm font-medium group-hover:text-[#154A7A] transition-colors">Author Page</div>
+            </div>
+          </a>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3 mb-12">
+          {[
+            { label: "Papers", value: stats.total },
+            { label: "Published", value: stats.published },
+            { label: "Journals", value: stats.journals },
+          ].map((s) => (
+            <div key={s.label} className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-5 text-center">
+              <div className="font-display text-[clamp(2.4rem,4vw,3.2rem)] leading-none text-vermilion">{s.value}</div>
+              <div className="text-[11px] uppercase tracking-[0.14em] font-mono text-ink/40 mt-1.5">{s.label}</div>
+            </div>
           ))}
         </div>
 
-        {/* read more */}
-        <div className="mt-10 flex flex-wrap items-center gap-4">
-          {!showAll ? (
-            <button
-              type="button"
-              onClick={() => setShowAll(true)}
-              className="text-mono inline-flex items-center gap-2 border border-ink/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-ink hover:border-vermilion hover:text-vermilion"
-            >
-              Read more papers →
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setShowAll(false)}
-              className="text-mono inline-flex items-center gap-2 border border-ink/30 px-4 py-2 text-meta uppercase tracking-[0.16em] text-ink hover:border-vermilion hover:text-vermilion"
-            >
-              Show less ↑
-            </button>
-          )}
-          <span className="text-mono text-eyebrow text-graphite/55">
-            {showAll
-              ? `Showing all ${ordered.length} papers`
-              : `Showing 5 of ${ordered.length} papers`}
-            {" "}· full archive on{" "}
-            <a
-              href="https://orcid.org/0009-0005-2576-8731"
-              target="_blank"
-              rel="noreferrer"
-              className="underline hover:text-vermilion"
-            >
-              ORCID
-            </a>
-          </span>
+        {/* Papers list */}
+        <div className="space-y-3">
+          {papers.map((p: any, i: number) => {
+            const isOpen = expanded === p.id;
+            return (
+              <motion.article
+                key={p.id}
+                className={`rounded-2xl border bg-white/40 backdrop-blur-sm overflow-hidden transition-all duration-300 ${isOpen ? "border-vermilion/30 shadow-md shadow-vermilion/5" : "border-ink/8 hover:border-ink/15"}`}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+              >
+                <button
+                  onClick={() => setExpanded(isOpen ? null : p.id)}
+                  className="w-full p-5 sm:p-6 text-left"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="text-[10px] uppercase tracking-[0.12em] font-mono px-2.5 py-1 rounded-full bg-vermilion/10 border border-vermilion/20 text-vermilion">{p.year}</span>
+                        <span className="text-[11px] font-mono text-ink/40">{p.journal}</span>
+                      </div>
+                      <h3 className="font-display text-[1.15rem] leading-tight">{p.title}</h3>
+                    </div>
+                    <span className="text-ink/20 text-lg shrink-0 mt-1">{isOpen ? "−" : "+"}</span>
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-ink/5">
+                        <p className="text-sm text-ink/65 leading-relaxed mb-4">{p.abstract}</p>
+                        {p.keywords?.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            {p.keywords.map((k: string) => (
+                              <span key={k} className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{k}</span>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex gap-2 flex-wrap">
+                          {p.url && (
+                            <a href={p.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] bg-ink/90 text-bone hover:bg-ink transition-colors">
+                              <DocIcon /> Read Paper
+                            </a>
+                          )}
+                          {p.ssrn_url && (
+                            <a href={p.ssrn_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] border border-ink/15 text-ink hover:border-[#154A7A]/40 hover:text-[#154A7A] transition-colors">
+                              <SsrnIcon /> SSRN
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.article>
+            );
+          })}
         </div>
+
+        {papers.length === 0 && (
+          <p className="text-center py-16 text-ink/30 text-sm">Research papers coming soon.</p>
+        )}
       </div>
     </section>
   );
