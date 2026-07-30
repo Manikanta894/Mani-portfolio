@@ -32,12 +32,21 @@ export function Ch06Work() {
   const { projects } = usePortfolio();
   const all = (projects?.length ? projects : []).map(normalize);
   const [filter, setFilter] = useState("All");
+  const [stackFilter, setStackFilter] = useState<string | null>(null);
   const [selected, setSelected] = useState<Project | null>(null);
 
+  const allTechs = useMemo(() => {
+    const t = new Set<string>();
+    all.forEach((p) => p.tech.forEach((s: string) => t.add(s)));
+    return Array.from(t).sort();
+  }, [all]);
+
   const filtered = useMemo(() => {
-    if (filter === "All") return all;
-    return all.filter((p) => p.category === filter);
-  }, [filter, all]);
+    let pool = all;
+    if (filter !== "All") pool = pool.filter((p) => p.category === filter);
+    if (stackFilter) pool = pool.filter((p) => p.tech.includes(stackFilter));
+    return pool;
+  }, [filter, stackFilter, all]);
 
   return (
     <section id="work" className="relative chapter-pad text-ink">
@@ -57,15 +66,33 @@ export function Ch06Work() {
         </header>
 
         {/* Filters */}
-        <div className="flex gap-2 flex-wrap mb-12">
+        <div className="flex gap-2 flex-wrap mb-4">
           {FILTERS.map((f) => (
             <button
               key={f}
-              onClick={() => setFilter(f)}
+              onClick={() => { setFilter(f); setStackFilter(null); }}
               className={`px-4 py-1.5 rounded-full text-[10px] tracking-[0.1em] uppercase font-medium border transition-colors duration-200
-                ${filter === f ? "bg-ink text-bone border-ink" : "bg-transparent text-ink/50 border-ink/15 hover:border-ink/30 hover:text-ink"}`}
+                ${filter === f && !stackFilter ? "bg-ink text-bone border-ink" : "bg-transparent text-ink/50 border-ink/15 hover:border-ink/30 hover:text-ink"}`}
             >
               {f}
+            </button>
+          ))}
+        </div>
+
+        {/* Stack filter */}
+        <div className="flex gap-1.5 flex-wrap mb-10">
+          {stackFilter && (
+            <button onClick={() => setStackFilter(null)} className="px-3 py-1 rounded-full text-[10px] font-mono tracking-[0.03em] bg-vermilion text-bone border border-vermilion">
+              {stackFilter} ×
+            </button>
+          )}
+          {allTechs.slice(0, 8).map((t) => (
+            <button
+              key={t}
+              onClick={() => setStackFilter(stackFilter === t ? null : t)}
+              className={`px-2.5 py-1 rounded-full text-[10px] font-mono tracking-[0.03em] border transition-colors ${stackFilter === t ? "border-vermilion bg-vermilion/10 text-vermilion" : "border-ink/10 bg-ink/5 text-ink/50 hover:border-ink/25 hover:text-ink"}`}
+            >
+              {t}
             </button>
           ))}
         </div>
@@ -103,7 +130,7 @@ export function Ch06Work() {
                 {p.tech.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {p.tech.slice(0, 3).map((t: string) => (
-                      <span key={t} className="px-3 py-1.5 rounded-full text-[11px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{t}</span>
+                      <button key={t} onClick={(e) => { e.stopPropagation(); setStackFilter(stackFilter === t ? null : t); }} className={`px-3 py-1.5 rounded-full text-[11px] font-mono tracking-[0.03em] border transition-colors cursor-pointer ${stackFilter === t ? "border-vermilion bg-vermilion/10 text-vermilion" : "bg-ink/5 border-ink/8 text-ink/55 hover:border-ink/20"}`}>{t}</button>
                     ))}
                     {p.tech.length > 3 && <span className="text-[11px] font-mono text-ink/30 self-center">+{p.tech.length - 3}</span>}
                   </div>
