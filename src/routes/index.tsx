@@ -146,7 +146,7 @@ function Index() {
     );
   }
   return (
-      <main className="relative bg-ink text-bone" data-mood="ink">
+      <main className="relative bg-bone text-ink">
       <ReadingProgress />
       <PremiumNav onRecruiterToggle={() => setRecruiterMode(true)} />
       
