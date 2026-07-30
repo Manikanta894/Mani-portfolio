@@ -193,6 +193,7 @@ export function Ch01About() {
             </MaskReveal>
           </h2>
           <Reveal delay={0.15}>
+            <div className="about-greeting">{["Hello", "ನಮಸ್ಕಾರ", "नमस्ते", "హలో", "வணக்கம்"].join(" · ")}</div>
             <p className="about-deck">
               Not a biography. A short field guide to the questions that won't leave me alone —
               and the practice I've built around them.
@@ -373,6 +374,14 @@ export function Ch01About() {
         .about-title em {
           font-style: italic;
           color: color-mix(in oklab, var(--ink) 92%, var(--vermilion, #D46A2E));
+        }
+        .about-greeting {
+          margin: 16px 0 8px;
+          font-family: var(--font-mono);
+          font-size: 12px;
+          letter-spacing: 0.12em;
+          color: var(--vermilion);
+          opacity: 0.5;
         }
         .about-deck {
           margin: 32px 0 0;

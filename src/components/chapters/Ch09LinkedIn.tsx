@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Reveal } from "@/components/motion/primitives";
 import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
@@ -43,6 +44,7 @@ export default function Ch09LinkedIn() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -61,9 +63,8 @@ export default function Ch09LinkedIn() {
       });
       if (!res.ok) throw new Error("Failed to send message");
       setSubmitStatus("success");
-      setToastVisible(true);
+      setSubmitted(true);
       setFormData({});
-      setTimeout(() => setToastVisible(false), 4000);
     } catch (err: any) {
       setSubmitStatus("error");
       setErrorMessage(err.message || "Something went wrong.");
@@ -158,21 +159,30 @@ export default function Ch09LinkedIn() {
                   {submitting ? "Sending..." : "Send message"}
                 </button>
                 <span className="li-form__status">
-                  {submitStatus === "success"
-                    ? "Message sent"
-                    : submitStatus === "error"
-                    ? errorMessage
-                    : ""}
+                  {submitting ? "Sending..." : submitStatus === "error" ? errorMessage : ""}
                 </span>
               </div>
             </form>
           </Reveal>
-        </div>
-      </div>
 
-      <div className={`li-toast ${toastVisible ? "is-visible" : ""}`}>
-        <span className="li-toast__icon">✓</span>
-        <span>Message transmitted successfully</span>
+          {/* Success state — replaces form inline */}
+          <AnimatePresence>
+            {submitted && (
+              <motion.div
+                className="li-success"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, ease: [0.22, 0.8, 0.22, 1] }}
+              >
+                <span className="li-success__check">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
+                <p className="li-success__msg">Got it — I'll reply soon.</p>
+                <button onClick={() => setSubmitted(false)} className="li-success__again">Send another</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
       <style>{css}</style>
     </section>
@@ -390,32 +400,28 @@ const css = `
   font-size: 12.5px;
   color: color-mix(in oklab, currentColor 50%, transparent);
 }
+
+/* Success */
+.li-success {
+  text-align: center; padding: 48px 24px;
+}
+.li-success__check {
+  display: flex; justify-content: center;
+  color: var(--vermilion); margin-bottom: 16px;
+}
+.li-success__msg {
+  font-family: var(--font-display, "Instrument Serif", serif);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  color: var(--ink); margin-bottom: 20px;
+}
+.li-success__again {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: color-mix(in oklab, currentColor 40%, transparent);
+  background: none; border: 1px solid color-mix(in oklab, currentColor 15%, transparent);
+  padding: 8px 20px; border-radius: 999px; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.li-success__again:hover { border-color: var(--vermilion); color: var(--vermilion); }
+
 .li-arrow { transition: transform .3s ease; }
-.li-profile-card__cta:hover .li-arrow { transform: translateX(4px); }
-
-/* Toast */
-.li-toast {
-  position: fixed; bottom: 32px; right: 32px; z-index: 999;
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 12px 22px; border-radius: 999px;
-  background: #0a0a0c;
-  border: 1px solid color-mix(in oklab, var(--vermilion) 30%, transparent);
-  box-shadow: 0 8px 32px -12px rgba(0,0,0,0.4), 0 0 20px rgba(212,106,46,0.08);
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-  color: var(--bone);
-  opacity: 0; transform: translateY(12px) scale(0.96);
-  transition: opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1);
-  pointer-events: none;
-}
-.li-toast.is-visible { opacity: 1; transform: translateY(0) scale(1); }
-.li-toast__icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--vermilion); color: var(--bone);
-  font-size: 10px; font-weight: 700;
-}
-
-@media (max-width: 640px) {
-  .li-toast { left: 16px; right: 16px; bottom: 16px; }
-}
 `;

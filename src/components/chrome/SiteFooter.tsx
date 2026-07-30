@@ -7,6 +7,19 @@ const ICON_MAP: Record<string, React.ComponentType<any>> = {
   Linkedin, Github, Instagram, Facebook,
 };
 
+function FooterClock() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const tick = () => {
+      setTime(new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" }));
+    };
+    tick();
+    const i = setInterval(tick, 1000);
+    return () => clearInterval(i);
+  }, []);
+  return <span className="tabular-nums">{time || "—"} IST</span>;
+}
+
 export function SiteFooter() {
   const { profile, socialLinks } = usePortfolio();
 
@@ -112,7 +125,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mr-footer__bottom">
-          <div className="mr-footer__copy">{copyright}</div>
+          <div className="mr-footer__copy">{copyright} · <FooterClock /> · replies within 24h</div>
           <div className="mr-footer__craft">{tagline}</div>
           <button type="button" onClick={onTop} className="mr-footer__top">
             <ArrowUp aria-hidden className="mr-footer__top-icon" />
