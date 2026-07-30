@@ -147,13 +147,6 @@ function Index() {
   }
   return (
       <main className="relative bg-bone text-ink">
-
-
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.015]"
-        style={{
-          backgroundImage: "radial-gradient(circle at 25% 25%, var(--vermilion) 0%, transparent 50%), radial-gradient(circle at 75% 75%, var(--vermilion) 0%, transparent 50%)",
-        }}
-      />
       <ReadingProgress />
       <PremiumNav onRecruiterToggle={() => setRecruiterMode(true)} />
       
@@ -162,27 +155,16 @@ function Index() {
       <CornerStamp />
 
       <Ch00Cover />
-      <SectionDivider />
       <Ch01About />
-      <SectionDivider />
       <Ch02Education />
-      <SectionDivider />
       <Ch03Experience />
-      <SectionDivider />
       <Ch06Work />
-      <SectionDivider />
       <Ch07Ecosystem />
-      <SectionDivider />
       <Ch05Research />
-      <SectionDivider />
       <Ch08Credentials />
-      <SectionDivider />
       <Ch11Philosophy />
-      <SectionDivider />
       <Ch09LinkedIn />
-      <SectionDivider />
       <Ch10Journal />
-      <SectionDivider />
       <Ch14BeyondNotes />
 
       <SiteFooter />

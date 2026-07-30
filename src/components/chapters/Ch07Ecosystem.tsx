@@ -44,7 +44,7 @@ export function Ch07Ecosystem() {
   const domainsWithSkills = DOMAINS.filter((d) => (byDomain.get(d.id) || []).length > 0).length;
 
   return (
-    <section id="ecosystem" data-mood="ink" className="relative chapter-pad">
+    <section id="ecosystem" className="relative chapter-pad text-ink">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <header className="mb-16">
           <div className="flex items-center gap-3 text-mono text-[0.8rem] uppercase tracking-[0.2em] text-ink/40 mb-5">
