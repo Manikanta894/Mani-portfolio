@@ -108,10 +108,10 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
             <div className="text-mono text-[0.75rem] uppercase tracking-[0.18em] text-bone/45 mb-4">
               {r.company}{r.city ? ` · ${r.city}` : ""}
             </div>
-            <h3 className="text-display text-[clamp(2.2rem,3.8vw,3.6rem)] leading-[1.06] text-bone">
+            <h3 className="text-display text-[clamp(2.4rem,4vw,3.8rem)] leading-[1.04] text-bone">
               <MaskReveal>{r.role}</MaskReveal>
             </h3>
-            <p className="mt-5 text-[1.08rem] leading-relaxed text-bone/65 max-w-[48ch]">
+            <p className="mt-6 text-[1.15rem] leading-relaxed text-bone/65 max-w-[52ch]">
               {r.context}
             </p>
           </header>
@@ -120,7 +120,7 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
             <div className="text-mono mb-5 text-[0.75rem] uppercase tracking-[0.2em] text-vermilion/80">
               Impact & contributions
             </div>
-            <ul className="space-y-4 text-[1.05rem] leading-relaxed text-bone/75">
+            <ul className="space-y-4 text-[1.12rem] leading-relaxed text-bone/75">
               {(r.achievements || []).map((a: string, j: number) => (
                 <li key={j} className="flex gap-3">
                   <span className="text-vermilion shrink-0 mt-[0.15em]">+</span>

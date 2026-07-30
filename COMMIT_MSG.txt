@@ -1,0 +1,1 @@
+﻿redesign skills section: domain cards with stage bars, expandable skill tags, detail card, stage distribution chart

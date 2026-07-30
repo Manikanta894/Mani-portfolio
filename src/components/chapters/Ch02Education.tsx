@@ -375,19 +375,19 @@ const css = `
 }
 .mr-edu__card-span {
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.18em;
+  font-size: 12px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: color-mix(in oklab, var(--ink) 45%, transparent);
 }
 .mr-edu__card-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
   border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: color-mix(in oklab, var(--ink) 55%, transparent);
 }
@@ -410,8 +410,8 @@ const css = `
 .mr-edu__card-degree {
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
-  font-size: clamp(24px, 2.8vw, 40px);
-  line-height: 1.1;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.08;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -419,15 +419,15 @@ const css = `
   margin-top: 8px;
   font-family: var(--font-serif, "Instrument Serif", serif);
   font-style: italic;
-  font-size: clamp(15px, 1.1vw, 18px);
+  font-size: clamp(16px, 1.2vw, 20px);
   color: color-mix(in oklab, var(--ink) 60%, transparent);
 }
 
 .mr-edu__card-points {
-  list-style: none; margin: 20px 0 0; padding: 0;
-  display: flex; flex-direction: column; gap: 8px;
-  font-size: clamp(14px, 1vw, 16px);
-  line-height: 1.6;
+  list-style: none; margin: 22px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 10px;
+  font-size: clamp(15px, 1.05vw, 17px);
+  line-height: 1.65;
   color: color-mix(in oklab, var(--ink) 78%, transparent);
 }
 .mr-edu__card-points li {
