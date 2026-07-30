@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 
 const ORCID_URL = "https://orcid.org/0009-0005-2576-8731";
-const SSRN_URL = "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=7670815";
+const SSRN_URL = "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252";
 
 function OrcidIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 8h2.2c1.8 0 3 .8 3 2.5s-1.2 2.5-3 2.5H8V8zm2.2 3.8c1 0 1.6-.5 1.6-1.3S11.2 9.2 10.2 9.2H9.3v2.6h.9zM8 14.5h2.5l1.5 2.5h1.5l-1.6-2.6c.9-.3 1.5-1.1 1.5-2 0-1.5-1-2.4-2.8-2.4H8v6.5z" fill="currentColor"/></svg>); }
 function SsrnIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h8M7 17h6"/></svg>); }
@@ -17,7 +17,7 @@ export function Ch05Research() {
 
   const stats = useMemo(() => ({
     total: papers.length,
-    published: papers.filter((p: any) => p.status === "Published" || !p.status).length,
+    withDOI: papers.filter((p: any) => p.doi).length,
     journals: [...new Set(papers.map((p: any) => p.journal).filter(Boolean))].length,
   }), [papers]);
 
@@ -64,7 +64,7 @@ export function Ch05Research() {
         <div className="grid grid-cols-3 gap-3 mb-12">
           {[
             { label: "Papers", value: stats.total },
-            { label: "Published", value: stats.published },
+            { label: "DOI Indexed", value: stats.withDOI },
             { label: "Journals", value: stats.journals },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-5 text-center">
@@ -96,8 +96,10 @@ export function Ch05Research() {
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         <span className="text-[10px] uppercase tracking-[0.12em] font-mono px-2.5 py-1 rounded-full bg-vermilion/10 border border-vermilion/20 text-vermilion">{p.year}</span>
                         <span className="text-[11px] font-mono text-ink/40">{p.journal}</span>
+                        {p.doi && <span className="text-[10px] font-mono text-ink/25">DOI: {p.doi}</span>}
                       </div>
                       <h3 className="font-display text-[1.15rem] leading-tight">{p.title}</h3>
+                      <p className="text-xs text-ink/40 mt-1">{p.authors}</p>
                     </div>
                     <span className="text-ink/20 text-lg shrink-0 mt-1">{isOpen ? "−" : "+"}</span>
                   </div>
@@ -126,9 +128,9 @@ export function Ch05Research() {
                               <DocIcon /> Read Paper
                             </a>
                           )}
-                          {p.ssrn_url && (
-                            <a href={p.ssrn_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] border border-ink/15 text-ink hover:border-[#154A7A]/40 hover:text-[#154A7A] transition-colors">
-                              <SsrnIcon /> SSRN
+                          {p.doi && (
+                            <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] border border-ink/15 text-ink hover:border-ink/40 transition-colors">
+                              DOI
                             </a>
                           )}
                         </div>
