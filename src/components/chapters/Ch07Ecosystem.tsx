@@ -66,15 +66,15 @@ export function Ch07Ecosystem() {
           ].map((s, i) => (
             <motion.div
               key={s.label}
-              className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-5"
+              className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06, duration: 0.4 }}
             >
-              <div className="text-[10px] uppercase tracking-[0.15em] font-mono text-ink/40 mb-1">{s.label}</div>
-              <div className="font-display text-[clamp(2rem,3.5vw,2.8rem)] leading-none text-vermilion">{s.value}</div>
-              <div className="text-[11px] text-ink/45 mt-1">{s.hint}</div>
+              <div className="text-[11px] uppercase tracking-[0.15em] font-mono text-ink/40 mb-1.5">{s.label}</div>
+              <div className="font-display text-[clamp(2.4rem,4vw,3.2rem)] leading-none text-vermilion">{s.value}</div>
+              <div className="text-[12px] text-ink/45 mt-1.5">{s.hint}</div>
             </motion.div>
           ))}
         </div>
@@ -95,18 +95,18 @@ export function Ch07Ecosystem() {
               >
                 <button
                   onClick={() => setExpandedDomain(expanded ? null : d.id)}
-                  className="w-full p-5 text-left flex items-center gap-3"
+                  className="w-full p-6 text-left flex items-center gap-3"
                 >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg" style={{ background: `${d.accent}18`, color: d.accent }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 text-xl" style={{ background: `${d.accent}18`, color: d.accent }}>
                     {d.icon}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="font-display text-base leading-tight">{d.label}</h3>
-                    <div className="text-[10px] uppercase tracking-[0.1em] font-mono text-ink/35 mt-0.5">
+                    <h3 className="font-display text-lg leading-tight">{d.label}</h3>
+                    <div className="text-[11px] uppercase tracking-[0.1em] font-mono text-ink/35 mt-1">
                       {items.length} skills · {[...new Set(items.map((c) => c.stage))].length} stages
                     </div>
                   </div>
-                  <span className="ml-auto text-ink/25 text-sm">{expanded ? "−" : "+"}</span>
+                  <span className="ml-auto text-ink/25 text-base">{expanded ? "−" : "+"}</span>
                 </button>
 
                 {/* Stage bar */}
@@ -132,12 +132,12 @@ export function Ch07Ecosystem() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-5 pb-5 pt-1 border-t border-ink/5 flex flex-wrap gap-1.5">
+                      <div className="px-6 pb-6 pt-2 border-t border-ink/5 flex flex-wrap gap-2">
                         {items.map((c) => (
                           <button
                             key={c.id}
                             onClick={(e) => { e.stopPropagation(); setSelected(c); }}
-                            className="px-2.5 py-1.5 rounded-full text-[10px] font-mono tracking-[0.03em] border transition-colors hover:border-ink/30 text-ink/65 border-ink/10"
+                            className="px-3 py-2 rounded-full text-[11px] font-mono tracking-[0.03em] border transition-colors hover:border-ink/30 text-ink/65 border-ink/10"
                             style={selected?.id === c.id ? { borderColor: d.accent, color: d.accent, background: `${d.accent}10` } : {}}
                           >
                             {c.name}

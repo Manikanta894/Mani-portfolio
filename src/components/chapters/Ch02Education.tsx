@@ -410,23 +410,23 @@ const css = `
 .mr-edu__card-degree {
   font-family: var(--font-display, "Instrument Serif", serif);
   font-weight: 400;
-  font-size: clamp(22px, 2.6vw, 36px);
+  font-size: clamp(24px, 2.8vw, 40px);
   line-height: 1.1;
   letter-spacing: -0.01em;
   margin: 0;
 }
 .mr-edu__card-school {
-  margin-top: 6px;
+  margin-top: 8px;
   font-family: var(--font-serif, "Instrument Serif", serif);
   font-style: italic;
-  font-size: clamp(14px, 1.05vw, 16px);
+  font-size: clamp(15px, 1.1vw, 18px);
   color: color-mix(in oklab, var(--ink) 60%, transparent);
 }
 
 .mr-edu__card-points {
-  list-style: none; margin: 18px 0 0; padding: 0;
-  display: flex; flex-direction: column; gap: 7px;
-  font-size: clamp(13px, 0.95vw, 15px);
+  list-style: none; margin: 20px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 8px;
+  font-size: clamp(14px, 1vw, 16px);
   line-height: 1.6;
   color: color-mix(in oklab, var(--ink) 78%, transparent);
 }

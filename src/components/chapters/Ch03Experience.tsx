@@ -108,19 +108,19 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
             <div className="text-mono text-[0.75rem] uppercase tracking-[0.18em] text-bone/45 mb-4">
               {r.company}{r.city ? ` · ${r.city}` : ""}
             </div>
-            <h3 className="text-display text-[clamp(2rem,3.5vw,3.2rem)] leading-[1.06] text-bone">
+            <h3 className="text-display text-[clamp(2.2rem,3.8vw,3.6rem)] leading-[1.06] text-bone">
               <MaskReveal>{r.role}</MaskReveal>
             </h3>
-            <p className="mt-5 text-[1rem] leading-relaxed text-bone/65 max-w-[42ch]">
+            <p className="mt-5 text-[1.08rem] leading-relaxed text-bone/65 max-w-[48ch]">
               {r.context}
             </p>
           </header>
 
           <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-bone/8">
-            <div className="text-mono mb-5 text-[0.7rem] uppercase tracking-[0.2em] text-vermilion/80">
+            <div className="text-mono mb-5 text-[0.75rem] uppercase tracking-[0.2em] text-vermilion/80">
               Impact & contributions
             </div>
-            <ul className="space-y-3.5 text-[0.98rem] leading-relaxed text-bone/75">
+            <ul className="space-y-4 text-[1.05rem] leading-relaxed text-bone/75">
               {(r.achievements || []).map((a: string, j: number) => (
                 <li key={j} className="flex gap-3">
                   <span className="text-vermilion shrink-0 mt-[0.15em]">+</span>
@@ -130,11 +130,11 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
             </ul>
 
             {r.lesson && (
-              <div className="mt-8 rounded-lg border border-bone/8 bg-bone/[0.03] px-5 py-4">
-                <div className="text-mono text-[0.65rem] uppercase tracking-[0.2em] text-vermilion/60 mb-2">
+              <div className="mt-8 rounded-lg border border-bone/8 bg-bone/[0.03] px-6 py-5">
+                <div className="text-mono text-[0.7rem] uppercase tracking-[0.2em] text-vermilion/60 mb-2">
                   What I learned
                 </div>
-                <p className="text-[0.95rem] italic leading-relaxed text-bone/70">
+                <p className="text-[1.02rem] italic leading-relaxed text-bone/70">
                   {"\u201C"}{r.lesson}{"\u201D"}
                 </p>
               </div>

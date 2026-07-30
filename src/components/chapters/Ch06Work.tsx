@@ -88,44 +88,44 @@ export function Ch06Work() {
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-white font-display text-lg"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 text-white font-display text-xl"
                     style={{ background: accent }}
                   >
                     {p.name.charAt(0)}
                   </div>
                   <div className="min-w-0">
-                    <span className="block text-[9px] uppercase tracking-[0.15em] font-mono text-ink/35 mb-1">{p.category} · {p.year}</span>
-                    <h3 className="font-display text-[1.05rem] leading-tight">{p.name}</h3>
-                    <p className="text-[0.8rem] text-ink/50 mt-1.5 line-clamp-2">{p.desc}</p>
+                    <span className="block text-[10px] uppercase tracking-[0.15em] font-mono text-ink/35 mb-1.5">{p.category} · {p.year}</span>
+                    <h3 className="font-display text-[1.15rem] leading-tight">{p.name}</h3>
+                    <p className="text-[0.85rem] text-ink/50 mt-2 line-clamp-2">{p.desc}</p>
                   </div>
                 </div>
 
                 {p.tech.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {p.tech.slice(0, 3).map((t: string) => (
-                      <span key={t} className="px-2 py-0.5 rounded-full text-[9px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{t}</span>
+                      <span key={t} className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{t}</span>
                     ))}
-                    {p.tech.length > 3 && <span className="text-[9px] font-mono text-ink/30 self-center">+{p.tech.length - 3}</span>}
+                    {p.tech.length > 3 && <span className="text-[10px] font-mono text-ink/30 self-center">+{p.tech.length - 3}</span>}
                   </div>
                 )}
 
-                <div className="flex gap-2 mt-auto pt-2 border-t border-ink/5">
+                <div className="flex gap-2 mt-auto pt-3 border-t border-ink/5">
                   {p.github ? (
-                    <a href={p.github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono tracking-[0.04em] bg-ink/90 text-bone hover:bg-ink transition-colors">
+                    <a href={p.github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] bg-ink/90 text-bone hover:bg-ink transition-colors">
                       <GitIcon /> GitHub
                     </a>
                   ) : (
-                    <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono tracking-[0.04em] bg-ink/5 text-ink/25 cursor-not-allowed">
+                    <span className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] bg-ink/5 text-ink/25 cursor-not-allowed">
                       <GitIcon /> Private
                     </span>
                   )}
                   {p.demo && (
-                    <a href={p.demo} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono tracking-[0.04em] bg-vermilion text-bone hover:bg-vermilion/90 transition-colors">
+                    <a href={p.demo} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] bg-vermilion text-bone hover:bg-vermilion/90 transition-colors">
                       <DemoIcon /> Demo
                     </a>
                   )}
-                  <span className="ml-auto inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[9px] uppercase tracking-[0.1em] font-mono border border-ink/10 text-ink/40">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.status === "Completed" ? "#63c4a8" : "#d4a844" }} />
+                  <span className="ml-auto inline-flex items-center gap-1 px-3 py-2 rounded-full text-[10px] uppercase tracking-[0.1em] font-mono border border-ink/10 text-ink/40">
+                    <span className="w-2 h-2 rounded-full" style={{ background: p.status === "Completed" ? "#63c4a8" : "#d4a844" }} />
                     {p.status}
                   </span>
                 </div>
