@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
@@ -76,9 +76,12 @@ function EvolutionRail({ evolution }: { evolution: string[] }) {
   );
 }
 
-function RoleSpread({ r, index }: { r: any; index: number }) {
+function RoleSpread({ r, index, view }: { r: any; index: number; view: "timeline" | "impact" }) {
   const ref = useRef<HTMLElement | null>(null);
   const num = String(index + 1).padStart(2, "0");
+  const achievements = view === "impact" && r.achievements
+    ? [...r.achievements].sort((a: string, b: string) => b.length - a.length)
+    : (r.achievements || []);
 
   return (
     <article ref={ref} className="relative group">
@@ -121,7 +124,7 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
               Impact & contributions
             </div>
             <ul className="space-y-4 text-[1.12rem] leading-relaxed text-bone/75">
-              {(r.achievements || []).map((a: string, j: number) => (
+              {achievements.map((a: string, j: number) => (
                 <li key={j} className="flex gap-3">
                   <span className="text-vermilion shrink-0 mt-[0.15em]">+</span>
                   <span>{a}</span>
@@ -149,6 +152,7 @@ function RoleSpread({ r, index }: { r: any; index: number }) {
 export function Ch03Experience() {
   const { experience } = usePortfolio();
   const roles = (experience?.length ? experience : []).map(normalizeExperience);
+  const [view, setView] = useState<"timeline" | "impact">("timeline");
   const evolution: string[] = [
     "Operations", "Customer Experience", "Leadership", "Business Thinking",
     "Analytics", "Research", "AI & Business Strategy",
@@ -165,6 +169,13 @@ export function Ch03Experience() {
             <h2 className="text-display text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.94] text-bone">
               <MaskReveal>The Journey That Built Me</MaskReveal>
             </h2>
+            <div className="mt-4 flex gap-2">
+              {(["timeline", "impact"] as const).map((v) => (
+                <button key={v} onClick={() => setView(v)} className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.1em] font-mono border transition-colors ${view === v ? "border-vermilion bg-vermilion/10 text-vermilion" : "border-bone/20 text-bone/40 hover:border-bone/40"}`}>
+                  {v}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="col-span-12 md:col-span-7 md:pt-2">
             <Reveal>
@@ -185,7 +196,7 @@ export function Ch03Experience() {
           <div className="col-span-12 md:col-span-9">
             <div className="space-y-16">
               {roles.map((r: any, i: number) => (
-                <RoleSpread key={r.company || i} r={r} index={i} />
+                <RoleSpread key={r.company || i} r={r} index={i} view={view} />
               ))}
             </div>
           </div>

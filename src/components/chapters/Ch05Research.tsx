@@ -127,6 +127,7 @@ export function Ch05Research() {
                         <span className="text-[11px] uppercase tracking-[0.12em] font-mono px-3 py-1 rounded-full bg-vermilion/10 border border-vermilion/20 text-vermilion">{p.year}</span>
                         <span className="text-xs font-mono text-ink/40">{p.journal}</span>
                         {p.doi && <span className="text-[11px] font-mono text-ink/30">DOI: {p.doi}</span>}
+                        {p.status && <span className={`text-[10px] uppercase tracking-[0.1em] font-mono px-2 py-0.5 rounded-full ${p.status === "Published" ? "bg-[#63c4a8]/10 border border-[#63c4a8]/30 text-[#63c4a8]" : "bg-amber-500/10 border border-amber-500/30 text-amber-500"}`}>{p.status}</span>}
                       </div>
                       <h3 className="font-display text-[1.3rem] leading-tight">{p.title}</h3>
                       <p className="text-sm text-ink/40 mt-1">{p.authors}</p>

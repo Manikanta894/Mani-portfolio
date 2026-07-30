@@ -38,9 +38,11 @@ export function Ch11Philosophy() {
         </Reveal>
 
         <div className="mt-24 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-          {philosophyData.pillars.map((p: any, i: number) => (
+          {philosophyData.pillars.map((p: any, i: number) => {
+            const y = useTransform(scrollYProgress, [0.2, 0.8], [0, (i - 1) * 30]);
+            return (
             <Reveal key={p.n} delay={i * 0.1}>
-              <motion.article whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 220, damping: 22 }} className="group relative overflow-hidden rounded-[2px] border border-bone/10 bg-gradient-to-b from-bone/[0.04] to-transparent p-8 pt-10 backdrop-blur-sm">
+              <motion.article whileHover={{ y: -6 }} style={{ y }} transition={{ type: "spring", stiffness: 220, damping: 22 }} className="group relative overflow-hidden rounded-[2px] border border-bone/10 bg-gradient-to-b from-bone/[0.04] to-transparent p-8 pt-10 backdrop-blur-sm">
                 <span className="absolute left-0 top-0 h-px w-12 bg-vermilion transition-all duration-500 group-hover:w-full" />
                 <svg viewBox="0 0 60 180" className="pointer-events-none absolute right-4 top-6 h-40 w-12 opacity-25 transition-opacity duration-500 group-hover:opacity-60" aria-hidden>
                   <motion.rect x="4" y="4" width="52" height="8" fill="none" stroke="currentColor" strokeWidth="0.8" className="text-bone" style={{ pathLength: draw }} />
@@ -60,7 +62,8 @@ export function Ch11Philosophy() {
                 <p className="mt-5 text-[0.95rem] leading-relaxed text-bone/70">{p.body}</p>
               </motion.article>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

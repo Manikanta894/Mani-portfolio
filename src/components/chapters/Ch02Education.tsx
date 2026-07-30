@@ -141,7 +141,9 @@ export function Ch02Education() {
                     {e.points && e.points.length > 0 && (
                       <ul className="mr-edu__card-points">
                         {(e.points as string[]).map((p: string, idx: number) => (
-                          <li key={idx}>{p}</li>
+                          <li key={idx}>
+                            <a href="#ecosystem" className="hover:text-vermilion transition-colors">{p}</a>
+                          </li>
                         ))}
                       </ul>
                     )}

@@ -96,11 +96,11 @@ export function Ch08Credentials() {
                     <span className="text-[10px] font-mono text-vermilion font-medium">{c.date}</span>
                   </div>
                 </div>
-                {verifyUrl && (
-                  <span className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-ink/5 group-hover:bg-ink/10 transition-colors text-ink/30 group-hover:text-ink/60">
-                    <LinkIcon />
-                  </span>
-                )}
+                  {verifyUrl && (
+                    <a href={verifyUrl} target="_blank" rel="noreferrer" className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-ink/5 group-hover:bg-ink/10 transition-colors text-ink/30 group-hover:text-ink/60 relative" title={verifyUrl.includes("coursera") ? "Coursera" : verifyUrl.includes("credly") ? "Credly" : verifyUrl.includes("edx") ? "edX" : verifyUrl.includes("sap") ? "SAP Learning" : verifyUrl.includes("forage") ? "Forage" : verifyUrl.includes("greatlearning") ? "Great Learning" : verifyUrl.includes("unstop") ? "Unstop" : verifyUrl.includes("certx") ? "Be10x" : "Verify"}>
+                      <LinkIcon />
+                    </a>
+                  )}
               </motion.a>
             );
           })}
