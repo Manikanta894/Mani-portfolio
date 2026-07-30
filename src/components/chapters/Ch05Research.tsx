@@ -94,12 +94,12 @@ export function Ch05Research() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <span className="text-[10px] uppercase tracking-[0.12em] font-mono px-2.5 py-1 rounded-full bg-vermilion/10 border border-vermilion/20 text-vermilion">{p.year}</span>
-                        <span className="text-[11px] font-mono text-ink/40">{p.journal}</span>
-                        {p.doi && <span className="text-[10px] font-mono text-ink/25">DOI: {p.doi}</span>}
+                        <span className="text-[11px] uppercase tracking-[0.12em] font-mono px-3 py-1 rounded-full bg-vermilion/10 border border-vermilion/20 text-vermilion">{p.year}</span>
+                        <span className="text-xs font-mono text-ink/40">{p.journal}</span>
+                        {p.doi && <span className="text-[11px] font-mono text-ink/30">DOI: {p.doi}</span>}
                       </div>
-                      <h3 className="font-display text-[1.15rem] leading-tight">{p.title}</h3>
-                      <p className="text-xs text-ink/40 mt-1">{p.authors}</p>
+                      <h3 className="font-display text-[1.3rem] leading-tight">{p.title}</h3>
+                      <p className="text-sm text-ink/40 mt-1">{p.authors}</p>
                     </div>
                     <span className="text-ink/20 text-lg shrink-0 mt-1">{isOpen ? "−" : "+"}</span>
                   </div>
@@ -114,22 +114,22 @@ export function Ch05Research() {
                       className="overflow-hidden"
                     >
                       <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-ink/5">
-                        <p className="text-sm text-ink/65 leading-relaxed mb-4">{p.abstract}</p>
+                        <p className="text-[0.95rem] text-ink/65 leading-relaxed mb-5">{p.abstract}</p>
                         {p.keywords?.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mb-4">
+                          <div className="flex flex-wrap gap-2 mb-5">
                             {p.keywords.map((k: string) => (
-                              <span key={k} className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{k}</span>
+                              <span key={k} className="px-3 py-1.5 rounded-full text-[11px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{k}</span>
                             ))}
                           </div>
                         )}
                         <div className="flex gap-2 flex-wrap">
                           {p.url && (
-                            <a href={p.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] bg-ink/90 text-bone hover:bg-ink transition-colors">
+                            <a href={p.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono tracking-[0.04em] bg-ink/90 text-bone hover:bg-ink transition-colors">
                               <DocIcon /> Read Paper
                             </a>
                           )}
                           {p.doi && (
-                            <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-mono tracking-[0.04em] border border-ink/15 text-ink hover:border-ink/40 transition-colors">
+                            <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono tracking-[0.04em] border border-ink/15 text-ink hover:border-ink/40 transition-colors">
                               DOI
                             </a>
                           )}
