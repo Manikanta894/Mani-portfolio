@@ -40,18 +40,18 @@ export function Ch07Ecosystem() {
 
   return (
     <section id="ecosystem" className="relative chapter-pad text-ink">
-      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
         {/* Header */}
         <header className="mb-14">
-          <div className="flex items-center gap-3 text-mono text-[0.7rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
+          <div className="flex items-center gap-3 text-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
             <span className="text-vermilion font-medium">05</span>
-            <span className="w-6 h-px bg-ink/20" />
+            <span className="w-8 h-px bg-ink/20" />
             Capabilities
           </div>
-          <h2 className="font-display font-normal text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.94] tracking-[-0.02em]">
+          <h2 className="font-display font-normal text-[clamp(3.2rem,7vw,6rem)] leading-[0.92] tracking-[-0.02em]">
             Professional Operating System
           </h2>
-          <p className="mt-4 text-[0.95rem] text-ink/55 max-w-[48ch]">
+          <p className="mt-5 text-[1.05rem] text-ink/55 max-w-[52ch]">
             Every capability tracked — where learned, where applied — connected across research, projects, certifications and experience.
           </p>
         </header>

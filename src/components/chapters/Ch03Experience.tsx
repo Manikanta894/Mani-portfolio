@@ -156,7 +156,7 @@ export function Ch03Experience() {
 
   return (
     <section id="experience" data-mood="ink" className="relative chapter-pad">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <header className="mb-20 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">
             <div className="text-mono text-[0.75rem] uppercase tracking-[0.22em] text-bone/40 mb-5">

@@ -41,17 +41,17 @@ export function Ch06Work() {
 
   return (
     <section id="work" className="relative chapter-pad text-ink">
-      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <header className="mb-14">
-          <div className="flex items-center gap-3 text-mono text-[0.7rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
+          <div className="flex items-center gap-3 text-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
             <span className="text-vermilion font-medium">04</span>
-            <span className="w-6 h-px bg-ink/20" />
+            <span className="w-8 h-px bg-ink/20" />
             Product Showcase
           </div>
-          <h2 className="font-display font-normal text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.94] tracking-[-0.02em]">
-            Projects &amp;<br />Case Studies
+          <h2 className="font-display font-normal text-[clamp(3.2rem,7vw,6rem)] leading-[0.92] tracking-[-0.02em]">
+            Projects &amp; Case Studies
           </h2>
-          <p className="mt-4 text-[0.95rem] text-ink/55 max-w-[42ch]">
+          <p className="mt-5 text-[1.05rem] text-ink/55 max-w-[52ch]">
             Research, analytics, and strategy — built with curiosity and shipped with care.
           </p>
         </header>
