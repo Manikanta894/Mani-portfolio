@@ -45,23 +45,23 @@ export function Ch07Ecosystem() {
 
   return (
     <section id="ecosystem" className="relative chapter-pad text-ink">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <header className="mb-14">
-          <div className="flex items-center gap-3 text-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <header className="mb-16">
+          <div className="flex items-center gap-3 text-mono text-[0.8rem] uppercase tracking-[0.2em] text-ink/40 mb-5">
             <span className="text-vermilion font-medium">05</span>
             <span className="w-8 h-px bg-ink/20" />
             Capabilities
           </div>
-          <h2 className="font-display font-normal text-[clamp(3.2rem,7vw,6rem)] leading-[0.92] tracking-[-0.02em]">
+          <h2 className="font-display font-normal text-[clamp(3.8rem,8vw,7rem)] leading-[0.9] tracking-[-0.02em]">
             Professional Operating System
           </h2>
-          <p className="mt-5 text-[1.05rem] text-ink/55 max-w-[60ch]">
+          <p className="mt-6 text-[1.15rem] text-ink/55 max-w-[64ch]">
             Every capability tracked — where learned, where applied — connected across research, projects, certifications and experience.
           </p>
         </header>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-3 mb-12">
+        <div className="grid grid-cols-3 gap-4 mb-14">
           {[
             { label: "Skills", value: totalCaps },
             { label: "At Applying+", value: applyingPlus },
@@ -69,14 +69,14 @@ export function Ch07Ecosystem() {
           ].map((s, i) => (
             <motion.div
               key={s.label}
-              className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-5 text-center"
+              className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6 text-center"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
             >
-              <div className="font-display text-[clamp(2.2rem,3.5vw,3rem)] leading-none text-vermilion">{s.value}</div>
-              <div className="text-[11px] uppercase tracking-[0.12em] font-mono text-ink/40 mt-1.5">{s.label}</div>
+              <div className="font-display text-[clamp(2.8rem,4.5vw,3.8rem)] leading-none text-vermilion">{s.value}</div>
+              <div className="text-xs uppercase tracking-[0.14em] font-mono text-ink/40 mt-2">{s.label}</div>
             </motion.div>
           ))}
         </div>
@@ -89,26 +89,26 @@ export function Ch07Ecosystem() {
             return (
               <motion.div
                 key={d.id}
-                className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-5 sm:p-6"
+                className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6 sm:p-7"
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: di * 0.06, duration: 0.4 }}
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: d.accent }} />
-                  <h3 className="font-display text-lg">{d.label}</h3>
-                  <span className="text-[11px] font-mono text-ink/35 ml-auto">{items.length} skills</span>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-3 h-3 rounded-full shrink-0" style={{ background: d.accent }} />
+                  <h3 className="font-display text-xl">{d.label}</h3>
+                  <span className="text-xs font-mono text-ink/35 ml-auto">{items.length} skills</span>
                 </div>
 
                 {/* Stage dots */}
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-1 mb-5">
                   {Object.entries(STAGES).map(([stage, { level }]) => {
                     const has = items.some((c) => c.stage === stage);
                     return (
                       <div
                         key={stage}
-                        className="flex-1 h-1 rounded-full"
+                        className="flex-1 h-1.5 rounded-full"
                         style={{ background: has ? d.accent : "color-mix(in oklab, currentColor 6%, transparent)" }}
                         title={stage}
                       />
@@ -117,11 +117,11 @@ export function Ch07Ecosystem() {
                 </div>
 
                 {/* Skill tags */}
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {items.map((c) => (
                     <span
                       key={c.id}
-                      className="px-2.5 py-1 rounded-full text-[11px] font-mono tracking-[0.02em] border border-ink/10 text-ink/60"
+                      className="px-3 py-1.5 rounded-full text-xs font-mono tracking-[0.02em] border border-ink/10 text-ink/60"
                     >
                       {c.name}
                     </span>
@@ -133,12 +133,12 @@ export function Ch07Ecosystem() {
         </div>
 
         {/* Stage legend */}
-        <div className="mt-10 flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.1em] text-ink/35">
+        <div className="mt-12 flex items-center gap-5 text-[11px] font-mono uppercase tracking-[0.12em] text-ink/35">
           <span>Stages:</span>
           {Object.entries(STAGES).map(([stage, { level }]) => (
-            <span key={stage} className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: `color-mix(in oklab, var(--vermilion) ${level * 18}%, transparent)` }} />
-              {stage.slice(0, 5)}
+            <span key={stage} className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full" style={{ background: `color-mix(in oklab, var(--vermilion) ${level * 18}%, transparent)` }} />
+              {stage}
             </span>
           ))}
         </div>
