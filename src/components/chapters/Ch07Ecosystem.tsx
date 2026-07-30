@@ -49,7 +49,7 @@ export function Ch07Ecosystem() {
             Capabilities
           </div>
           <h2 className="font-display font-normal text-[clamp(2.6rem,6.5vw,5rem)] leading-[0.94] tracking-[-0.02em]">
-            Professional<br />Operating System
+            Professional Operating System
           </h2>
           <p className="mt-4 text-[0.95rem] text-ink/55 max-w-[48ch]">
             Every capability tracked — where learned, where applied — connected across research, projects, certifications and experience.
