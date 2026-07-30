@@ -24,7 +24,7 @@ const FALLBACK_ITEMS: Item[] = [
   { id: "beyond-me",  label: "Beyond",      n: "10" },
 ];
 
-export function PremiumNav() {
+export function PremiumNav({ onRecruiterToggle }: { onRecruiterToggle?: () => void }) {
   const { navigationItems } = usePortfolio();
   const navItems: Item[] = navigationItems?.length > 0
     ? navigationItems
@@ -261,6 +261,18 @@ export function PremiumNav() {
           <span>Resume</span>
         </a>
       </nav>
+
+      {/* Recruiter toggle */}
+      {onRecruiterToggle && (
+        <button
+          onClick={onRecruiterToggle}
+          className="ml-2 hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono tracking-[0.1em] uppercase border text-ink/50 border-ink/15 hover:border-vermilion/40 hover:text-vermilion transition-colors"
+          title="Recruiter View (Ctrl+K)"
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          Recruiter
+        </button>
+      )}
 
       <LiveAnnouncer navItems={navItems} />
 

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useLenis } from "@/lib/hooks";
 import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Chrome";
@@ -23,6 +23,7 @@ import { Ch10Journal } from "@/components/chapters/Ch10Journal";
 import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
 import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
+import { RecruiterView } from "@/components/chrome/RecruiterView";
 
 
 export const Route = createFileRoute("/")({
@@ -36,6 +37,7 @@ function Index() {
     }
     return false;
   });
+  const [recruiterMode, setRecruiterMode] = useState(false);
 
   useLenis();
 
@@ -96,8 +98,23 @@ function Index() {
     setIntroDone(true);
   };
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setRecruiterMode((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   if (!introDone) {
     return <CinematicIntro onDone={handleIntroComplete} />;
+  }
+
+  if (recruiterMode) {
+    return <RecruiterView onClose={() => setRecruiterMode(false)} />;
   }
 
   if (loading) {
@@ -130,7 +147,7 @@ function Index() {
   return (
     <main className="relative bg-bone text-ink">
       <ReadingProgress />
-      <PremiumNav />
+      <PremiumNav onRecruiterToggle={() => setRecruiterMode(true)} />
       
       <AvailabilityPill />
       <LiveClock />
