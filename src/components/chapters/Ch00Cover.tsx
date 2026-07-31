@@ -98,100 +98,49 @@ export function Ch00Cover() {
       {/* Top-right accent gradient */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none bg-[radial-gradient(circle,_rgba(212,106,46,0.04)_0%,_transparent_70%)]" />
 
-      <div className="relative mx-auto w-full max-w-[900px] px-6 sm:px-10 py-16 sm:py-24">
-        <div className="flex flex-col items-center text-center">
-          {/* Portrait — magical layered frame */}
+      <div className="relative mx-auto w-full max-w-[1400px] px-6 sm:px-10 lg:px-16 py-20 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          {/* Left: Portrait */}
           <motion.div
-            className="flex justify-center mb-10 sm:mb-14 relative"
-            initial={{ opacity: 0, scale: 0.88 }}
+            className="lg:col-span-5 flex justify-center lg:justify-end"
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={entered ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 1, ease: [0.22, 0.8, 0.22, 1] }}
+            transition={{ duration: 0.8, ease: [0.22, 0.8, 0.22, 1] }}
           >
-            {/* Outer particle orbit */}
             <motion.div
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: "clamp(240px, 34vw, 360px)",
-                height: "clamp(240px, 34vw, 360px)",
-                border: "1px dashed rgba(212,106,46,0.12)",
-                left: "50%", top: "50%",
-                x: "-50%", y: "-50%",
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            />
-            {/* Middle glow ring — follows cursor */}
-            <motion.div
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: "clamp(220px, 31vw, 330px)",
-                height: "clamp(220px, 31vw, 330px)",
-                background: "conic-gradient(from var(--angle, 0deg), rgba(212,106,46,0.15), rgba(24,24,24,0.03), rgba(212,106,46,0.15), transparent 70%)",
-                left: "50%", top: "50%",
-                x: mouseX, y: mouseY,
-                filter: "blur(12px)",
-                ['--angle' as string]: "0deg",
-              }}
-            />
-            {/* Inner glow */}
-            <div className="absolute rounded-full pointer-events-none"
-              style={{
-                width: "clamp(210px, 29vw, 320px)",
-                height: "clamp(210px, 29vw, 320px)",
-                background: "radial-gradient(circle, rgba(212,106,46,0.06) 0%, transparent 70%)",
-                left: "50%", top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-            {/* Glass reflection overlay */}
-            <motion.div
-              className="absolute rounded-full pointer-events-none z-10"
-              style={{
-                width: "clamp(200px, 28vw, 300px)",
-                height: "clamp(200px, 28vw, 300px)",
-                background: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.05) 100%)",
-                left: "50%", top: "50%",
-                x: mouseX, y: mouseY,
-              }}
-            />
-            {/* Portrait image */}
-            <motion.div
-              className="relative z-5"
+              className="relative"
               style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800 }}
             >
-              <div
-                className="relative rounded-full overflow-hidden border-2 border-white/25"
-                style={{
-                  width: "clamp(180px, 24vw, 260px)",
-                  height: "clamp(180px, 24vw, 260px)",
-                  boxShadow: "0 0 80px rgba(212,106,46,0.08), 0 0 40px rgba(212,106,46,0.04), 0 20px 60px -16px rgba(0,0,0,0.25)",
-                }}
-              >
-                <img src={portraitImg} alt={name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 rounded-full pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.15)]" />
+              {/* Outer glow ring */}
+              <div className="absolute -inset-3 rounded-full bg-[conic-gradient(from_220deg,_rgba(212,106,46,0.4),_rgba(24,24,24,0.1),_rgba(212,106,46,0.4))] blur-sm opacity-40" />
+              {/* Glass reflection layer */}
+              <div className="absolute inset-[-6px] rounded-full bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none z-10" />
+              {/* Portrait */}
+              <div className="relative w-[clamp(200px,28vw,300px)] h-[clamp(200px,28vw,300px)] rounded-full overflow-hidden border-2 border-white/30 shadow-[0_0_60px_rgba(212,106,46,0.12),0_20px_50px_-20px_rgba(0,0,0,0.2)]">
+                <img src={portraitImg} alt={name} className="w-full h-full object-cover" style={{ filter: "contrast(1.03) brightness(1.04)" }} />
+                <div className="absolute inset-0 rounded-full pointer-events-none shadow-[inset_0_0_60px_rgba(0,0,0,0.2)]" />
               </div>
+              {/* Live status */}
+              <motion.div
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-ink/8 shadow-sm"
+                initial={{ opacity: 0, y: 8 }}
+                animate={entered ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.6, duration: 0.5 }}
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75 animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                </span>
+                <span className="text-[10px] font-mono tracking-[0.06em] uppercase text-ink/60">{status || "Available"}</span>
+              </motion.div>
             </motion.div>
           </motion.div>
 
-          {/* Live status — below portrait */}
-          <motion.div
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-ink/8 shadow-sm -mt-6 mb-6 relative z-20"
-            initial={{ opacity: 0, y: 8 }}
-            animate={entered ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75 animate-ping" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-                </span>
-                <span className="text-[10px] font-mono tracking-[0.06em] uppercase text-ink/60">{status || "Available"}</span>
-          </motion.div>
-
-          {/* Content — centered below portrait */}
-          <div className="w-full">
+          {/* Right: Content */}
+          <div className="lg:col-span-7">
             {/* Eyebrow */}
             <motion.div
-              className="flex items-center justify-center gap-3 mb-6"
+              className="flex items-center gap-3 mb-6"
               initial={{ opacity: 0, y: 10 }}
               animate={entered ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.15, duration: 0.5 }}
@@ -234,7 +183,7 @@ export function Ch00Cover() {
 
             {/* Skills pills */}
             <motion.div
-              className="mt-6 flex flex-wrap justify-center gap-2"
+              className="mt-6 flex flex-wrap gap-2"
               initial={{ opacity: 0, y: 8 }}
               animate={entered ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6, duration: 0.5 }}
