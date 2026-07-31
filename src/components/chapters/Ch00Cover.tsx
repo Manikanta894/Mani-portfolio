@@ -98,11 +98,11 @@ export function Ch00Cover() {
       {/* Top-right accent gradient */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none bg-[radial-gradient(circle,_rgba(212,106,46,0.04)_0%,_transparent_70%)]" />
 
-      <div className="relative mx-auto w-full max-w-[1400px] px-6 sm:px-10 lg:px-16 py-20 lg:py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          {/* Left: Portrait */}
+      <div className="relative mx-auto w-full max-w-[900px] px-6 sm:px-10 py-16 sm:py-24">
+        <div className="flex flex-col items-center text-center">
+          {/* Portrait — top center */}
           <motion.div
-            className="lg:col-span-5 flex justify-center lg:justify-end"
+            className="flex justify-center mb-8 sm:mb-12"
             initial={{ opacity: 0, scale: 0.92 }}
             animate={entered ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 0.8, 0.22, 1] }}
@@ -136,11 +136,11 @@ export function Ch00Cover() {
             </motion.div>
           </motion.div>
 
-          {/* Right: Content */}
-          <div className="lg:col-span-7">
+          {/* Content — centered below portrait */}
+          <div className="w-full">
             {/* Eyebrow */}
             <motion.div
-              className="flex items-center gap-3 mb-6"
+              className="flex items-center justify-center gap-3 mb-6"
               initial={{ opacity: 0, y: 10 }}
               animate={entered ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.15, duration: 0.5 }}
@@ -183,7 +183,7 @@ export function Ch00Cover() {
 
             {/* Skills pills */}
             <motion.div
-              className="mt-6 flex flex-wrap gap-2"
+              className="mt-6 flex flex-wrap justify-center gap-2"
               initial={{ opacity: 0, y: 8 }}
               animate={entered ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6, duration: 0.5 }}
