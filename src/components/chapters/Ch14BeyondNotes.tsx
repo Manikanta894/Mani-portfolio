@@ -212,7 +212,7 @@ export function Ch14BeyondNotes() {
   const hiddenNotes = notes.slice(VISIBLE_BY_DEFAULT);
 
   return (
-    <section id="beyond-me" data-mood="ink" className="relative chapter-pad overflow-hidden" aria-labelledby="field-notes-title">
+    <section id="beyond-notes" data-mood="ink" className="relative chapter-pad overflow-hidden" aria-labelledby="field-notes-title">
       <div aria-hidden className="mr-notes__ambient" />
       <div aria-hidden className="mr-notes__paper-lines" />
 

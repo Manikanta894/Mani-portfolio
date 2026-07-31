@@ -24,7 +24,6 @@ import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
 import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { RecruiterView } from "@/components/chrome/RecruiterView";
-import { SectionDivider } from "@/components/chrome/SectionDivider";
 
 
 export const Route = createFileRoute("/")({
