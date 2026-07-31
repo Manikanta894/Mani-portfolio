@@ -52,7 +52,7 @@ export function Ch05Research() {
   }), [papers]);
 
   return (
-    <section id="research" className="relative chapter-pad text-ink">
+    <section id="research" data-mood="ink" className="relative chapter-pad">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <header className="mb-14">
           <div className="flex items-center gap-3 text-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
