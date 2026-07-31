@@ -31,12 +31,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [introDone, setIntroDone] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("mr_intro_seen") === "1";
-    }
-    return false;
-  });
+  const [introDone, setIntroDone] = useState(true);
   const [recruiterMode, setRecruiterMode] = useState(false);
 
   useLenis();
