@@ -159,7 +159,9 @@ export function Ch03Experience() {
   ];
 
   return (
-    <section id="experience" data-mood="ink" className="relative chapter-pad">
+    <section id="experience" data-mood="ink" className="relative chapter-pad" style={{
+      background: "radial-gradient(800px 500px at 10% 20%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 60%), radial-gradient(600px 400px at 90% 80%, color-mix(in oklab, var(--bone) 5%, transparent), transparent 60%)"
+    } as React.CSSProperties}>
       <div className="mx-auto max-w-7xl">
         <header className="mb-20 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">

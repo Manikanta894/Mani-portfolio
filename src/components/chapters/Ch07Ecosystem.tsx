@@ -69,7 +69,7 @@ export function Ch07Ecosystem() {
           ].map((s, i) => (
             <motion.div
               key={s.label}
-              className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6 text-center"
+              className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6 text-center hover:border-ink/15 hover:-translate-y-0.5 transition-all duration-300"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -89,7 +89,7 @@ export function Ch07Ecosystem() {
             return (
               <motion.div
                 key={d.id}
-                className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6 sm:p-7"
+                className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-6 sm:p-7 hover:border-ink/20 hover:shadow-lg hover:shadow-ink/5 hover:-translate-y-0.5 transition-all duration-300"
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -121,7 +121,7 @@ export function Ch07Ecosystem() {
                   {items.map((c) => (
                     <span
                       key={c.id}
-                      className="px-3 py-1.5 rounded-full text-xs font-mono tracking-[0.02em] border border-ink/10 text-ink/60"
+                      className="px-3 py-1.5 rounded-full text-xs font-mono tracking-[0.02em] border transition-colors hover:border-ink/25 hover:text-ink/80 cursor-default text-ink/60 border-ink/10"
                     >
                       {c.name}
                     </span>
