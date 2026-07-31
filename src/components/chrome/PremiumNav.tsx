@@ -34,7 +34,6 @@ const ITEMS = [
 
 export function PremiumNav({ onRecruiterToggle }: { onRecruiterToggle?: () => void }) {
   const { profile } = usePortfolio();
-  const status = profile?.availability_status || "Available";
   const name = profile?.name || "Manikanta R";
 
   const [active, setActive] = useState("cover");
@@ -97,10 +96,6 @@ export function PremiumNav({ onRecruiterToggle }: { onRecruiterToggle?: () => vo
             <span className="mr-head__name">{name}</span>
           </button>
           <div className="mr-head__right">
-            <span className="mr-head__status">
-              <span className="mr-head__status-dot" />
-              <span className="mr-head__status-text">{status}</span>
-            </span>
             <a href="https://manikantar.in/resume.pdf" target="_blank" rel="noopener noreferrer" className="mr-head__resume">
               Resume
             </a>
