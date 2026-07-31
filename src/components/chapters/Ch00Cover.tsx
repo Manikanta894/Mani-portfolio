@@ -592,7 +592,6 @@ const css = `
   width: 112%; height: 112%;
   object-fit: cover; object-position: 50% 18%;
   position: absolute; left: -6%; top: -6%;
-  filter: grayscale(0.1) contrast(1.04);
 }
 
 @keyframes hero-float {
