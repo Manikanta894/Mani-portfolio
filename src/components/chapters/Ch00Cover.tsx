@@ -766,70 +766,70 @@ const css = `
 
 .hero-tagline {
   margin: 22px 0 0;
-  max-width: 30ch;
+  max-width: 50ch;
   font-family: var(--font-display);
   font-style: normal;
   font-size: clamp(20px, 1.8vw, 28px);
   line-height: 1.4;
   letter-spacing: -0.005em;
   color: var(--hero-ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .hero-tagline em { font-style: italic; color: var(--hero-ink); }
 
-.hero-ctas { display: inline-flex; flex-wrap: wrap; gap: 12px 14px; margin-top: 30px; align-items: stretch; }
+.hero-ctas { display: inline-flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; align-items: center; }
 .hero-cta {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  height: 48px;
-  padding: 0 24px;
+  height: 52px;
+  padding: 0 28px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  font-weight: 500;
   text-transform: uppercase;
-  border-radius: 999px;
+  border-radius: 14px;
   text-decoration: none;
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  transition: color .35s ease, border-color .35s ease, transform .35s ease, box-shadow .35s ease;
+  transition: all .35s cubic-bezier(.22,.8,.22,1);
 }
-.hero-cta svg { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
-.hero-cta:hover svg { transform: translateX(4px); }
-.hero-cta::before {
-  content: "";
-  position: absolute; inset: 0;
-  border-radius: inherit;
-  z-index: -1;
-  transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
-}
+.hero-cta svg { transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.hero-cta:hover svg { transform: translateX(5px); }
 .hero-cta--primary {
-  color: var(--hero-paper);
-  border: 1px solid var(--hero-accent);
-  background: linear-gradient(135deg, var(--hero-accent), #c05a20);
-  box-shadow: 0 12px 24px -16px color-mix(in oklab, var(--hero-accent) 80%, transparent);
+  color: #fff;
+  border: none;
+  background: linear-gradient(135deg, var(--hero-accent) 0%, #c05a20 50%, #a84d18 100%);
+  box-shadow: 0 4px 24px -8px color-mix(in oklab, var(--hero-accent) 60%, transparent), 0 0 0 0 color-mix(in oklab, var(--hero-accent) 40%, transparent);
+  animation: cta-glow 3s ease-in-out infinite;
 }
-.hero-cta--primary::before {
-  background: linear-gradient(135deg, #c05a20, #a84d18);
-  transform: translateY(101%);
-  opacity: 0;
+@keyframes cta-glow {
+  0%, 100% { box-shadow: 0 4px 24px -8px color-mix(in oklab, var(--hero-accent) 60%, transparent), 0 0 0 0 color-mix(in oklab, var(--hero-accent) 30%, transparent); }
+  50% { box-shadow: 0 4px 28px -8px color-mix(in oklab, var(--hero-accent) 70%, transparent), 0 0 0 8px color-mix(in oklab, var(--hero-accent) 0%, transparent); }
 }
-.hero-cta--primary:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -18px color-mix(in oklab, var(--hero-accent) 90%, transparent); }
-.hero-cta--primary:hover::before { transform: translateY(0); opacity: 1; }
+.hero-cta--primary:hover { transform: translateY(-3px); box-shadow: 0 8px 32px -12px color-mix(in oklab, var(--hero-accent) 80%, transparent); }
 
 .hero-cta--ghost {
   background: transparent;
   color: var(--hero-ink);
-  border: 1px solid color-mix(in oklab, var(--hero-ink) 28%, transparent);
+  border: 1.5px solid color-mix(in oklab, var(--hero-ink) 18%, transparent);
+  position: relative;
 }
-.hero-cta--ghost::before {
-  background: color-mix(in oklab, var(--hero-ink) 8%, transparent);
-  transform: translateY(101%);
-  opacity: 0;
+.hero-cta--ghost::after {
+  content: "";
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 2px;
+  background: var(--hero-accent);
+  border-radius: 2px;
+  transition: width .35s cubic-bezier(.22,.8,.22,1);
 }
 .hero-cta--ghost:hover {
   border-color: var(--hero-ink);
   transform: translateY(-2px);
 }
-.hero-cta--ghost:hover::before { transform: translateY(0); opacity: 1; }
+.hero-cta--ghost:hover::after { width: 60%; }
 
 /* Trust bar — Experience strip */
 .hero-trust {
