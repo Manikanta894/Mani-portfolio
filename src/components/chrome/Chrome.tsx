@@ -80,7 +80,7 @@ export function AvailabilityPill() {
         <span className="absolute inline-flex h-full w-full rounded-full bg-vermilion opacity-75 pulse-dot" />
         <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-vermilion" />
       </span>
-      <span className="text-eyebrow">{status} · {location}</span>
+      <span className="text-eyebrow">{location}</span>
     </div>
   );
 }

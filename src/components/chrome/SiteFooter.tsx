@@ -67,10 +67,6 @@ export function SiteFooter() {
               <div className="mr-footer__name">{name}</div>
               <div className="mr-footer__line">{role}</div>
               <div className="mr-footer__line">{location}</div>
-              <div className="mr-footer__status">
-                <span className="mr-footer__dot" aria-hidden />
-                {status}
-              </div>
               {socialIcons.length > 0 && (
                 <div className="mr-footer__social" aria-label="Social media">
                   {socialIcons.map((s: any) => {
