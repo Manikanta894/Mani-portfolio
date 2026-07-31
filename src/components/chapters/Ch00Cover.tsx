@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import portraitImg from "@/assets/portrait.jpg";
 
-function roleCarousel(roles: string[]) {
+function RoleCarouselHooks({ roles }: { roles: string[] }) {
   const [i, setI] = useState(0);
   const [text, setText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -124,7 +124,7 @@ export function Ch00Cover() {
 
             <div className="mt-4 font-mono text-[clamp(0.9rem,1.2vw,1.05rem)] tracking-[0.04em] text-ink/45">
               Specializing in{" "}
-              <span className="text-ink font-medium">{roleCarousel(roles)}</span>
+              <span className="text-ink font-medium"><RoleCarouselHooks roles={roles} /></span>
             </div>
 
             <p className="mt-5 max-w-[44ch] font-display text-[clamp(1.15rem,1.7vw,1.5rem)] leading-[1.35] text-ink/55"
