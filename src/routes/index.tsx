@@ -6,7 +6,7 @@ import { AvailabilityPill, LiveClock, CornerStamp } from "@/components/chrome/Ch
 import { PremiumNav } from "@/components/chrome/PremiumNav";
 import { ReadingProgress } from "@/components/chrome/ReadingProgress";
 import usePortfolio from "@/hooks/usePortfolio";
-import { CinematicIntro } from "@/components/hero/CinematicIntro";
+import { IntroSequence } from "@/components/hero/IntroSequence";
 
 
 import { Ch00Cover } from "@/components/chapters/Ch00Cover";
@@ -31,7 +31,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [introDone, setIntroDone] = useState(true);
+  const [introDone, setIntroDone] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("mr_intro_seen") === "1";
+    }
+    return false;
+  });
   const [recruiterMode, setRecruiterMode] = useState(false);
 
   useLenis();
@@ -105,7 +110,7 @@ function Index() {
   }, []);
 
   if (!introDone) {
-    return <CinematicIntro onDone={handleIntroComplete} />;
+    return <IntroSequence onDone={handleIntroComplete} />;
   }
 
   if (recruiterMode) {
