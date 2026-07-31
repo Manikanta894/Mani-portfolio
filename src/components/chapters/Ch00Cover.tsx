@@ -246,14 +246,6 @@ export function Ch00Cover() {
       <HeroGridBg />
       <div className="hero-bg" aria-hidden />
 
-      {/* Status bar */}
-      <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
-        <span className="hero-status-dot" />
-        <span>Open to Opportunities</span>
-        <span className="hero-status-sep" aria-hidden />
-        <span className="hero-status-loc">{location}</span>
-      </div>
-
       <div className="relative mx-auto grid min-h-screen w-full max-w-[1480px] grid-cols-12 items-center gap-6 px-4 sm:px-6 md:px-8 lg:px-16 py-10 lg:py-0 lg:h-screen">
         {/* LEFT · PORTRAIT */}
         <div className="col-span-12 lg:col-span-5 relative flex items-center justify-center flex-col hero-left is-awake">
@@ -290,15 +282,8 @@ export function Ch00Cover() {
         </div>
 
         {/* RIGHT · NAME + HIERARCHY */}
-        <div className={`col-span-12 lg:col-span-7 relative hero-right is-awake ${entered ? "is-entered" : ""}`}>
-          <div className="hero-eyebrow" style={{ transitionDelay: entered ? "120ms" : "0ms" }}>
-            <span className="hero-eyebrow-dot" />
-            {location}
-            <span className="hero-eyebrow-sep" />
-            Edition · 2026
-          </div>
-
-          <h1 className="hero-name hero-name--inline" aria-label="Manikanta R">
+          <div className={`col-span-12 lg:col-span-7 relative hero-right is-awake ${entered ? "is-entered" : ""}`}>
+            <h1 className="hero-name hero-name--inline mt-0" aria-label="Manikanta R">
             Manikanta<span className="hero-name-period">&nbsp;</span>R<span className="hero-name-period">.</span>
           </h1>
 
