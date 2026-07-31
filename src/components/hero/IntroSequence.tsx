@@ -12,7 +12,7 @@ const GRAY = "#8A8578";
 
 const GREETINGS = ["Hello","ನಮಸ್ಕಾರ","नमस्ते","ഹലോ","வணக்கம்"];
 
-type SceneId = "collision" | "portrait" | "greetings" | "identity" | "done";
+type SceneId = "portrait" | "greetings" | "identity" | "done";
 
 /* ─── Canvas Particles ─── */
 function Particles({ scene }: { scene: SceneId }) {
@@ -83,8 +83,7 @@ function Particles({ scene }: { scene: SceneId }) {
 
 /* ─── Main ─── */
 export function IntroSequence({ onDone }: { onDone: () => void }) {
-  const [scene, setScene] = useState<SceneId>("collision");
-  const [flash, setFlash] = useState(false);
+  const [scene, setScene] = useState<SceneId>("portrait");
   const [greetIdx, setGreetIdx] = useState(-1);
   const [showSkip, setShowSkip] = useState(false);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
@@ -100,13 +99,8 @@ export function IntroSequence({ onDone }: { onDone: () => void }) {
     const tl = gsap.timeline({ paused: true });
     tlRef.current = tl;
 
-    // Scene 1: Collision (0-600ms)
-    tl.call(() => setScene("collision"), null, 0);
-    tl.call(() => setFlash(true), null, 0.5);
-    tl.call(() => setFlash(false), null, 0.56);
-
-    // Scene 2: Portrait (750ms — 150ms gap after collision exit)
-    tl.call(() => setScene("portrait"), null, 0.75);
+    // Skip collision — start directly with portrait at 0ms
+    tl.call(() => setScene("portrait"), null, 0);
 
     // Scene 3: Greetings (2350ms — 150ms gap after portrait exit)
     tl.call(() => setScene("greetings"), null, 2.35);
@@ -134,21 +128,7 @@ export function IntroSequence({ onDone }: { onDone: () => void }) {
       <Particles scene={scene} />
 
       <AnimatePresence mode="wait">
-        {/* ─── Scene 1: Collision ─── */}
-        {scene === "collision" && (
-          <motion.div key="collision" className="absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-            <motion.span className="font-display italic text-[#1E1E1E]" style={{ fontSize: "clamp(120px,18vw,260px)", fontFamily: "var(--font-display,'Instrument Serif',serif)", lineHeight: 1 }}
-              initial={{ x: "-100vw", opacity: 1 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }}
-              transition={{ x: { duration: 0.32, ease: "easeInExpo" }, exit: { duration: 0.12 } }}>M</motion.span>
-            <motion.span className="font-display italic text-[#1E1E1E]" style={{ fontSize: "clamp(120px,18vw,260px)", fontFamily: "var(--font-display,'Instrument Serif',serif)", lineHeight: 1 }}
-              initial={{ x: "100vw", opacity: 1 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }}
-              transition={{ x: { duration: 0.32, ease: "easeInExpo" }, exit: { duration: 0.12 } }}>R</motion.span>
-            {flash && <motion.div className="absolute inset-0 bg-[#F7F4EC] pointer-events-none" style={{ zIndex: 2 }} initial={{ opacity: 0.4 }} animate={{ opacity: 0 }} transition={{ duration: 0.06 }} />}
-          </motion.div>
-        )}
-
-        {/* ─── Scene 2: Portrait ─── */}
+        {/* ─── Scene 1: Portrait ─── */}
         {scene === "portrait" && (
           <motion.div key="portrait" className="absolute flex flex-col items-center" style={{ zIndex: 10 }}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
