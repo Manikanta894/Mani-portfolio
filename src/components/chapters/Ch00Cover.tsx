@@ -53,8 +53,10 @@ export function Ch00Cover() {
   const [entered, setEntered] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rotateX = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
-  const rotateY = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
+  const rotateXMV = useMotionValue(0);
+  const rotateYMV = useMotionValue(0);
+  const rotateX = useSpring(rotateXMV, { stiffness: 100, damping: 30 });
+  const rotateY = useSpring(rotateYMV, { stiffness: 100, damping: 30 });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -65,8 +67,8 @@ export function Ch00Cover() {
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     mouseX.set(x * 16);
     mouseY.set(y * 16);
-    rotateX.set(y * -8);
-    rotateY.set(x * 8);
+    rotateXMV.set(y * -8);
+    rotateYMV.set(x * 8);
   }, []);
 
   useEffect(() => {
