@@ -63,13 +63,13 @@ export function Ch06Work() {
             return (
               <motion.article
                 key={p.id}
-                className="group min-h-[70vh] flex items-center py-16 border-t border-[#1E1E1E]/6 first:border-t-0"
+                className="group min-h-[50vh] flex items-center py-12 border-t border-[#1E1E1E]/6 first:border-t-0"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.7, ease: [0.22, 0.8, 0.22, 1] }}
               >
-                <div className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full ${!isEven ? "lg:direction-rtl" : ""}`}>
+                <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center w-full ${!isEven ? "lg:direction-rtl" : ""}`}>
                   {/* Image */}
                   <motion.div
                     className={`lg:col-span-6 ${!isEven ? "lg:order-2" : ""}`}
@@ -79,62 +79,68 @@ export function Ch06Work() {
                     {p.cover ? (
                       <img src={p.cover} alt={p.name} className="w-full rounded-2xl shadow-lg" loading="lazy" />
                     ) : (
-                      <div className="w-full aspect-[4/3] rounded-2xl bg-[#1E1E1E]/3 flex items-center justify-center overflow-hidden relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#D9782E]/8 via-transparent to-[#1E1E1E]/5" />
-                        <span className="font-display text-[clamp(3rem,8vw,8rem)] text-[#1E1E1E]/[0.04] select-none">{p.name.charAt(0)}</span>
+                      <div className="w-full aspect-[4/3] rounded-2xl border border-[#1E1E1E]/8 bg-gradient-to-br from-[#F7F4EC] to-[#F0EAD9] flex items-center justify-center overflow-hidden relative">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(217,120,46,0.06)_0%,_transparent_60%)]" />
+                        <div className="flex flex-col items-center gap-3 relative z-10">
+                          <div className="w-16 h-16 rounded-2xl bg-white/60 border border-[#1E1E1E]/8 flex items-center justify-center shadow-sm">
+                            <span className="font-display italic text-2xl text-[#D9782E]">{p.name.charAt(0)}</span>
+                          </div>
+                          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#8A8578]/60">{p.category}</span>
+                        </div>
                       </div>
                     )}
                   </motion.div>
 
                   {/* Content */}
                   <div className={`lg:col-span-6 ${!isEven ? "lg:order-1" : ""}`}>
-                    <div className="flex items-center gap-4 mb-5">
-                      <span className="font-mono text-[0.75rem] uppercase tracking-[0.15em] text-[#D9782E] font-bold">0{i + 1}</span>
+                    <div className="flex items-center gap-4 mb-4">
+                      <span className="font-mono text-[0.85rem] uppercase tracking-[0.12em] text-[#D9782E] font-bold">0{i + 1}</span>
                       <span className="h-px flex-1 bg-[#1E1E1E]/10" />
-                      <span className="font-mono text-[0.7rem] uppercase tracking-[0.15em] text-[#8A8578]">{p.category}</span>
+                      <span className="font-mono text-[0.85rem] uppercase tracking-[0.12em] text-[#8A8578]">{p.category}</span>
                     </div>
 
-                    <h3 className="font-display italic text-[clamp(2.2rem,3.5vw,3.4rem)] leading-[1.06] mb-5 group-hover:text-[#D9782E] transition-colors duration-500">
+                    <h3 className="font-display italic text-[clamp(2.2rem,3.5vw,3.4rem)] leading-[1.06] mb-4 group-hover:text-[#D9782E] transition-colors duration-500">
                       {p.name}
                     </h3>
 
-                    <div className="space-y-5 text-[1rem] leading-relaxed text-[#8A8578]">
+                    <div className="space-y-4 text-[1.1rem] leading-[1.7] text-[#8A8578]">
                       {p.problem && (
                         <div>
-                          <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[#1E1E1E]/40 font-semibold block mb-1">Challenge</span>
-                          <p className="text-[#1E1E1E]/70">{p.problem}</p>
+                          <span className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-[#1E1E1E]/45 font-semibold block mb-1">Challenge</span>
+                          <p className="text-[#1E1E1E]/75">{p.problem}</p>
                         </div>
                       )}
                       {p.approach && (
                         <div>
-                          <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[#1E1E1E]/40 font-semibold block mb-1">Approach</span>
-                          <p className="text-[#1E1E1E]/70">{p.approach}</p>
+                          <span className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-[#1E1E1E]/45 font-semibold block mb-1">Approach</span>
+                          <p className="text-[#1E1E1E]/75">{p.approach}</p>
                         </div>
                       )}
                       {p.outcome && (
                         <div>
-                          <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[#1E1E1E]/40 font-semibold block mb-1">Impact</span>
-                          <p className="text-[#1E1E1E]/70">{p.outcome}</p>
+                          <span className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-[#1E1E1E]/45 font-semibold block mb-1">Impact</span>
+                          <p className="text-[#1E1E1E]/75">{p.outcome}</p>
                         </div>
                       )}
                     </div>
 
                     {p.tech.length > 0 && (
-                      <div className="flex gap-2 mt-7 flex-wrap">
+                      <div className="flex gap-2 mt-6 flex-wrap">
                         {p.tech.slice(0, 4).map((t: string) => (
-                          <span key={t} className="px-3 py-1.5 rounded-full text-[10px] font-mono tracking-[0.05em] border border-[#1E1E1E]/12 text-[#1E1E1E]/50">{t}</span>
+                          <span key={t} className="px-3.5 py-2 rounded-full text-[13px] font-mono tracking-[0.04em] border border-[#1E1E1E]/12 text-[#1E1E1E]/55">{t}</span>
                         ))}
                       </div>
                     )}
 
-                    <div className="flex gap-4 mt-7">
+                    <div className="flex gap-5 mt-6">
                       {p.demo && (
-                        <motion.a href={p.demo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[0.8rem] uppercase tracking-[0.08em] text-[#D9782E] border-b border-[#D9782E]/30 pb-1 hover:border-[#D9782E] transition-all duration-300" whileHover={{ x: 3 }}>
+                        <motion.a href={p.demo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[0.9rem] uppercase tracking-[0.08em] text-[#D9782E] border-b border-[#D9782E]/30 pb-1 hover:border-[#D9782E] transition-all duration-300" whileHover={{ x: 3 }}>
                           View Project <span>→</span>
                         </motion.a>
                       )}
                       {p.github && (
-                        <motion.a href={p.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[0.8rem] uppercase tracking-[0.08em] text-[#1E1E1E]/50 border-b border-[#1E1E1E]/20 pb-1 hover:text-[#1E1E1E] hover:border-[#1E1E1E]/40 transition-all duration-300" whileHover={{ x: 3 }}>
+                        <motion.a href={p.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 font-mono text-[0.9rem] uppercase tracking-[0.08em] text-[#1E1E1E]/55 border-b border-[#1E1E1E]/20 pb-1 hover:text-[#1E1E1E] hover:border-[#1E1E1E]/40 transition-all duration-300" whileHover={{ x: 3 }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.12.82-.26.82-.58v-2.02c-3.34.72-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.22.08 1.86 1.25 1.86 1.25 1.08 1.86 2.84 1.32 3.54 1 .1-.78.42-1.32.76-1.62-2.7-.3-5.54-1.35-5.54-6 0-1.32.47-2.4 1.24-3.25-.12-.3-.54-1.54.12-3.2 0 0 1.02-.32 3.34 1.24a11.6 11.6 0 016.08 0c2.32-1.56 3.34-1.24 3.34-1.24.66 1.66.24 2.9.12 3.2.78.85 1.24 1.93 1.24 3.25 0 4.66-2.84 5.7-5.55 6 .44.38.82 1.12.82 2.26v3.35c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
                           GitHub <span>→</span>
                         </motion.a>
                       )}
