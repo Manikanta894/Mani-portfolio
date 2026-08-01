@@ -46,7 +46,7 @@ export default function Ch09LinkedIn() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           {/* LEFT — Identity */}
           <div className="lg:col-span-7">
-            <div className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-black/40 mb-4">
+            <div className="font-mono text-[0.9rem] uppercase tracking-[0.1em] text-black/40 mb-4">
               <span className="text-[#D96D22] font-bold mr-2">09</span>Connect
             </div>
 
