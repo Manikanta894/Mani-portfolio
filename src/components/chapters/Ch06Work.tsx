@@ -34,7 +34,7 @@ export function Ch06Work() {
             <div className="flex items-center gap-3 font-mono text-[0.8rem] uppercase tracking-[0.16em] text-[#8A8578]/60 mb-2">
               <span className="text-[#D9782E] font-bold">04</span>
               <span className="w-4 h-px bg-[#8A8578]/25" />
-              Selected Works
+              Selected Works — Refined
             </div>
             <h2 className="font-display italic text-[clamp(2.8rem,6vw,5rem)] leading-[0.94] tracking-[-0.02em]">Ideas Into Impact</h2>
           </div>
