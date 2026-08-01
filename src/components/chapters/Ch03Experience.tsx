@@ -32,9 +32,9 @@ function EvolutionStep({
   return (
     <motion.li
       style={{ opacity, x }}
-      className="flex items-baseline gap-3 text-bone/80"
+      className="flex items-baseline gap-3 text-bone/85"
     >
-      <span className="text-mono text-[0.7rem] font-medium tabular-nums text-vermilion w-5 shrink-0 text-right">
+      <span className="text-mono text-[0.75rem] font-medium tabular-nums text-vermilion w-5 shrink-0 text-right">
         {String(i + 1).padStart(2, "0")}
       </span>
       <span className="text-[0.95rem] leading-snug">{label}</span>
@@ -51,7 +51,7 @@ function EvolutionRail({ evolution }: { evolution: string[] }) {
   const fillH = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   return (
     <div ref={ref} className="relative">
-      <div className="text-mono mb-6 text-[0.7rem] uppercase tracking-[0.24em] text-bone/40">
+      <div className="text-mono mb-6 text-[0.75rem] uppercase tracking-[0.16em] text-bone/50 font-medium">
         Career Evolution
       </div>
       <div className="relative pl-7">
@@ -88,56 +88,56 @@ function RoleSpread({ r, index, view }: { r: any; index: number; view: "timeline
       {/* Large editorial number */}
       <span
         aria-hidden
-        className="absolute -left-3 -top-6 text-[clamp(6rem,10vw,10rem)] leading-none text-bone/[0.025] select-none pointer-events-none transition-colors duration-500 group-hover:text-bone/[0.05]"
+        className="absolute -left-3 -top-6 text-[clamp(6rem,10vw,10rem)] leading-none text-bone/[0.04] select-none pointer-events-none transition-colors duration-500 group-hover:text-bone/[0.06]"
         style={{ fontFamily: "var(--font-display, 'Instrument Serif', serif)" }}
       >
         {num}
       </span>
 
-      <div className="relative border-t border-bone/10 pt-12 transition-colors duration-500 group-hover:border-bone/20">
+      <div className="relative border-t border-bone/12 pt-12 transition-colors duration-500 group-hover:border-bone/20">
         {/* Chapter header row */}
         <div className="flex items-center gap-4 mb-8">
-          <span className="text-mono text-[0.7rem] uppercase tracking-[0.22em] text-vermilion font-medium">
+          <span className="text-mono text-[0.8rem] uppercase tracking-[0.14em] text-vermilion font-semibold">
             Chapter {num}
           </span>
-          <span className="h-px flex-1 bg-bone/10" />
-          <span className="text-mono text-[0.7rem] tracking-[0.18em] text-bone/40 uppercase">
+          <span className="h-px flex-1 bg-bone/12" />
+          <span className="text-mono text-[0.8rem] tracking-[0.12em] text-bone/55 uppercase font-medium">
             {r.span}
           </span>
         </div>
 
         <div className="grid grid-cols-12 gap-x-8 gap-y-8">
           <header className="col-span-12 md:col-span-5">
-            <div className="text-mono text-[0.75rem] uppercase tracking-[0.18em] text-bone/45 mb-4">
+            <div className="text-mono text-[0.8rem] uppercase tracking-[0.12em] text-bone/55 mb-4 font-medium">
               {r.company}{r.city ? ` · ${r.city}` : ""}
             </div>
-            <h3 className="text-display text-[clamp(2.4rem,4vw,3.8rem)] leading-[1.04] text-bone">
+            <h3 className="text-display text-[clamp(2.6rem,4.5vw,4.2rem)] leading-[1.04] text-bone/95">
               <MaskReveal>{r.role}</MaskReveal>
             </h3>
-            <p className="mt-6 text-[1.15rem] leading-relaxed text-bone/65 max-w-[52ch]">
+            <p className="mt-6 text-[1.15rem] leading-relaxed text-bone/80 max-w-[52ch]">
               {r.context}
             </p>
           </header>
 
-          <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-bone/8">
-            <div className="text-mono mb-5 text-[0.75rem] uppercase tracking-[0.2em] text-vermilion/80">
+          <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-bone/10">
+            <div className="text-mono mb-5 text-[0.8rem] uppercase tracking-[0.14em] text-vermilion font-semibold">
               Impact & contributions
             </div>
-            <ul className="space-y-4 text-[1.12rem] leading-relaxed text-bone/75">
+            <ul className="space-y-4 text-[1.12rem] leading-relaxed text-bone/85">
               {achievements.map((a: string, j: number) => (
                 <li key={j} className="flex gap-3">
-                  <span className="text-vermilion shrink-0 mt-[0.15em]">+</span>
+                  <span className="text-vermilion shrink-0 mt-[0.15em] font-mono text-sm">+</span>
                   <span>{a}</span>
                 </li>
               ))}
             </ul>
 
             {r.lesson && (
-              <div className="mt-8 rounded-lg border border-bone/8 bg-bone/[0.03] px-6 py-5">
-                <div className="text-mono text-[0.7rem] uppercase tracking-[0.2em] text-vermilion/60 mb-2">
+              <div className="mt-8 rounded-lg border border-bone/12 bg-bone/[0.04] px-6 py-5">
+                <div className="text-mono text-[0.75rem] uppercase tracking-[0.14em] text-vermilion/80 font-semibold mb-2">
                   What I learned
                 </div>
-                <p className="text-[1.02rem] italic leading-relaxed text-bone/70">
+                <p className="text-[1.02rem] italic leading-relaxed text-bone/80">
                   {"\u201C"}{r.lesson}{"\u201D"}
                 </p>
               </div>
@@ -160,20 +160,20 @@ export function Ch03Experience() {
 
   return (
     <section id="experience" data-mood="ink" className="relative chapter-pad" style={{
-      background: "radial-gradient(800px 500px at 10% 20%, color-mix(in oklab, var(--vermilion) 6%, transparent), transparent 60%), radial-gradient(600px 400px at 90% 80%, color-mix(in oklab, var(--bone) 5%, transparent), transparent 60%)"
+      background: "radial-gradient(800px 500px at 10% 20%, color-mix(in oklab, var(--vermilion) 5%, transparent), transparent 60%), radial-gradient(600px 400px at 90% 80%, color-mix(in oklab, var(--bone) 4%, transparent), transparent 60%)"
     } as React.CSSProperties}>
       <div className="mx-auto max-w-7xl">
         <header className="mb-20 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">
-            <div className="text-mono text-[0.75rem] uppercase tracking-[0.22em] text-bone/40 mb-5">
+            <div className="text-mono text-[0.8rem] uppercase tracking-[0.16em] text-bone/55 mb-5">
               /03 — From the retail floor to research
             </div>
-            <h2 className="text-display text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.94] text-bone">
+            <h2 className="text-display text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.94] text-bone opacity-95">
               <MaskReveal>The Journey That Built Me</MaskReveal>
             </h2>
             <div className="mt-4 flex gap-2">
               {(["timeline", "impact"] as const).map((v) => (
-                <button key={v} onClick={() => setView(v)} className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.1em] font-mono border transition-colors ${view === v ? "border-vermilion bg-vermilion/10 text-vermilion" : "border-bone/20 text-bone/40 hover:border-bone/40"}`}>
+                <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.08em] font-mono border transition-colors ${view === v ? "border-vermilion bg-vermilion/10 text-vermilion" : "border-bone/25 text-bone/55 hover:border-bone/45"}`}>
                   {v}
                 </button>
               ))}
@@ -181,7 +181,7 @@ export function Ch03Experience() {
           </div>
           <div className="col-span-12 md:col-span-7 md:pt-2">
             <Reveal>
-              <p className="text-[clamp(1.1rem,1.6vw,1.4rem)] italic leading-relaxed text-bone/70 max-w-[52ch]">
+              <p className="text-[clamp(1.1rem,1.6vw,1.4rem)] italic leading-relaxed text-bone/80 max-w-[52ch]">
                 Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.
               </p>
             </Reveal>
@@ -206,12 +206,12 @@ export function Ch03Experience() {
 
         <div className="mt-28 border-t border-bone/10 pt-14">
           <Reveal>
-            <p className="text-display text-balance text-[clamp(1.4rem,2.4vw,2.2rem)] italic leading-snug text-bone/80 max-w-[48ch]">
+            <p className="text-display text-balance text-[clamp(1.4rem,2.4vw,2.2rem)] italic leading-snug text-bone/85 max-w-[48ch]">
               {"\u201C"}The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.{"\u201D"}
             </p>
             <a
               href="#research"
-              className="text-mono mt-8 inline-flex items-center gap-2 border-b border-bone/25 pb-1 text-[0.7rem] uppercase tracking-[0.22em] text-bone/60 hover:text-vermilion hover:border-vermilion/50 transition-colors duration-300"
+              className="text-mono mt-8 inline-flex items-center gap-2 border-b border-bone/30 pb-1 text-[0.8rem] uppercase tracking-[0.14em] text-bone/70 hover:text-vermilion hover:border-vermilion/50 transition-colors duration-300 font-medium"
             >
               Continue to research
               <span className="text-vermilion">↓</span>
