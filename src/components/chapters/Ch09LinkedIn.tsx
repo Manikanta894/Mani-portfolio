@@ -63,14 +63,13 @@ export default function Ch09LinkedIn() {
 
             <p className="font-display italic text-[clamp(1.4rem,2vw,1.8rem)] leading-[1.12] text-[#111] mb-3">Let&apos;s Build Something Meaningful.</p>
 
-            <p className="text-[0.95rem] leading-[1.7] text-black/65 max-w-[46ch] mb-2">
+            <p className="text-[1.05rem] leading-[1.75] text-black/70 max-w-[46ch] mb-3">
               I enjoy solving real-world business problems through AI, analytics, research and strategy. Whether you&apos;re hiring, collaborating, or simply exchanging ideas — I&apos;d love to hear from you.
             </p>
-            <p className="text-[0.85rem] text-black/40 italic mb-6">
-              Currently building AI-powered HR research, analytics dashboards and business strategy projects from {p.location}. <span className="font-display text-[#D96D22]/60">— Manikanta R.</span>
+            <p className="text-[0.95rem] text-black/50 italic mb-6">
+              Currently building AI-powered HR research, analytics dashboards and business strategy projects from {p.location}. <span className="font-display text-[#D96D22]">— Manikanta R.</span>
             </p>
 
-            {/* Premium info rows */}
             <div className="space-y-0 mb-6">
               {[
                 { icon: "✉", label: "Email", value: p.email, action: true },
@@ -78,18 +77,17 @@ export default function Ch09LinkedIn() {
                 { icon: "🟢", label: "Status", value: "Open for Opportunities" },
                 { icon: "⏱", label: "Response Time", value: "Usually within 24 hours" },
               ].map((r) => (
-                <div key={r.label} className="flex items-center gap-3 py-2.5 border-b border-black/5 group cursor-pointer hover:bg-black/[0.01] transition-colors px-1 -mx-1 rounded"
+                <div key={r.label} className="flex items-center gap-3 py-3 border-b border-black/8 group cursor-pointer hover:bg-black/[0.02] transition-colors px-1 -mx-1 rounded"
                   onClick={r.action ? copyEmail : undefined}>
-                  <span className="w-6 text-center shrink-0 text-sm opacity-50">{r.icon}</span>
-                  <span className="text-[0.75rem] font-mono uppercase tracking-[0.08em] text-black/35 w-28 shrink-0">{r.label}</span>
-                  <span className="text-[0.85rem] text-black/65 group-hover:text-[#D96D22] transition-colors flex-1">{r.value}</span>
-                  {r.action && <span className="text-[0.65rem] font-mono text-[#D96D22]/40 group-hover:text-[#D96D22] transition-colors shrink-0">{copied ? "Copied ✓" : "Copy →"}</span>}
+                  <span className="w-6 text-center shrink-0 text-base opacity-50">{r.icon}</span>
+                  <span className="text-[0.85rem] font-mono uppercase tracking-[0.06em] text-black/40 w-32 shrink-0">{r.label}</span>
+                  <span className="text-[0.95rem] text-black/70 group-hover:text-[#D96D22] transition-colors flex-1">{r.value}</span>
+                  {r.action && <span className="text-[0.8rem] font-mono text-[#D96D22]/50 group-hover:text-[#D96D22] transition-colors shrink-0">{copied ? "Copied ✓" : "Copy →"}</span>}
                 </div>
               ))}
             </div>
 
-            {/* Social icons */}
-            <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
               {[
                 { label: "LinkedIn", href: LINKEDIN_URL, icon: <LiIcon /> },
                 { label: "GitHub", href: "https://github.com/manikantar", icon: <GhIcon /> },
@@ -98,7 +96,7 @@ export default function Ch09LinkedIn() {
                 { label: "Resume", href: "https://manikantar.in/resume.pdf", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
               ].map((l) => (
                 <a key={l.label} href={l.href} target="_blank" rel="noreferrer"
-                  className="group flex items-center gap-1.5 text-[0.78rem] font-mono tracking-[0.04em] text-black/45 hover:text-[#D96D22] transition-colors duration-250 pb-1 border-b border-transparent hover:border-[#D96D22]/40">
+                  className="group flex items-center gap-1.5 text-[0.85rem] font-mono tracking-[0.04em] text-black/50 hover:text-[#D96D22] transition-colors duration-250 pb-1 border-b border-transparent hover:border-[#D96D22]/40">
                   <span className="opacity-50 group-hover:opacity-100 transition-opacity">{l.icon}</span>
                   {l.label} <span className="inline-block group-hover:translate-x-0.5 transition-transform duration-250">→</span>
                 </a>
@@ -121,13 +119,13 @@ export default function Ch09LinkedIn() {
               ) : (
                 <>
                   <h3 className="font-display text-[1.5rem] text-[#111] mb-1">Start a Conversation.</h3>
-                  <p className="text-[0.85rem] text-black/50 mb-5">Every meaningful collaboration begins with a simple message.</p>
+                  <p className="text-[0.95rem] text-black/50 mb-5">Every meaningful collaboration begins with a simple message.</p>
 
                   <div className="flex flex-wrap gap-1.5 mb-6">
                     {TOPICS.map((t) => (
                       <button key={t} onClick={() => setTopic(t === topic ? "" : t)}
-                        className={`px-3.5 py-2 rounded-full text-[0.75rem] font-mono tracking-[0.04em] transition-all duration-250
-                          ${topic === t ? "bg-[#111] text-[#F7F4EC]" : "border border-black/10 text-black/45 hover:border-[#D96D22]/25 hover:text-[#D96D22]"}`}>
+                        className={`px-4 py-2.5 rounded-full text-[0.85rem] font-mono tracking-[0.04em] transition-all duration-250
+                          ${topic === t ? "bg-[#111] text-[#F7F4EC]" : "border border-black/10 text-black/50 hover:border-[#D96D22]/25 hover:text-[#D96D22]"}`}>
                         {t}
                       </button>
                     ))}
@@ -143,18 +141,18 @@ export default function Ch09LinkedIn() {
                         {f.area ? (
                           <textarea required={f.required} value={form[f.name] || ""} onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
                             placeholder={f.placeholder} rows={4}
-                            className="w-full bg-transparent border-b-2 border-black/8 py-3 text-[0.95rem] text-[#111] placeholder:text-black/30 outline-none transition-colors duration-250 focus:border-[#D96D22] resize-none" />
+                            className="w-full bg-transparent border-b-2 border-black/10 py-3.5 text-[1.05rem] text-[#111] placeholder:text-black/35 outline-none transition-colors duration-250 focus:border-[#D96D22] resize-none" />
                         ) : (
                           <input type={f.type || "text"} required={f.required} value={form[f.name] || ""} onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
                             placeholder={f.placeholder}
-                            className="w-full bg-transparent border-b-2 border-black/8 py-3 text-[0.95rem] text-[#111] placeholder:text-black/30 outline-none transition-colors duration-250 focus:border-[#D96D22]" />
+                            className="w-full bg-transparent border-b-2 border-black/10 py-3.5 text-[1.05rem] text-[#111] placeholder:text-black/35 outline-none transition-colors duration-250 focus:border-[#D96D22]" />
                         )}
                       </div>
                     ))}
 
                     <div className="pt-2">
                       <motion.button type="submit" disabled={sending}
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#D96D22] text-white font-mono text-[0.85rem] tracking-[0.04em] hover:bg-[#b85a1a] hover:shadow-lg hover:shadow-[#D96D22]/20 transition-all duration-[250ms] disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#D96D22] text-white font-mono text-[0.95rem] tracking-[0.04em] hover:bg-[#b85a1a] hover:shadow-lg hover:shadow-[#D96D22]/20 transition-all duration-[250ms] disabled:opacity-50"
                         whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}>
                         {sending ? "Sending..." : <>Send Message →</>}
                       </motion.button>
