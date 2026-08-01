@@ -6,12 +6,17 @@ import usePortfolio from "@/hooks/usePortfolio";
 const API_BASE = typeof window !== "undefined" ? import.meta.env.VITE_API_URL || "http://localhost:5000/api" : "";
 const LINKEDIN_URL = "https://www.linkedin.com/in/manikanta894/";
 const TOPICS = ["Job Opportunity", "Research", "Consulting", "Speaking", "Startup", "Networking", "Other"];
+const EASE = [0.22, 0.61, 0.36, 1];
+
+function LiIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>); }
+function GhIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>); }
+function MailIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>); }
+function OrcidSvg() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 7h2.5c2 0 3.5 1 3.5 3s-1.5 3-3.5 3H8V7zm2.5 4.5c1.2 0 2-.6 2-1.5s-.8-1.5-2-1.5H9.5v3h1zM8 15.5h3l2 3h1.8l-2.2-3.2c1-.3 1.8-1.2 1.8-2.3 0-1.8-1.2-3-3.2-3H8v8.5z"/></svg>); }
 
 export default function Ch09LinkedIn() {
   const { profile } = usePortfolio();
   const p = {
     name: profile?.name || "Manikanta R",
-    headline: profile?.tagline || "Building AI-powered business solutions through analytics, research, and human-centered strategy.",
     location: profile?.location || "Bengaluru, India",
     email: "hello@manikantar.in",
   };
@@ -20,165 +25,157 @@ export default function Ch09LinkedIn() {
   const [topic, setTopic] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSending(true);
+    e.preventDefault(); setSending(true);
     try { await fetch(`${API_BASE}/contact`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, subject: topic }) }); setSent(true); }
     catch {} finally { setSending(false); }
   };
 
+  const copyEmail = () => { navigator.clipboard?.writeText(p.email); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
   return (
-    <section id="linkedin" className="relative bg-[#F7F4EC] text-[#1E1E1E] overflow-hidden" style={{ minHeight: "90vh", display: "flex", flexDirection: "column" }}>
-      <div className="flex-1 flex items-center">
-        <div className="w-full mx-auto max-w-6xl px-5 sm:px-8 py-14 sm:py-18">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14">
-            {/* LEFT — Identity */}
-            <div className="lg:col-span-7">
-              <div className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-[#8A8578] mb-6">
-                <span className="text-[#D9782E] font-bold mr-2">09</span>Connect
-              </div>
+    <section id="linkedin" className="relative bg-[#F7F4EC] text-[#111]">
+      {/* MR watermark */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        <span className="absolute top-1/2 left-[5%] -translate-y-1/2 font-display italic text-[clamp(20rem,35vw,40rem)] leading-none text-[#111]/[0.025]">MR</span>
+      </div>
 
-              <h1 className="font-display italic text-[clamp(3.2rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.02em] text-[#1E1E1E] mb-4">
-                {p.name.split(" ")[0]}<br /><span className="text-[#D9782E]">{p.name.split(" ").slice(1).join(" ")}.</span>
-              </h1>
-
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-[0.78rem] font-mono uppercase tracking-[0.08em] text-[#8A8578] mb-6">
-                <span>MBA Candidate</span><span className="text-[#8A8578]/30">·</span>
-                <span>HR &amp; Business Analytics</span><span className="text-[#8A8578]/30">·</span>
-                <span>AI Research</span><span className="text-[#8A8578]/30">·</span>
-                <span>Business Strategy</span><span className="text-[#8A8578]/30">·</span>
-                <span>{p.location}</span>
-              </div>
-
-              <p className="font-display italic text-[clamp(1.6rem,2.4vw,2.2rem)] leading-[1.1] text-[#1E1E1E] mb-4">
-                Let&apos;s Build Something Meaningful.
-              </p>
-
-              <p className="text-[0.95rem] leading-[1.7] text-[#8A8578] max-w-[44ch] mb-8">
-                I enjoy solving real-world business problems through AI, analytics, research and strategy. Whether you&apos;re hiring, collaborating, or simply exchanging ideas — I&apos;d love to hear from you.
-              </p>
-
-              {/* Contact info */}
-              <div className="space-y-2 mb-8 text-[0.85rem] text-[#8A8578]">
-                <button onClick={() => { navigator.clipboard?.writeText(p.email); }} className="flex items-center gap-2 hover:text-[#D9782E] transition-colors group cursor-pointer">
-                  <span className="opacity-60">✉</span> {p.email} <span className="text-[0.65rem] opacity-0 group-hover:opacity-50 transition-opacity ml-1">Click to copy</span>
-                </button>
-                <div className="flex items-center gap-2"><span className="opacity-60">📍</span> {p.location}</div>
-                <div className="flex items-center gap-2"><span className="opacity-60">🕒</span> Replies within 24 Hours</div>
-                <div className="flex items-center gap-2"><span className="opacity-60">💼</span> Open to Full-Time Opportunities</div>
-                <div className="flex items-center gap-2"><span className="opacity-60">🤝</span> Available for Research Collaboration</div>
-              </div>
-
-              {/* Social links */}
-              <div className="flex flex-wrap gap-x-6 gap-y-3">
-                {[
-                  { label: "LinkedIn", href: LINKEDIN_URL },
-                  { label: "GitHub", href: "https://github.com/manikantar" },
-                  { label: "Email", href: `mailto:${p.email}` },
-                  { label: "ORCID", href: "https://orcid.org/0009-0005-2576-8731" },
-                  { label: "SSRN", href: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252" },
-                  { label: "Resume", href: "https://manikantar.in/resume.pdf" },
-                ].map((l) => (
-                  <a key={l.label} href={l.href} target="_blank" rel="noreferrer"
-                    className="group flex items-center gap-1.5 text-[0.8rem] font-mono tracking-[0.04em] text-[#8A8578] hover:text-[#D9782E] transition-colors duration-250 border-b border-transparent hover:border-[#D9782E]/40 pb-0.5">
-                    {l.label} <span className="inline-block group-hover:translate-x-0.5 transition-transform duration-250">→</span>
-                  </a>
-                ))}
-              </div>
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-8 py-12 sm:py-16 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          {/* LEFT — Identity */}
+          <div className="lg:col-span-7">
+            <div className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-black/40 mb-4">
+              <span className="text-[#D96D22] font-bold mr-2">09</span>Connect
             </div>
 
-            {/* RIGHT — Conversation */}
-            <div className="lg:col-span-5">
-              <div className="lg:sticky lg:top-24">
-                {sent ? (
-                  <motion.div className="text-center py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <div className="w-14 h-14 rounded-full bg-[#D9782E]/10 flex items-center justify-center mx-auto mb-4">
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D9782E" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" strokeLinecap="round"/></svg>
-                    </div>
-                    <h3 className="font-display text-[1.4rem] text-[#1E1E1E] mb-1">Message Sent.</h3>
-                    <p className="text-[#8A8578] mb-4">I&apos;ll reply within 24 hours.</p>
-                    <button onClick={() => { setSent(false); setForm({}); setTopic(""); }} className="text-[0.8rem] font-mono text-[#D9782E] underline hover:no-underline">Send another</button>
-                  </motion.div>
-                ) : (
-                  <>
-                    <h3 className="font-display text-[1.4rem] text-[#1E1E1E] mb-1">Start a Conversation.</h3>
-                    <p className="text-[0.85rem] text-[#8A8578] mb-5">Every meaningful collaboration begins with a simple message.</p>
+            <h1 className="font-display italic leading-[0.88] tracking-[-0.04em] text-[#111] mb-3 whitespace-nowrap" style={{ fontSize: "clamp(4rem,8vw,7.5rem)" }}>
+              {p.name.split(" ")[0]} <span className="text-[#D96D22]">{p.name.split(" ").slice(1).join(" ")}.</span>
+            </h1>
 
-                    {/* Topic chips */}
-                    <div className="flex flex-wrap gap-1.5 mb-6">
-                      {TOPICS.map((t) => (
-                        <button key={t} onClick={() => setTopic(t === topic ? "" : t)}
-                          className={`px-3.5 py-2 rounded-full text-[0.75rem] font-mono tracking-[0.04em] transition-all duration-250
-                            ${topic === t ? "bg-[#1E1E1E] text-[#F7F4EC]" : "border border-[#1E1E1E]/12 text-[#8A8578] hover:border-[#D9782E]/25 hover:text-[#D9782E]"}`}>
-                          {t}
-                        </button>
-                      ))}
-                    </div>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[0.78rem] font-mono uppercase tracking-[0.06em] text-black/40 mb-5">
+              <span>MBA</span><span className="text-black/15">·</span>
+              <span>HR &amp; BA</span><span className="text-black/15">·</span>
+              <span>AI Research</span><span className="text-black/15">·</span>
+              <span>Strategy</span>
+            </div>
 
-                    <form onSubmit={submit} className="space-y-4">
-                      {[
-                        { name: "name", placeholder: "Your full name", required: true },
-                        { name: "email", placeholder: "you@company.com", required: true, type: "email" },
-                        { name: "message", placeholder: "What would you like to discuss?", required: true, area: true },
-                      ].map((f) => (
-                        <div key={f.name}>
-                          {f.area ? (
-                            <textarea
-                              required={f.required}
-                              value={form[f.name] || ""}
-                              onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
-                              placeholder={f.placeholder}
-                              rows={4}
-                              className="w-full bg-transparent border-b-2 border-[#1E1E1E]/10 py-3 text-[0.95rem] text-[#1E1E1E] placeholder:text-[#8A8578]/45 outline-none transition-colors duration-250 focus:border-[#D9782E] resize-none"
-                            />
-                          ) : (
-                            <input
-                              type={f.type || "text"}
-                              required={f.required}
-                              value={form[f.name] || ""}
-                              onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
-                              placeholder={f.placeholder}
-                              className="w-full bg-transparent border-b-2 border-[#1E1E1E]/10 py-3 text-[0.95rem] text-[#1E1E1E] placeholder:text-[#8A8578]/45 outline-none transition-colors duration-250 focus:border-[#D9782E]"
-                            />
-                          )}
-                        </div>
-                      ))}
+            <p className="font-display italic text-[clamp(1.4rem,2vw,1.8rem)] leading-[1.12] text-[#111] mb-3">Let&apos;s Build Something Meaningful.</p>
 
-                      <div className="pt-2">
-                        <motion.button type="submit" disabled={sending}
-                          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#D9782E] text-white font-mono text-[0.85rem] tracking-[0.04em] hover:bg-[#c06820] hover:shadow-lg hover:shadow-[#D9782E]/20 transition-all duration-300 disabled:opacity-50"
-                          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                          {sending ? "Sending..." : <>Send Message →</>}
-                        </motion.button>
-                        <p className="mt-3 text-[0.72rem] text-[#8A8578]/60">I personally reply within 24 hours.</p>
+            <p className="text-[0.95rem] leading-[1.7] text-black/65 max-w-[46ch] mb-2">
+              I enjoy solving real-world business problems through AI, analytics, research and strategy. Whether you&apos;re hiring, collaborating, or simply exchanging ideas — I&apos;d love to hear from you.
+            </p>
+            <p className="text-[0.85rem] text-black/40 italic mb-6">
+              Currently building AI-powered HR research, analytics dashboards and business strategy projects from {p.location}. <span className="font-display text-[#D96D22]/60">— Manikanta R.</span>
+            </p>
+
+            {/* Premium info rows */}
+            <div className="space-y-0 mb-6">
+              {[
+                { icon: "✉", label: "Email", value: p.email, action: true },
+                { icon: "📍", label: "Location", value: p.location },
+                { icon: "🟢", label: "Status", value: "Open for Opportunities" },
+                { icon: "⏱", label: "Response Time", value: "Usually within 24 hours" },
+              ].map((r) => (
+                <div key={r.label} className="flex items-center gap-3 py-2.5 border-b border-black/5 group cursor-pointer hover:bg-black/[0.01] transition-colors px-1 -mx-1 rounded"
+                  onClick={r.action ? copyEmail : undefined}>
+                  <span className="w-6 text-center shrink-0 text-sm opacity-50">{r.icon}</span>
+                  <span className="text-[0.75rem] font-mono uppercase tracking-[0.08em] text-black/35 w-28 shrink-0">{r.label}</span>
+                  <span className="text-[0.85rem] text-black/65 group-hover:text-[#D96D22] transition-colors flex-1">{r.value}</span>
+                  {r.action && <span className="text-[0.65rem] font-mono text-[#D96D22]/40 group-hover:text-[#D96D22] transition-colors shrink-0">{copied ? "Copied ✓" : "Copy →"}</span>}
+                </div>
+              ))}
+            </div>
+
+            {/* Social icons */}
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
+              {[
+                { label: "LinkedIn", href: LINKEDIN_URL, icon: <LiIcon /> },
+                { label: "GitHub", href: "https://github.com/manikantar", icon: <GhIcon /> },
+                { label: "Email", href: `mailto:${p.email}`, icon: <MailIcon /> },
+                { label: "ORCID", href: "https://orcid.org/0009-0005-2576-8731", icon: <OrcidSvg /> },
+                { label: "Resume", href: "https://manikantar.in/resume.pdf", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+              ].map((l) => (
+                <a key={l.label} href={l.href} target="_blank" rel="noreferrer"
+                  className="group flex items-center gap-1.5 text-[0.78rem] font-mono tracking-[0.04em] text-black/45 hover:text-[#D96D22] transition-colors duration-250 pb-1 border-b border-transparent hover:border-[#D96D22]/40">
+                  <span className="opacity-50 group-hover:opacity-100 transition-opacity">{l.icon}</span>
+                  {l.label} <span className="inline-block group-hover:translate-x-0.5 transition-transform duration-250">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT — Conversation */}
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-24">
+              {sent ? (
+                <motion.div className="py-8 text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <div className="w-14 h-14 rounded-full bg-[#D96D22]/10 flex items-center justify-center mx-auto mb-4">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D96D22" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" strokeLinecap="round"/></svg>
+                  </div>
+                  <h3 className="font-display text-[1.3rem] text-[#111] mb-1">Message Sent.</h3>
+                  <p className="text-black/50 mb-3">I&apos;ll reply within 24 hours.</p>
+                  <button onClick={() => { setSent(false); setForm({}); setTopic(""); }} className="text-[0.8rem] font-mono text-[#D96D22] underline hover:no-underline">Send another</button>
+                </motion.div>
+              ) : (
+                <>
+                  <h3 className="font-display text-[1.5rem] text-[#111] mb-1">Start a Conversation.</h3>
+                  <p className="text-[0.85rem] text-black/50 mb-5">Every meaningful collaboration begins with a simple message.</p>
+
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {TOPICS.map((t) => (
+                      <button key={t} onClick={() => setTopic(t === topic ? "" : t)}
+                        className={`px-3.5 py-2 rounded-full text-[0.75rem] font-mono tracking-[0.04em] transition-all duration-250
+                          ${topic === t ? "bg-[#111] text-[#F7F4EC]" : "border border-black/10 text-black/45 hover:border-[#D96D22]/25 hover:text-[#D96D22]"}`}>
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+
+                  <motion.form onSubmit={submit} className="space-y-4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                    {[
+                      { name: "name", placeholder: "Your name", required: true },
+                      { name: "email", placeholder: "you@company.com", required: true, type: "email" },
+                      { name: "message", placeholder: "Tell me about your project, idea or opportunity...", required: true, area: true },
+                    ].map((f) => (
+                      <div key={f.name} className="group">
+                        {f.area ? (
+                          <textarea required={f.required} value={form[f.name] || ""} onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
+                            placeholder={f.placeholder} rows={4}
+                            className="w-full bg-transparent border-b-2 border-black/8 py-3 text-[0.95rem] text-[#111] placeholder:text-black/30 outline-none transition-colors duration-250 focus:border-[#D96D22] resize-none" />
+                        ) : (
+                          <input type={f.type || "text"} required={f.required} value={form[f.name] || ""} onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
+                            placeholder={f.placeholder}
+                            className="w-full bg-transparent border-b-2 border-black/8 py-3 text-[0.95rem] text-[#111] placeholder:text-black/30 outline-none transition-colors duration-250 focus:border-[#D96D22]" />
+                        )}
                       </div>
-                    </form>
-                  </>
-                )}
-              </div>
+                    ))}
+
+                    <div className="pt-2">
+                      <motion.button type="submit" disabled={sending}
+                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#D96D22] text-white font-mono text-[0.85rem] tracking-[0.04em] hover:bg-[#b85a1a] hover:shadow-lg hover:shadow-[#D96D22]/20 transition-all duration-[250ms] disabled:opacity-50"
+                        whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}>
+                        {sending ? "Sending..." : <>Send Message →</>}
+                      </motion.button>
+                    </div>
+                  </motion.form>
+                </>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Closing */}
-      <div className="border-t border-[#1E1E1E]/6 px-5 sm:px-8 py-12">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-display italic text-[clamp(1.4rem,2.2vw,2rem)] leading-[1.2] text-[#1E1E1E] mb-3">
-            Thank you for exploring my work.
+      {/* Closing footer */}
+      <div className="border-t border-black/6 px-5 sm:px-8 py-10">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="font-display italic text-[clamp(1.1rem,1.5vw,1.3rem)] text-[#111] mb-1">Every great collaboration starts with curiosity.</p>
+          <p className="text-[0.75rem] font-mono text-black/30 mb-4 leading-relaxed">
+            &copy; 2026 Manikanta R. &mdash; Designed &amp; Built with intention.<br />
+            React &bull; TypeScript &bull; Framer Motion &bull; GSAP &bull; Supabase &bull; Vercel
           </p>
-          <p className="text-[0.9rem] text-[#8A8578] mb-6">
-            Every project in this portfolio started with curiosity.<br />Maybe the next one starts with this conversation.
-          </p>
-          <p className="text-[0.8rem] text-[#8A8578]/50 mb-8">— Manikanta R.</p>
-
-          <div className="text-[0.7rem] font-mono text-[#8A8578]/40 space-y-1">
-            <p>&copy; 2026 Manikanta R. &mdash; Designed &amp; Built with intention.</p>
-            <p>React &bull; TypeScript &bull; Framer Motion &bull; GSAP &bull; Supabase &bull; Vercel</p>
-          </div>
-
-          <p className="font-display italic text-[1rem] text-[#D9782E]/60 mt-6">Curiosity never graduates.</p>
+          <p className="font-display italic text-[0.9rem] text-[#D96D22]/50">Curiosity never graduates.</p>
         </div>
       </div>
     </section>
