@@ -33,7 +33,7 @@ function EvolutionRail({ evolution }: { evolution: string[] }) {
   const fillH = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   return (
     <div ref={ref} className="relative">
-      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] text-bone/75 font-semibold">Career Evolution</div>
+      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] opacity-80 font-semibold">Career Evolution</div>
       <div className="relative pl-7">
         <div className="absolute left-[9px] top-1.5 bottom-1.5 w-px bg-bone/15 rounded-full" />
         <motion.div style={{ height: fillH }} className="absolute left-[9px] top-1.5 w-px rounded-full bg-vermilion" />
