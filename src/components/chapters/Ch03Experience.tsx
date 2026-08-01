@@ -22,7 +22,7 @@ function EvolutionStep({ scrollYProgress, i, total, label }: { scrollYProgress: 
   return (
     <motion.li style={{ opacity: o, x }} className="flex items-baseline gap-3">
       <span className="font-mono text-[0.75rem] font-semibold tabular-nums text-vermilion w-5 shrink-0 text-right">{String(i + 1).padStart(2, "0")}</span>
-      <span className="text-[0.95rem] leading-snug text-bone/85">{label}</span>
+      <span className="text-[0.95rem] leading-snug text-white/80">{label}</span>
     </motion.li>
   );
 }
@@ -33,9 +33,9 @@ function EvolutionRail({ evolution }: { evolution: string[] }) {
   const fillH = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   return (
     <div ref={ref} className="relative">
-      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] opacity-80 font-semibold">Career Evolution</div>
+      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] text-white/65 font-semibold">Career Evolution</div>
       <div className="relative pl-7">
-        <div className="absolute left-[9px] top-1.5 bottom-1.5 w-px bg-bone/15 rounded-full" />
+        <div className="absolute left-[9px] top-1.5 bottom-1.5 w-px bg-white/12 rounded-full" />
         <motion.div style={{ height: fillH }} className="absolute left-[9px] top-1.5 w-px rounded-full bg-vermilion" />
         <ul className="flex flex-col gap-4">
           {evolution.map((step, i) => (<EvolutionStep key={step} scrollYProgress={scrollYProgress} i={i} total={evolution.length} label={step} />))}
@@ -51,34 +51,34 @@ function RoleSpread({ r, index, view }: { r: any; index: number; view: "timeline
 
   return (
     <article className="relative group">
-      <span aria-hidden className="absolute -left-3 -top-6 text-[clamp(6rem,10vw,10rem)] leading-none text-bone/[0.035] select-none pointer-events-none font-display"> {num} </span>
+      <span aria-hidden className="absolute -left-3 -top-6 text-[clamp(6rem,10vw,10rem)] leading-none text-white/[0.03] select-none pointer-events-none font-display"> {num} </span>
 
-      <div className="relative border-t border-bone/15 pt-12 group-hover:border-bone/25 transition-colors">
+      <div className="relative border-t border-white/12 pt-12 group-hover:border-white/20 transition-colors">
         <div className="flex items-center gap-4 mb-8">
           <span className="font-mono text-[0.85rem] uppercase tracking-[0.1em] text-vermilion font-semibold">Chapter {num}</span>
-          <span className="h-px flex-1 bg-bone/15" />
-          <span className="font-mono text-[0.85rem] tracking-[0.1em] text-bone/60 uppercase font-medium">{r.span}</span>
+          <span className="h-px flex-1 bg-white/12" />
+          <span className="font-mono text-[0.85rem] tracking-[0.1em] text-white/55 uppercase font-medium">{r.span}</span>
         </div>
 
         <div className="grid grid-cols-12 gap-x-8 gap-y-8">
           <header className="col-span-12 md:col-span-5">
-            <div className="font-mono text-[0.85rem] uppercase tracking-[0.1em] text-bone/60 mb-4 font-medium">{r.company}{r.city ? ` · ${r.city}` : ""}</div>
-            <h3 className="font-display text-[clamp(2.6rem,4.5vw,4.2rem)] leading-[1.04] text-bone font-normal"><MaskReveal>{r.role}</MaskReveal></h3>
-            <p className="mt-6 text-[1.1rem] leading-relaxed text-bone/85 max-w-[52ch]">{r.context}</p>
+            <div className="font-mono text-[0.85rem] uppercase tracking-[0.1em] text-white/55 mb-4 font-medium">{r.company}{r.city ? ` · ${r.city}` : ""}</div>
+            <h3 className="font-display text-[clamp(2.6rem,4.5vw,4.2rem)] leading-[1.04] text-white font-normal"><MaskReveal>{r.role}</MaskReveal></h3>
+            <p className="mt-6 text-[1.1rem] leading-relaxed text-white/80 max-w-[52ch]">{r.context}</p>
           </header>
 
-          <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-bone/15">
+          <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-white/12">
             <div className="font-mono mb-5 text-[0.85rem] uppercase tracking-[0.14em] text-vermilion font-semibold">Impact &amp; contributions</div>
-            <ul className="space-y-4 text-[1.1rem] leading-relaxed text-bone/90">
+            <ul className="space-y-4 text-[1.1rem] leading-relaxed text-white/85">
               {achievements.map((a: string, j: number) => (
                 <li key={j} className="flex gap-3"><span className="text-vermilion shrink-0 mt-[0.15em] font-mono text-sm">+</span><span>{a}</span></li>
               ))}
             </ul>
 
             {r.lesson && (
-              <div className="mt-8 rounded-lg border border-bone/15 bg-bone/5 px-6 py-5">
+              <div className="mt-8 rounded-lg border border-white/12 bg-white/5 px-6 py-5">
                 <div className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-vermilion/90 font-semibold mb-2">What I learned</div>
-                <p className="text-[1rem] italic leading-relaxed text-bone/85">{"\u201C"}{r.lesson}{"\u201D"}</p>
+                <p className="text-[1rem] italic leading-relaxed text-white/80">{"\u201C"}{r.lesson}{"\u201D"}</p>
               </div>
             )}
           </div>
@@ -95,21 +95,21 @@ export function Ch03Experience() {
   const evolution = ["Operations", "Customer Experience", "Leadership", "Business Thinking", "Analytics", "Research", "AI & Business Strategy"];
 
   return (
-    <section id="experience" data-mood="ink" className="relative chapter-pad" style={{ background: "radial-gradient(800px 500px at 10% 20%, color-mix(in oklab, var(--vermilion) 4%, transparent), transparent 65%), radial-gradient(600px 400px at 90% 80%, color-mix(in oklab, var(--bone) 3%, transparent), transparent 65%)" } as React.CSSProperties}>
+    <section id="experience" className="relative chapter-pad bg-[#14110F] text-[#F5F1EB]" style={{ background: "#14110F" }}>
       <div className="mx-auto max-w-7xl">
         <header className="mb-20 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">
-            <div className="font-mono text-[0.85rem] uppercase tracking-[0.14em] text-bone/60 font-medium mb-5">/03 — From the retail floor to research</div>
-            <h2 className="font-display text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.94] text-bone font-normal"><MaskReveal>The Journey That Built Me</MaskReveal></h2>
+            <div className="font-mono text-[0.85rem] uppercase tracking-[0.14em] text-white/55 font-medium mb-5">/03 — From the retail floor to research</div>
+            <h2 className="font-display text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.94] text-white font-normal"><MaskReveal>The Journey That Built Me</MaskReveal></h2>
             <div className="mt-4 flex gap-2">
               {(["timeline", "impact"] as const).map((v) => (
-                <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.08em] font-mono border font-semibold transition-colors ${view === v ? "border-vermilion bg-vermilion/15 text-vermilion" : "border-bone/30 text-bone/60 hover:border-bone/50"}`}>{v}</button>
+                <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.08em] font-mono border font-semibold transition-colors ${view === v ? "border-vermilion bg-vermilion/15 text-vermilion" : "border-white/25 text-white/55 hover:border-white/45"}`}>{v}</button>
               ))}
             </div>
           </div>
           <div className="col-span-12 md:col-span-7 md:pt-2">
             <Reveal>
-              <p className="text-[clamp(1.1rem,1.6vw,1.4rem)] italic leading-relaxed text-bone/85 max-w-[52ch]">Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.</p>
+              <p className="text-[clamp(1.1rem,1.6vw,1.4rem)] italic leading-relaxed text-white/80 max-w-[52ch]">Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.</p>
             </Reveal>
           </div>
         </header>
@@ -119,10 +119,10 @@ export function Ch03Experience() {
           <div className="col-span-12 md:col-span-9"><div className="space-y-16">{roles.map((r: any, i: number) => (<RoleSpread key={r.company || i} r={r} index={i} view={view} />))}</div></div>
         </div>
 
-        <div className="mt-28 border-t border-bone/15 pt-14">
+        <div className="mt-28 border-t border-white/12 pt-14">
           <Reveal>
-            <p className="font-display text-balance text-[clamp(1.4rem,2.4vw,2.2rem)] italic leading-snug text-bone/90 max-w-[48ch]">{"\u201C"}The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.{"\u201D"}</p>
-            <a href="#research" className="font-mono mt-8 inline-flex items-center gap-2 border-b border-bone/35 pb-1 text-[0.85rem] uppercase tracking-[0.12em] text-bone/75 hover:text-vermilion hover:border-vermilion font-medium transition-colors duration-300">Continue to research <span className="text-vermilion">↓</span></a>
+            <p className="font-display text-balance text-[clamp(1.4rem,2.4vw,2.2rem)] italic leading-snug text-white/85 max-w-[48ch]">{"\u201C"}The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.{"\u201D"}</p>
+            <a href="#research" className="font-mono mt-8 inline-flex items-center gap-2 border-b border-white/30 pb-1 text-[0.85rem] uppercase tracking-[0.12em] text-white/70 hover:text-vermilion hover:border-vermilion font-medium transition-colors duration-300">Continue to research <span className="text-vermilion">↓</span></a>
           </Reveal>
         </div>
       </div>
