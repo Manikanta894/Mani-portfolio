@@ -48,7 +48,7 @@ export function Ch07Ecosystem() {
   }, [caps]);
 
   return (
-    <section id="ecosystem" className="relative bg-[#0C0B0A] text-[#F5F4F0] overflow-hidden" style={{ minHeight: "65vh" }}>
+    <section id="ecosystem" className="relative bg-[#0C0B0A] text-[#D6D1C9] overflow-hidden" style={{ minHeight: "65vh" }}>
       {/* Ambient glow behind active card */}
       {expanded && (
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,_rgba(217,122,50,0.04)_0%,_transparent_70%)]" />
