@@ -17,7 +17,7 @@ function normalizeExperience(raw: any) {
 
 function EvolutionStep({ scrollYProgress, i, total, label }: { scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"]; i: number; total: number; label: string }) {
   const a = i / Math.max(1, total - 1);
-  const o = useTransform(scrollYProgress, [a - 0.06, a + 0.02], [0.35, 1]);
+  const o = useTransform(scrollYProgress, [a - 0.06, a + 0.02], [0.6, 1]);
   const x = useTransform(scrollYProgress, [a - 0.06, a + 0.02], [4, 0]);
   return (
     <motion.li style={{ opacity: o, x }} className="flex items-baseline gap-3">
@@ -33,7 +33,7 @@ function EvolutionRail({ evolution }: { evolution: string[] }) {
   const fillH = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   return (
     <div ref={ref} className="relative">
-      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] text-bone/60 font-semibold">Career Evolution</div>
+      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] text-bone/75 font-semibold">Career Evolution</div>
       <div className="relative pl-7">
         <div className="absolute left-[9px] top-1.5 bottom-1.5 w-px bg-bone/15 rounded-full" />
         <motion.div style={{ height: fillH }} className="absolute left-[9px] top-1.5 w-px rounded-full bg-vermilion" />
