@@ -1,183 +1,149 @@
 "use client";
-import { useState, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useMemo } from "react";
+import { motion } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
-
-function apaCite(p: any) {
-  const authors = (p.authors || "Manikanta R").split(",").map((a: string) => a.trim());
-  const last = authors.length > 1 ? `& ${authors.pop()}` : authors[0];
-  const authorStr = authors.length > 1 ? `${authors.join(", ")}, ${last}` : last;
-  const year = p.year || "2026";
-  const journal = p.journal ? ` ${p.journal}` : "";
-  const vol = p.volume ? `, ${p.volume}` : "";
-  const issue = p.issue ? `(${p.issue})` : "";
-  const pages = p.pages ? `, ${p.pages}` : "";
-  const doi = p.doi ? `. https://doi.org/${p.doi}` : "";
-  return `${authorStr} (${year}). ${p.title}.${journal}${vol}${issue}${pages}${doi}`;
-}
-
-function copyToClipboard(text: string) {
-  navigator.clipboard?.writeText(text);
-}
 
 const ORCID_URL = "https://orcid.org/0009-0005-2576-8731";
 const SSRN_URL = "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252";
 
-function OrcidIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 8h2.2c1.8 0 3 .8 3 2.5s-1.2 2.5-3 2.5H8V8zm2.2 3.8c1 0 1.6-.5 1.6-1.3S11.2 9.2 10.2 9.2H9.3v2.6h.9zM8 14.5h2.5l1.5 2.5h1.5l-1.6-2.6c.9-.3 1.5-1.1 1.5-2 0-1.5-1-2.4-2.8-2.4H8v6.5z" fill="currentColor"/></svg>); }
-function SsrnIcon() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h8M7 17h6"/></svg>); }
-function DocIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>); }
-
-function CopyCitationBtn({ paper }: { paper: any }) {
-  const [copied, setCopied] = useState(false);
-  const cite = useMemo(() => apaCite(paper), [paper]);
-  return (
-    <button
-      onClick={() => { copyToClipboard(cite); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono tracking-[0.04em] border border-ink/15 text-ink/50 hover:border-ink/40 hover:text-ink transition-colors"
-    >
-      {copied ? "Copied!" : "Copy APA"}
-    </button>
-  );
-}
+function OrcidLogo() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 7h2.5c2 0 3.5 1 3.5 3s-1.5 3-3.5 3H8V7zm2.5 4.5c1.2 0 2-.6 2-1.5s-.8-1.5-2-1.5H9.5v3h1zM8 15.5h3l2 3h1.8l-2.2-3.2c1-.3 1.8-1.2 1.8-2.3 0-1.8-1.2-3-3.2-3H8v8.5z" fill="currentColor"/></svg>); }
+function SsrnLogo() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h8M7 17h6"/></svg>); }
+function DoiLogo() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>); }
+function PdfIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15v-4h4v4M9 13h4"/></svg>); }
 
 export function Ch05Research() {
   const { research } = usePortfolio();
   const papers = (research?.length ? research : []).sort((a: any, b: any) => Number(b.year) - Number(a.year));
-  const [expanded, setExpanded] = useState<string | null>(null);
 
   const stats = useMemo(() => ({
     total: papers.length,
     withDOI: papers.filter((p: any) => p.doi).length,
     journals: [...new Set(papers.map((p: any) => p.journal).filter(Boolean))].length,
+    domains: [...new Set(papers.flatMap((p: any) => p.keywords || []).filter(Boolean))].length,
   }), [papers]);
 
+  const years = [...new Set(papers.map((p: any) => p.year).filter(Boolean))].sort((a: string, b: string) => Number(b) - Number(a));
+
   return (
-    <section id="research" data-mood="ink" className="relative chapter-pad">
+    <section id="research" className="relative bg-[#0C0B0A] text-[#D6D1C9] chapter-pad">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <header className="mb-14">
-          <div className="flex items-center gap-3 text-mono text-[0.75rem] uppercase tracking-[0.2em] text-ink/40 mb-4">
-            <span className="text-vermilion font-medium">06</span>
-            <span className="w-8 h-px bg-ink/20" />
-            Research & Innovation
-          </div>
-          <h2 className="font-display font-normal text-[clamp(3.2rem,7vw,6rem)] leading-[0.92] tracking-[-0.02em]">
-            Research Lab
-          </h2>
-          <p className="mt-5 text-[1.05rem] text-ink/55 max-w-[52ch]">
-            Published research across AI in HR, workforce analytics, and organizational behavior.
-          </p>
-        </header>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+          {/* LEFT — Info + Stats */}
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-24">
+              <div className="flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[#A39A90] mb-2">
+                <span className="text-[#D97A32] font-bold">06</span>
+                Research Lab
+              </div>
+              <h2 className="font-display italic text-[clamp(2rem,4vw,3rem)] leading-[0.94] text-[#F7F4EF] mb-4">Publications</h2>
+              <p className="text-[0.9rem] leading-relaxed text-[#A39A90] mb-8 max-w-[32ch]">
+                Published research across AI in HR, workforce analytics, organizational behavior, and business strategy.
+              </p>
 
-        {/* Profile badges */}
-        <div className="flex flex-wrap gap-3 mb-12">
-          <a href={ORCID_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl border border-ink/10 bg-white/50 backdrop-blur-sm hover:border-[#A6CE39]/40 transition-colors group">
-            <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#A6CE3920", color: "#7DA128" }}>
-              <OrcidIcon />
-            </span>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.12em] font-mono text-ink/40">ORCID</div>
-              <div className="text-sm font-medium group-hover:text-[#7DA128] transition-colors">0009-0005-2576-8731</div>
-            </div>
-          </a>
-          <a href={SSRN_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl border border-ink/10 bg-white/50 backdrop-blur-sm hover:border-[#154A7A]/40 transition-colors group">
-            <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#154A7A15", color: "#154A7A" }}>
-              <SsrnIcon />
-            </span>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.12em] font-mono text-ink/40">SSRN</div>
-              <div className="text-sm font-medium group-hover:text-[#154A7A] transition-colors">Author Page</div>
-            </div>
-          </a>
-        </div>
+              {/* Profile links */}
+              <div className="flex flex-col gap-2 mb-8">
+                <a href={ORCID_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-[#A6CE39]/30 hover:bg-white/[0.04] transition-all duration-300 group">
+                  <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#A6CE3920", color: "#7DA128" }}><OrcidLogo /></span>
+                  <span className="text-[0.8rem] font-mono text-[#A39A90] group-hover:text-[#D6D1C9] transition-colors">0009-0005-2576-8731</span>
+                </a>
+                <a href={SSRN_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:border-[#154A7A]/30 hover:bg-white/[0.04] transition-all duration-300 group">
+                  <span className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#154A7A15", color: "#154A7A" }}><SsrnLogo /></span>
+                  <span className="text-[0.8rem] font-mono text-[#A39A90] group-hover:text-[#D6D1C9] transition-colors">SSRN Author</span>
+                </a>
+              </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-12">
-          {[
-            { label: "Papers", value: stats.total },
-            { label: "DOI Indexed", value: stats.withDOI },
-            { label: "Journals", value: stats.journals },
-          ].map((s) => (
-            <div key={s.label} className="rounded-2xl border border-ink/8 bg-white/40 backdrop-blur-sm p-5 text-center">
-              <div className="font-display text-[clamp(2.4rem,4vw,3.2rem)] leading-none text-vermilion">{s.value}</div>
-              <div className="text-[11px] uppercase tracking-[0.14em] font-mono text-ink/40 mt-1.5">{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Papers list */}
-        <div className="space-y-3">
-          {papers.map((p: any, i: number) => {
-            const isOpen = expanded === p.id;
-            return (
-              <motion.article
-                key={p.id}
-                className={`rounded-2xl border bg-white/40 backdrop-blur-sm overflow-hidden transition-all duration-300 ${isOpen ? "border-vermilion/30 shadow-md shadow-vermilion/5" : "border-ink/8 hover:border-ink/15"}`}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05, duration: 0.4 }}
-              >
-                <button
-                  onClick={() => setExpanded(isOpen ? null : p.id)}
-                  className="w-full p-5 sm:p-6 text-left"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <span className="text-[11px] uppercase tracking-[0.12em] font-mono px-3 py-1 rounded-full bg-vermilion/10 border border-vermilion/20 text-vermilion">{p.year}</span>
-                        <span className="text-xs font-mono text-ink/40">{p.journal}</span>
-                        {p.doi && <span className="text-[11px] font-mono text-ink/30">DOI: {p.doi}</span>}
-                        {p.status && <span className={`text-[10px] uppercase tracking-[0.1em] font-mono px-2 py-0.5 rounded-full ${p.status === "Published" ? "bg-[#63c4a8]/10 border border-[#63c4a8]/30 text-[#63c4a8]" : "bg-amber-500/10 border border-amber-500/30 text-amber-500"}`}>{p.status}</span>}
-                      </div>
-                      <h3 className="font-display text-[1.3rem] leading-tight">{p.title}</h3>
-                      <p className="text-sm text-ink/40 mt-1">{p.authors}</p>
-                    </div>
-                    <span className="text-ink/20 text-lg shrink-0 mt-1">{isOpen ? "−" : "+"}</span>
+              {/* Stats */}
+              <div className="space-y-3 mb-8">
+                {[
+                  { label: "Published Research", value: stats.total },
+                  { label: "DOI Indexed", value: stats.withDOI },
+                  { label: "Journal Publications", value: stats.journals },
+                  { label: "Research Domains", value: stats.domains },
+                ].map((s) => (
+                  <div key={s.label} className="flex items-baseline justify-between border-b border-white/[0.04] pb-2.5">
+                    <span className="text-[0.75rem] font-mono tracking-[0.06em] text-[#7E756B]">{s.label}</span>
+                    <span className="font-display text-[1.2rem] text-[#D6D1C9]">{s.value}</span>
                   </div>
-                </button>
+                ))}
+              </div>
 
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-ink/5">
-                        <p className="text-[0.95rem] text-ink/65 leading-relaxed mb-5">{p.abstract}</p>
-                        {p.keywords?.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-5">
-                            {p.keywords.map((k: string) => (
-                              <span key={k} className="px-3 py-1.5 rounded-full text-[11px] font-mono tracking-[0.03em] bg-ink/5 border border-ink/8 text-ink/55">{k}</span>
-                            ))}
-                          </div>
+              {/* Year timeline */}
+              <div className="flex flex-wrap gap-2">
+                {years.map((y) => (
+                  <span key={y} className="px-3 py-1 rounded-full border border-white/[0.06] text-[0.7rem] font-mono tracking-[0.08em] text-[#7E756B]">{y}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — Publications */}
+          <div className="lg:col-span-8">
+            <div className="space-y-4">
+              {papers.map((p: any, i: number) => {
+                const isFeatured = i === 0;
+                return (
+                  <motion.article
+                    key={p.id}
+                    className={`group rounded-2xl border border-white/[0.06] bg-white/[0.015] hover:border-[#D97A32]/20 hover:bg-white/[0.025] hover:-translate-y-1 transition-all duration-400 overflow-hidden
+                      ${isFeatured ? "shadow-lg shadow-black/20" : ""}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05, duration: 0.4 }}
+                  >
+                    <div className={`p-5 sm:p-6 ${isFeatured ? "sm:p-7" : ""}`}>
+                      {isFeatured && (
+                        <span className="inline-block px-2.5 py-1 rounded-full bg-[#D97A32]/10 border border-[#D97A32]/20 text-[0.6rem] font-mono uppercase tracking-[0.1em] text-[#D97A32] mb-3 font-semibold">Featured</span>
+                      )}
+                      
+                      <div className="flex items-center gap-3 mb-3 flex-wrap">
+                        <span className="text-[0.7rem] font-mono tracking-[0.1em] uppercase px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-[#A39A90]">{p.year}</span>
+                        <span className="text-[0.7rem] font-mono tracking-[0.04em] text-[#7E756B]">{p.journal}</span>
+                        {p.doi && (
+                          <span className="inline-flex items-center gap-1 text-[0.65rem] font-mono text-[#7E756B]">
+                            <DoiLogo /> {p.doi.slice(0, 25)}...
+                          </span>
                         )}
-                        <div className="flex gap-2 flex-wrap">
-                          {p.url && (
-                            <a href={p.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono tracking-[0.04em] bg-ink/90 text-bone hover:bg-ink transition-colors">
-                              <DocIcon /> Read Paper
-                            </a>
-                          )}
-                          {p.doi && (
-                            <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-mono tracking-[0.04em] border border-ink/15 text-ink hover:border-ink/40 transition-colors">
-                              DOI
-                            </a>
-                          )}
-                          <CopyCitationBtn paper={p} />
-                        </div>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.article>
-            );
-          })}
-        </div>
 
-        {papers.length === 0 && (
-          <p className="text-center py-16 text-ink/30 text-sm">Research papers coming soon.</p>
-        )}
+                      <h3 className={`font-display italic text-[#F7F4EF] leading-[1.08] mb-2 transition-colors duration-300 group-hover:text-[#D97A32]
+                        ${isFeatured ? "text-[clamp(1.2rem,1.6vw,1.5rem)]" : "text-[1.1rem]"}`}>
+                        {p.title}
+                      </h3>
+
+                      <div className="text-[0.75rem] font-mono text-[#A39A90] mb-3">{p.authors || "Manikanta R"}</div>
+
+                      <p className={`text-[0.88rem] leading-relaxed text-[#A39A90]/80 line-clamp-2 group-hover:line-clamp-none transition-all duration-500`}>
+                        {p.abstract}
+                      </p>
+
+                      {p.keywords?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-4">
+                          {p.keywords.slice(0, 4).map((k: string) => (
+                            <span key={k} className="px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-[0.65rem] font-mono tracking-[0.04em] text-[#7E756B] hover:border-[#D97A32]/25 hover:text-[#D97A32] transition-all duration-200 cursor-pointer">{k}</span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex gap-3 mt-5 pt-3 border-t border-white/[0.04]">
+                        {p.url && (
+                          <motion.a href={p.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[0.7rem] font-mono tracking-[0.04em] text-[#D97A32] hover:underline transition-all duration-200" whileHover={{ x: 2 }}>
+                            <PdfIcon /> Read Paper →
+                          </motion.a>
+                        )}
+                        {p.doi && (
+                          <motion.a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[0.7rem] font-mono tracking-[0.04em] text-[#A39A90] hover:text-[#D6D1C9] hover:underline transition-all duration-200" whileHover={{ x: 2 }}>
+                            <DoiLogo /> DOI →
+                          </motion.a>
+                        )}
+                      </div>
+                    </div>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
