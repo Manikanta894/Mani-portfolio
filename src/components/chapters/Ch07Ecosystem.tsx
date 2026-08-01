@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -14,17 +14,16 @@ const CARDS = [
   { id: "Leadership", label: "Leadership", color: "#E0533D" },
 ];
 
-/* ─── SVG Icons ─── */
-function BarChartIcon() { return (<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="4" y="16" width="5" height="12" rx="1"/><rect x="13" y="8" width="5" height="20" rx="1"/><rect x="22" y="12" width="5" height="16" rx="1"/></svg>); }
-function AIIcon() { return (<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="16" cy="16" r="3"/><path d="M16 4v6M16 22v6M4 16h6M22 16h6"/><circle cx="16" cy="16" r="12" strokeDasharray="3 3"/></svg>); }
-function BizIcon() { return (<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="6" y="20" width="20" height="8" rx="1.5"/><path d="M10 20v-4a6 6 0 0112 0v4"/><circle cx="16" cy="14" r="3"/></svg>); }
-function PeopleIcon() { return (<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="10" r="4"/><circle cx="22" cy="10" r="3"/><path d="M4 26c0-4.4 3.6-8 8-8h0c4.4 0 8 3.6 8 8"/><path d="M18 22c0-2.2 2-4 5-4h1c3 0 5 2 5 5"/></svg>); }
-function ResearchIcon() { return (<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="4" y="6" width="24" height="20" rx="2"/><path d="M12 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M8 16h16M8 11h16"/></svg>); }
-function LeaderIcon() { return (<svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M16 2l3 7 7 1-5 5 2 7-7-4-7 4 2-7-5-5 7-1z" fill="currentColor" opacity="0.15"/><path d="M16 2l3 7 7 1-5 5 2 7-7-4-7 4 2-7-5-5 7-1z"/></svg>); }
+function BarChartIcon() { return (<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="18" width="6" height="13" rx="1.5"/><rect x="15" y="9" width="6" height="22" rx="1.5"/><rect x="25" y="13" width="6" height="18" rx="1.5"/></svg>); }
+function CircuitIcon() { return (<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="18" cy="18" r="3.5"/><path d="M18 4v6M18 26v6M4 18h6M26 18h6"/><circle cx="18" cy="18" r="14" strokeDasharray="2 3" opacity="0.4"/></svg>); }
+function BriefcaseIcon() { return (<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="7" y="22" width="22" height="9" rx="2"/><path d="M12 22v-4a6 6 0 0112 0v4" strokeLinecap="round"/><circle cx="18" cy="16" r="3.5"/></svg>); }
+function UsersIcon() { return (<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="14" cy="12" r="4.5"/><circle cx="25" cy="12" r="3.5"/><path d="M5 29c0-5 4-9 9-9s9 3.6 9 9"/><path d="M20 24c0-2.5 2.5-5 6-5h1c3.5 0 5.5 2.5 5.5 6"/></svg>); }
+function BookIcon() { return (<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="8" width="26" height="22" rx="2.5"/><path d="M13 8V5a2.5 2.5 0 012.5-2.5h5A2.5 2.5 0 0123 5v3"/><path d="M9 18h18M9 13h18" opacity="0.4"/></svg>); }
+function StarIcon() { return (<svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 3l4 9 10 1-7 6 2 10-9-5-9 5 2-10-7-6 10-1z"/></svg>); }
 
 const ICONS: Record<string, React.ReactNode> = {
-  "Analytics": <BarChartIcon />, "Artificial Intelligence": <AIIcon />, "Business": <BizIcon />,
-  "People & HR": <PeopleIcon />, "Research": <ResearchIcon />, "Leadership": <LeaderIcon />,
+  "Analytics": <BarChartIcon />, "Artificial Intelligence": <CircuitIcon />, "Business": <BriefcaseIcon />,
+  "People & HR": <UsersIcon />, "Research": <BookIcon />, "Leadership": <StarIcon />,
 };
 
 export function Ch07Ecosystem() {
@@ -34,7 +33,6 @@ export function Ch07Ecosystem() {
   const researchCount = research?.length || 0;
   const certCount = certifications?.length || 0;
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [hintVisible, setHintVisible] = useState(true);
 
   const byDomain = useMemo(() => {
     const m = new Map<string, Cap[]>();
@@ -50,32 +48,32 @@ export function Ch07Ecosystem() {
   }, [caps]);
 
   return (
-    <section id="ecosystem" className="relative bg-[#0E0E10] text-[#F5F1EB] overflow-hidden" style={{ minHeight: "65vh" }}>
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-18">
+    <section id="ecosystem" className="relative bg-[#0C0B0A] text-[#F5F4F0] overflow-hidden" style={{ minHeight: "65vh" }}>
+      {/* Ambient glow behind active card */}
+      {expanded && (
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,_rgba(217,122,50,0.04)_0%,_transparent_70%)]" />
+      )}
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-14 sm:py-16">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <div className="flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-white/35 mb-2">
-              <span className="text-[#D9782E] font-bold">05</span>
+            <div className="flex items-center gap-2 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[#A39A90] mb-2">
+              <span className="text-[#D97A32] font-bold">05</span>
               Core Expertise
             </div>
-            <h2 className="font-display italic text-[clamp(2rem,4vw,3.2rem)] leading-[0.94] tracking-[-0.02em]">Capabilities</h2>
+            <h2 className="font-display italic text-[clamp(2.2rem,4.5vw,3.4rem)] leading-[0.92] tracking-[-0.02em] text-[#F7F4EF]">Capabilities</h2>
           </div>
-          <div className="hidden sm:flex items-center gap-5 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-white/25">
-            <span>{caps.length} skills</span><span>{projCount} projects</span><span>{researchCount} papers</span><span>{certCount} certs</span>
+          <div className="hidden sm:flex items-center gap-4 font-mono text-[0.75rem] tracking-[0.06em] text-[#A39A90]">
+            <span className="text-[#D6D1C9] font-medium">{caps.length}</span> Skills
+            <span className="text-[#7E756B]">·</span>
+            <span className="text-[#D6D1C9] font-medium">{projCount}</span> Projects
+            <span className="text-[#7E756B]">·</span>
+            <span className="text-[#D6D1C9] font-medium">{researchCount}</span> Papers
+            <span className="text-[#7E756B]">·</span>
+            <span className="text-[#D6D1C9] font-medium">{certCount}</span> Certs
           </div>
         </div>
 
-        {/* Interaction hint */}
-        <AnimatePresence>
-          {hintVisible && (
-            <motion.div className="text-center mb-4" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-              <span className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-white/15">Choose one to explore</span>
-              <motion.span className="block text-white/10 mt-0.5" animate={{ y: [0, 4, 0] }} transition={{ duration: 1.8, repeat: Infinity }}>↓</motion.span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* 3×2 Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {CARDS.map((card, i) => {
             const items = byDomain.get(card.id) || [];
@@ -89,82 +87,75 @@ export function Ch07Ecosystem() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.06, duration: 0.4 }}
-                className={isOpen ? "sm:col-span-2 sm:row-span-2 z-10" : ""}
+                transition={{ delay: i * 0.06, duration: 0.45 }}
+                className={isOpen ? "lg:col-span-2 lg:row-span-2 z-10" : ""}
               >
                 <motion.button
-                  onClick={() => {
-                    setExpanded(isOpen ? null : card.id);
-                    if (hintVisible) setHintVisible(false);
-                  }}
+                  onClick={() => setExpanded(isOpen ? null : card.id)}
                   layout="position"
-                  className={`w-full rounded-2xl border p-5 sm:p-6 text-left transition-all duration-500 group cursor-pointer
+                  className={`w-full rounded-[20px] border p-5 sm:p-6 text-left transition-all duration-400 group cursor-pointer
                     ${isOpen
-                      ? "border-[#D9782E]/40 bg-gradient-to-br from-[#D9782E]/8 to-transparent shadow-xl shadow-[#D9782E]/8"
-                      : "border-white/6 bg-white/[0.02] hover:border-[#D9782E]/20 hover:bg-white/[0.04] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"}`}
+                      ? "border-[#D97A32]/35 bg-gradient-to-br from-[#D97A32]/6 via-transparent to-transparent shadow-xl shadow-[#D97A32]/6"
+                      : "border-white/[0.06] bg-white/[0.015] hover:border-[#D97A32]/20 hover:bg-white/[0.03] hover:-translate-y-2 hover:shadow-xl hover:shadow-black/25"}`}
                   whileHover={!isOpen ? { scale: 1.02 } : {}}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {/* Header */}
+                  {/* Row 1: Icon + Title + Action */}
                   <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-300"
-                        style={{ background: `${card.color}15`, color: isOpen ? card.color : `${card.color}90` }}>
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-11 h-11 rounded-[14px] flex items-center justify-center transition-all duration-400 group-hover:scale-105"
+                        style={{ background: `${card.color}12`, color: isOpen ? card.color : `${card.color}85` }}>
                         {ICONS[card.id]}
                       </div>
                       <div>
-                        <h3 className="font-display text-[1.25rem] leading-tight group-hover:text-[#D9782E] transition-colors duration-300">{card.label}</h3>
-                        <div className="text-[0.7rem] font-mono tracking-[0.08em] text-white/25 mt-0.5">{items.length} skills</div>
+                        <h3 className="font-display text-[1.4rem] leading-tight text-[#F7F4EF] font-medium tracking-[-0.01em] group-hover:text-[#D97A32] transition-colors duration-300">{card.label}</h3>
+                        <div className="text-[0.8rem] font-mono tracking-[0.04em] text-[#A39A90] mt-0.5">{items.length} skills</div>
                       </div>
                     </div>
-                    <span className={`text-[0.7rem] font-mono tracking-[0.06em] transition-all duration-300 shrink-0
-                      ${isOpen ? "text-[#D9782E]" : "text-white/10 group-hover:text-[#D9782E]/50"}`}>
-                      {isOpen ? "Active" : <span>Explore <span className="inline-block group-hover:translate-x-0.5 transition-transform">→</span></span>}
+                    <span className={`text-[0.75rem] font-mono tracking-[0.06em] transition-all duration-300 shrink-0 mt-1
+                      ${isOpen ? "text-[#D97A32] flex items-center gap-1.5" : "text-white/[0.12] group-hover:text-[#D97A32]/50"}`}>
+                      {isOpen ? (
+                        <><span className="w-1.5 h-1.5 rounded-full bg-[#D97A32] animate-pulse" /> Selected</>
+                      ) : (
+                        <>Explore <span className="inline-block group-hover:translate-x-1 transition-transform duration-300">→</span></>
+                      )}
                     </span>
                   </div>
 
-                  {/* Quick skills preview */}
+                  {/* Quick preview */}
                   {!isOpen && (
                     <div className="flex flex-wrap gap-1.5 mt-4">
                       {top4.map((t) => (
-                        <span key={t} className="px-2.5 py-1 rounded-full bg-white/5 border border-white/6 text-[11px] font-mono text-white/40 truncate max-w-[140px]">{t}</span>
+                        <span key={t} className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-[12px] font-mono text-[#D6D1C9]/70 hover:border-[#D97A32]/30 hover:text-[#D97A32] transition-all duration-200 cursor-pointer truncate max-w-[150px]">{t}</span>
                       ))}
                     </div>
                   )}
 
-                  {/* Expanded content */}
+                  {/* Expanded detail */}
                   <AnimatePresence>
                     {isOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.35, ease: [0.22, 0.8, 0.22, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="mt-5 pt-4 border-t border-white/6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Core Technologies */}
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.35, ease: [0.22, 0.8, 0.22, 1] }} className="overflow-hidden">
+                        <div className="mt-6 pt-5 border-t border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-6">
                           <div>
-                            <div className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-white/25 font-semibold mb-2">Core Technologies</div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {items.slice(0, 6).map((c) => (
-                                <span key={c.id} className="px-2.5 py-1.5 rounded-full bg-white/5 border border-white/8 text-[12px] font-mono text-white/65">{c.name}</span>
+                            <div className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[#D97A32] font-semibold mb-2.5">Core Technologies</div>
+                            <div className="flex flex-wrap gap-2">
+                              {items.slice(0, 8).map((c) => (
+                                <span key={c.id} className="px-3 py-2 rounded-full bg-white/[0.04] border border-white/[0.07] text-[13px] font-mono text-[#D6D1C9] hover:border-[#D97A32]/30 hover:text-[#D97A32] transition-all duration-200 cursor-pointer">{c.name}</span>
                               ))}
                             </div>
                           </div>
-                          {/* Projects & Links */}
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             <div>
-                              <div className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-white/25 font-semibold mb-1">Projects</div>
-                              <div className="text-[13px] text-white/45">{projCount} projects across all domains</div>
+                              <div className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[#7E756B] font-semibold mb-1">Projects</div>
+                              <div className="text-[15px] text-[#D6D1C9]">{projCount} projects across all domains</div>
                             </div>
                             <div>
-                              <div className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-white/25 font-semibold mb-1">Research</div>
-                              <div className="text-[13px] text-white/45">{researchCount} published papers</div>
+                              <div className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[#7E756B] font-semibold mb-1">Research</div>
+                              <div className="text-[15px] text-[#D6D1C9]">{researchCount} published papers</div>
                             </div>
                             <div>
-                              <div className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-white/25 font-semibold mb-1">Certifications</div>
-                              <div className="text-[13px] text-white/45">{certCount} verified credentials</div>
+                              <div className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[#7E756B] font-semibold mb-1">Certifications</div>
+                              <div className="text-[15px] text-[#D6D1C9]">{certCount} verified credentials</div>
                             </div>
                           </div>
                         </div>
