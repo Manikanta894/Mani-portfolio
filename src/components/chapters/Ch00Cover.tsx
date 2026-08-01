@@ -631,17 +631,24 @@ const css = `
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 14px 20px;
+  gap: 5px;
+  padding: 18px 24px;
   min-width: 140px;
   flex: 1;
-  border-radius: 10px;
+  border-radius: 14px;
   background: color-mix(in oklab, var(--hero-paper) 75%, transparent);
-  border: 1px solid color-mix(in oklab, var(--hero-ink) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--hero-ink) 6%, transparent);
   backdrop-filter: blur(8px);
   opacity: 0;
   transform: translateY(6px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   animation: hero-metric-in 0.6s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.hero-metric:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.1);
+  border-color: color-mix(in oklab, var(--hero-accent) 25%, transparent);
+}
 }
 .hero-metric:nth-child(1) { animation-delay: 1.0s; }
 .hero-metric:nth-child(2) { animation-delay: 1.1s; }
@@ -681,16 +688,17 @@ const css = `
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  font-weight: 500;
   text-transform: uppercase;
-  color: var(--hero-mute);
+  color: color-mix(in oklab, var(--hero-ink) 55%, transparent);
   margin-bottom: 22px;
 }
 .hero-eyebrow-dot {
-  width: 6px; height: 6px; border-radius: 50%;
+  width: 7px; height: 7px; border-radius: 50%;
   background: var(--hero-accent);
-  box-shadow: 0 0 0 4px rgba(107,102,96,0.15);
+  box-shadow: 0 0 0 4px rgba(212,106,46,0.12);
 }
 .hero-eyebrow-sep { width: 22px; height: 1px; background: var(--hero-rule); }
 
@@ -713,30 +721,29 @@ const css = `
 .hero-welcome {
   margin: 28px 0 0;
   font-family: var(--font-display);
-  font-style: italic;
   font-weight: 400;
   font-size: clamp(22px, 2.1vw, 32px);
-  line-height: 1.2;
+  line-height: 1.3;
   letter-spacing: -0.005em;
   color: var(--hero-ink);
   max-width: 38ch;
+  overflow: hidden;
 }
+.hero-welcome-text { transition: opacity 0.35s ease, filter 0.35s ease; }
 .hero-welcome em { color: var(--hero-ink); font-style: italic; }
 
 /* Role carousel */
 .hero-role-row {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   gap: 4px;
   font-family: var(--font-mono);
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-  letter-spacing: 0.06em;
-  color: var(--hero-mute);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  letter-spacing: 0.04em;
+  color: color-mix(in oklab, var(--hero-ink) 55%, transparent);
 }
-.hero-role-label {
-  color: var(--hero-mute);
-}
+.hero-role-label { color: color-mix(in oklab, var(--hero-ink) 55%, transparent); }
 .hero-role {
   color: var(--hero-accent);
   font-weight: 500;
@@ -759,12 +766,12 @@ const css = `
 
 .hero-skills-line {
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
+  font-size: 12px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--hero-mute) 80%, transparent);
-  line-height: 1.8;
-  margin-top: 20px;
+  color: color-mix(in oklab, var(--hero-ink) 55%, transparent);
+  line-height: 1.9;
+  margin-top: 22px;
 }
 .hero-skills { display: flex; flex-wrap: wrap; gap: 10px 12px; margin: 22px 0 0; padding: 0; list-style: none; }
 .hero-skills li {
