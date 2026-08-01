@@ -1,128 +1,164 @@
 "use client";
-import { useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, useInView } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import { MaskReveal, Reveal } from "@/components/motion/primitives";
 
-function normalizeExperience(raw: any) {
+function normalize(raw: any) {
   return {
     ...raw,
-    span: raw.span || (raw.start_date ? `${raw.start_date} — ${raw.current ? "Present" : (raw.end_date || "")}` : raw.duration),
+    span: raw.span || (raw.start_date ? `${raw.start_date} — ${raw.current ? "Present" : raw.end_date || ""}` : raw.duration),
     city: raw.city || raw.location,
     context: raw.context || raw.description,
-    achievements: (raw.achievements && raw.achievements.length) ? raw.achievements : (Array.isArray(raw.highlights) ? raw.highlights : []),
+    achievements: (raw.achievements?.length ? raw.achievements : (Array.isArray(raw.highlights) ? raw.highlights : [])),
     lesson: raw.lesson || null,
   };
 }
 
-function EvolutionStep({ scrollYProgress, i, total, label }: { scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"]; i: number; total: number; label: string }) {
-  const a = i / Math.max(1, total - 1);
-  const o = useTransform(scrollYProgress, [a - 0.06, a + 0.02], [0.6, 1]);
-  const x = useTransform(scrollYProgress, [a - 0.06, a + 0.02], [4, 0]);
-  return (
-    <motion.li style={{ opacity: o, x }} className="flex items-baseline gap-3">
-      <span className="font-mono text-[0.75rem] font-semibold tabular-nums text-vermilion w-5 shrink-0 text-right">{String(i + 1).padStart(2, "0")}</span>
-      <span className="text-[0.95rem] leading-snug text-white/80">{label}</span>
-    </motion.li>
-  );
+function AnimatedNumber({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const num = parseInt(value) || 0;
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const duration = 1200;
+    const step = () => {
+      start += 16;
+      const p = Math.min(start / duration, 1);
+      setDisplay(Math.round(num * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, num]);
+  return <span ref={ref}>{display}</span>;
 }
 
-function EvolutionRail({ evolution }: { evolution: string[] }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 15%"] });
-  const fillH = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+function MetricCard({ label, value, suffix }: { label: string; value: string; suffix?: string }) {
   return (
-    <div ref={ref} className="relative">
-      <div className="font-mono mb-6 text-[0.8rem] uppercase tracking-[0.14em] text-white/65 font-semibold">Career Evolution</div>
-      <div className="relative pl-7">
-        <div className="absolute left-[9px] top-1.5 bottom-1.5 w-px bg-white/12 rounded-full" />
-        <motion.div style={{ height: fillH }} className="absolute left-[9px] top-1.5 w-px rounded-full bg-vermilion" />
-        <ul className="flex flex-col gap-4">
-          {evolution.map((step, i) => (<EvolutionStep key={step} scrollYProgress={scrollYProgress} i={i} total={evolution.length} label={step} />))}
-        </ul>
+    <motion.div className="rounded-xl border border-white/10 bg-white/[0.02] p-5 text-center backdrop-blur-sm hover:border-white/20 hover:-translate-y-0.5 transition-all duration-300"
+      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+      <div className="font-display text-[clamp(1.8rem,2.4vw,2.2rem)] leading-none text-vermilion">
+        <AnimatedNumber value={value} />{suffix}
       </div>
-    </div>
+      <div className="text-[10px] uppercase tracking-[0.12em] font-mono text-white/45 mt-1.5">{label}</div>
+    </motion.div>
   );
 }
 
-function RoleSpread({ r, index, view }: { r: any; index: number; view: "timeline" | "impact" }) {
+function ChapterCard({ r, index }: { r: any; index: number }) {
   const num = String(index + 1).padStart(2, "0");
-  const achievements = view === "impact" && r.achievements ? [...r.achievements].sort((a: string, b: string) => b.length - a.length) : (r.achievements || []);
+  const chapterNames = ["The Foundation", "Leading Operations"];
+  const chapterName = chapterNames[index] || `Chapter ${num}`;
 
   return (
-    <article className="relative group">
-      <span aria-hidden className="absolute -left-3 -top-6 text-[clamp(6rem,10vw,10rem)] leading-none text-white/[0.03] select-none pointer-events-none font-display"> {num} </span>
+    <motion.article className="relative group"
+      initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.6, ease: [0.22, 0.8, 0.22, 1] }}>
+      
+      {/* Watermark number */}
+      <span className="absolute -left-2 -top-4 text-[clamp(6rem,10vw,10rem)] leading-none text-white/[0.025] select-none pointer-events-none font-display transition-all duration-700 group-hover:text-white/[0.04]">{num}</span>
 
-      <div className="relative border-t border-white/12 pt-12 group-hover:border-white/20 transition-colors">
+      <div className="relative border-t border-white/10 pt-12 group-hover:border-white/18 transition-all duration-500">
+        {/* Chapter header */}
         <div className="flex items-center gap-4 mb-8">
-          <span className="font-mono text-[0.85rem] uppercase tracking-[0.1em] text-vermilion font-semibold">Chapter {num}</span>
-          <span className="h-px flex-1 bg-white/12" />
-          <span className="font-mono text-[0.85rem] tracking-[0.1em] text-white/55 uppercase font-medium">{r.span}</span>
+          <div>
+            <span className="font-mono text-[0.8rem] uppercase tracking-[0.14em] text-vermilion font-semibold">{chapterName}</span>
+            <div className="text-[0.65rem] font-mono tracking-[0.1em] text-white/35 mt-0.5 uppercase">Chapter {num}</div>
+          </div>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="font-mono text-[0.85rem] tracking-[0.08em] text-white/50 font-medium tabular-nums">{r.span}</span>
         </div>
 
         <div className="grid grid-cols-12 gap-x-8 gap-y-8">
-          <header className="col-span-12 md:col-span-5">
-            <div className="font-mono text-[0.85rem] uppercase tracking-[0.1em] text-white/55 mb-4 font-medium">{r.company}{r.city ? ` · ${r.city}` : ""}</div>
-            <h3 className="font-display text-[clamp(2.6rem,4.5vw,4.2rem)] leading-[1.04] text-white font-normal"><MaskReveal>{r.role}</MaskReveal></h3>
-            <p className="mt-6 text-[1.1rem] leading-relaxed text-white/80 max-w-[52ch]">{r.context}</p>
-          </header>
+          {/* Left: Role + context */}
+          <div className="col-span-12 md:col-span-5">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="font-mono text-[0.8rem] uppercase tracking-[0.1em] text-white/50 font-medium">{r.company}</span>
+              {r.city && <><span className="text-white/20">·</span><span className="font-mono text-[0.75rem] text-white/40">{r.city}</span></>}
+            </div>
+            <h3 className="font-display text-[clamp(2.4rem,4vw,3.8rem)] leading-[1.04] text-white font-normal group-hover:text-vermilion transition-colors duration-500">
+              <MaskReveal>{r.role}</MaskReveal>
+            </h3>
+            <p className="mt-5 text-[1.05rem] leading-relaxed text-white/75 max-w-[48ch]">{r.context}</p>
+          </div>
 
-          <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-white/12">
-            <div className="font-mono mb-5 text-[0.85rem] uppercase tracking-[0.14em] text-vermilion font-semibold">Impact &amp; contributions</div>
-            <ul className="space-y-4 text-[1.1rem] leading-relaxed text-white/85">
-              {achievements.map((a: string, j: number) => (
-                <li key={j} className="flex gap-3"><span className="text-vermilion shrink-0 mt-[0.15em] font-mono text-sm">+</span><span>{a}</span></li>
-              ))}
-            </ul>
+          {/* Right: Impact */}
+          <div className="col-span-12 md:col-span-7 md:pl-8 md:border-l md:border-white/8">
+            {r.achievements.length > 0 && (
+              <>
+                <div className="font-mono mb-5 text-[0.8rem] uppercase tracking-[0.16em] text-vermilion font-semibold">What I built here</div>
+                <ul className="space-y-3.5">
+                  {r.achievements.map((a: string, j: number) => (
+                    <motion.li key={j} className="flex gap-3 text-[1.05rem] leading-relaxed text-white/80"
+                      initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + j * 0.08 }}>
+                      <span className="text-vermilion shrink-0 mt-[0.15em] text-sm">+</span>
+                      <span>{a}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </>
+            )}
 
             {r.lesson && (
-              <div className="mt-8 rounded-lg border border-white/12 bg-white/5 px-6 py-5">
-                <div className="font-mono text-[0.8rem] uppercase tracking-[0.12em] text-vermilion/90 font-semibold mb-2">What I learned</div>
-                <p className="text-[1rem] italic leading-relaxed text-white/80">{"\u201C"}{r.lesson}{"\u201D"}</p>
+              <div className="mt-8 rounded-xl border border-white/8 bg-white/[0.03] px-6 py-5">
+                <div className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-vermilion/80 font-semibold mb-2">Lesson learned</div>
+                <p className="text-[0.95rem] italic leading-relaxed text-white/75">{"\u201C"}{r.lesson}{"\u201D"}</p>
               </div>
             )}
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
 export function Ch03Experience() {
-  const { experience } = usePortfolio();
-  const roles = (experience?.length ? experience : []).map(normalizeExperience);
-  const [view, setView] = useState<"timeline" | "impact">("timeline");
-  const evolution = ["Operations", "Customer Experience", "Leadership", "Business Thinking", "Analytics", "Research", "AI & Business Strategy"];
+  const { experience, profile } = usePortfolio();
+  const roles = (experience?.length ? experience : []).map(normalize);
 
   return (
-    <section id="experience" className="relative chapter-pad bg-[#14110F] text-[#F5F1EB]" style={{ background: "#14110F" }}>
+    <section id="experience" className="relative chapter-pad bg-[#14110F] text-[#F5F1EB]">
       <div className="mx-auto max-w-7xl">
+        {/* Header */}
         <header className="mb-20 grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-5">
-            <div className="font-mono text-[0.85rem] uppercase tracking-[0.14em] text-white/55 font-medium mb-5">/03 — From the retail floor to research</div>
+            <div className="font-mono text-[0.8rem] uppercase tracking-[0.16em] text-white/50 font-medium mb-5">/03 — From the retail floor to research</div>
             <h2 className="font-display text-[clamp(3rem,6.5vw,5.8rem)] leading-[0.94] text-white font-normal"><MaskReveal>The Journey That Built Me</MaskReveal></h2>
-            <div className="mt-4 flex gap-2">
-              {(["timeline", "impact"] as const).map((v) => (
-                <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.08em] font-mono border font-semibold transition-colors ${view === v ? "border-vermilion bg-vermilion/15 text-vermilion" : "border-white/25 text-white/55 hover:border-white/45"}`}>{v}</button>
-              ))}
-            </div>
           </div>
           <div className="col-span-12 md:col-span-7 md:pt-2">
             <Reveal>
-              <p className="text-[clamp(1.1rem,1.6vw,1.4rem)] italic leading-relaxed text-white/80 max-w-[52ch]">Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.</p>
+              <p className="text-[clamp(1.05rem,1.5vw,1.3rem)] italic leading-relaxed text-white/75 max-w-[52ch]">
+                Everything I know about analytics started long before dashboards. It started on the retail floor — where every customer interaction became a lesson in human behavior, every stockout a lesson in systems, and every shift a quiet seminar in business.
+              </p>
             </Reveal>
           </div>
         </header>
 
-        <div className="grid grid-cols-12 gap-x-10 gap-y-12">
-          <aside className="col-span-12 md:col-span-3"><div className="md:sticky md:top-28"><EvolutionRail evolution={evolution} /></div></aside>
-          <div className="col-span-12 md:col-span-9"><div className="space-y-16">{roles.map((r: any, i: number) => (<RoleSpread key={r.company || i} r={r} index={i} view={view} />))}</div></div>
+        {/* Career metrics */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-20">
+          <MetricCard label="Years Experience" value="3" suffix="+" />
+          <MetricCard label="Roles Held" value="2" />
+          <MetricCard label="Research Papers" value="6" />
+          <MetricCard label="Certifications" value="12" />
         </div>
 
-        <div className="mt-28 border-t border-white/12 pt-14">
+        {/* Chapters */}
+        <div className="space-y-20">
+          {roles.map((r: any, i: number) => (<ChapterCard key={r.company || i} r={r} index={i} />))}
+        </div>
+
+        {/* Ending transition */}
+        <div className="mt-32 border-t border-white/10 pt-16 text-center">
           <Reveal>
-            <p className="font-display text-balance text-[clamp(1.4rem,2.4vw,2.2rem)] italic leading-snug text-white/85 max-w-[48ch]">{"\u201C"}The questions I asked on the retail floor eventually became research questions. That is how this chapter ends — and how the next one begins.{"\u201D"}</p>
-            <a href="#research" className="font-mono mt-8 inline-flex items-center gap-2 border-b border-white/30 pb-1 text-[0.85rem] uppercase tracking-[0.12em] text-white/70 hover:text-vermilion hover:border-vermilion font-medium transition-colors duration-300">Continue to research <span className="text-vermilion">↓</span></a>
+            <p className="font-display text-balance text-[clamp(1.3rem,2vw,1.8rem)] italic leading-snug text-white/80 max-w-[48ch] mx-auto">
+              Every experience shaped the way I solve problems today.
+            </p>
+            <motion.a href="#work" className="font-mono mt-8 inline-flex items-center gap-2 border-b border-white/25 pb-1 text-[0.85rem] uppercase tracking-[0.12em] text-white/65 hover:text-vermilion hover:border-vermilion font-medium transition-colors duration-300"
+              whileHover={{ x: 4 }}>
+              Continue to Projects
+              <span className="text-vermilion">→</span>
+            </motion.a>
           </Reveal>
         </div>
       </div>
