@@ -36,7 +36,7 @@ export function Ch06Work() {
               <span className="w-4 h-px bg-[#8A8578]/25" />
               Selected Works — Refined
             </div>
-            <h2 className="font-display italic text-[clamp(2.8rem,6vw,5rem)] leading-[0.94] tracking-[-0.02em]" style={{ color: "#D9782E" }}>Ideas Into Impact — V2</h2>
+            <h2 className="font-display italic text-[clamp(2.8rem,6vw,5rem)] leading-[0.94] tracking-[-0.02em]">Ideas Into Impact</h2>
           </div>
           <p className="lg:max-w-[32ch] text-[0.95rem] leading-relaxed text-[#8A8578] lg:text-right lg:pb-1">
             Every project represents real-world business problems solved through analytics, strategy and research.
