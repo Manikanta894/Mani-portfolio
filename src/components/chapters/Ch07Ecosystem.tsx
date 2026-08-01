@@ -69,6 +69,11 @@ export function Ch07Ecosystem() {
           </div>
         </div>
 
+        {/* Helper text */}
+        <div className="text-center mb-5">
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-white/20">Click any capability to explore</span>
+        </div>
+
         {/* Cards grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {CARDS.map((card, i) => {
@@ -80,13 +85,15 @@ export function Ch07Ecosystem() {
               <motion.div key={card.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06, duration: 0.4 }}>
                 <motion.button
                   onClick={() => setExpanded(isOpen ? null : card.id)}
-                  className={`w-full rounded-2xl border p-4 sm:p-5 text-left transition-all duration-300
-                    ${isOpen ? "border-[#D9782E]/40 bg-[#D9782E]/5 shadow-lg shadow-[#D9782E]/5" : "border-white/8 bg-white/[0.02] hover:border-white/15 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/10"}`}
-                  whileHover={{ scale: 1.02 }}
+                  className={`w-full rounded-2xl border p-4 sm:p-5 text-left transition-all duration-300 group
+                    ${isOpen
+                      ? "border-[#D9782E]/50 bg-[#D9782E]/8 shadow-lg shadow-[#D9782E]/10"
+                      : "border-white/8 bg-white/[0.02] hover:border-[#D9782E]/25 hover:bg-[#D9782E]/4 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#D9782E]/5"}`}
+                  whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <div className="text-2xl sm:text-3xl mb-3">{card.icon}</div>
-                  <h3 className="font-display text-[1.05rem] sm:text-[1.15rem] leading-tight mb-1">{card.label}</h3>
+                  <div className="text-2xl sm:text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">{card.icon}</div>
+                  <h3 className="font-display text-[1.05rem] sm:text-[1.15rem] leading-tight mb-1 group-hover:text-[#D9782E] transition-colors duration-300">{card.label}</h3>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {top3.map((t) => (
                       <span key={t} className="inline-flex items-center gap-1 text-[10px] font-mono text-white/40 truncate max-w-full">
@@ -97,7 +104,13 @@ export function Ch07Ecosystem() {
                   </div>
                   <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between">
                     <span className="text-[10px] font-mono tracking-[0.08em] uppercase text-white/25">{items.length} skills</span>
-                    <span className="text-[10px] text-white/20">{isOpen ? "−" : "+"}</span>
+                    {isOpen ? (
+                      <span className="text-[10px] font-mono tracking-[0.06em] text-[#D9782E]">✓ Active</span>
+                    ) : (
+                      <span className="text-[10px] font-mono tracking-[0.06em] text-white/15 group-hover:text-[#D9782E]/60 transition-colors duration-300">
+                        Explore <span className="inline-block group-hover:translate-x-0.5 transition-transform duration-300">→</span>
+                      </span>
+                    )}
                   </div>
                 </motion.button>
               </motion.div>
