@@ -172,8 +172,7 @@ export default function Ch09LinkedIn() {
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-display italic text-[clamp(1.1rem,1.5vw,1.3rem)] text-[#111] mb-1">Every great collaboration starts with curiosity.</p>
           <p className="text-[0.75rem] font-mono text-black/30 mb-4 leading-relaxed">
-            &copy; 2026 Manikanta R. &mdash; Designed &amp; Built with intention.<br />
-            React &bull; TypeScript &bull; Framer Motion &bull; GSAP &bull; Supabase &bull; Vercel
+            &copy; 2026 Manikanta R. &mdash; Designed &amp; Built with intention.
           </p>
           <p className="font-display italic text-[0.9rem] text-[#D96D22]/50">Curiosity never graduates.</p>
         </div>
