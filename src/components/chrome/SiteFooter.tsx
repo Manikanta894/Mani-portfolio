@@ -1,418 +1,119 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, ArrowUp, Linkedin, Github, Instagram, Facebook } from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
-
-const ICON_MAP: Record<string, React.ComponentType<any>> = {
-  Linkedin, Github, Instagram, Facebook,
-};
+import portrait from "@/assets/portrait.jpg";
 
 function FooterClock() {
   const [time, setTime] = useState("");
   useEffect(() => {
-    const tick = () => {
-      setTime(new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" }));
-    };
-    tick();
-    const i = setInterval(tick, 1000);
-    return () => clearInterval(i);
+    const tick = () => { setTime(new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" })); };
+    tick(); const i = setInterval(tick, 1000); return () => clearInterval(i);
   }, []);
   return <span className="tabular-nums">{time || "—"} IST</span>;
 }
 
 export function SiteFooter() {
-  const { profile, socialLinks } = usePortfolio();
-
-  const blurb = profile?.blurb || "Building the future of work — one model, one paper, one decision at a time.";
+  const { profile } = usePortfolio();
   const name = profile?.name || "Manikanta R";
-  const role = profile?.role || "MBA — HR & Business Analytics";
   const location = profile?.location || "Bengaluru, India";
-  const status = profile?.availability_status || "Available for opportunities";
-  const tagline = profile?.tagline || "Building the future of work";
-  const copyright = profile?.copyright || "© 2026 Manikanta R";
 
-  const socialIcons = (socialLinks || []).filter((s: any) => s.category === "social" && s.visible !== false);
-  const quickLinks = (socialLinks || []).filter((s: any) => s.category === "quick" && s.visible !== false);
-  const professionalLinks = (socialLinks || []).filter((s: any) => s.category === "professional" && s.visible !== false);
-
-  const rootRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); io.disconnect(); } },
-      { threshold: 0.1 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  const onTop = () => {
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-  };
+  const navLinks = ["Journey", "Education", "Experience", "Projects", "Research", "Credentials", "Manifesto", "Connect"];
+  const profiles = [
+    { label: "LinkedIn", href: "https://linkedin.com/in/manikanta894" },
+    { label: "GitHub", href: "https://github.com/manikantar" },
+    { label: "ORCID", href: "https://orcid.org/0009-0005-2576-8731" },
+    { label: "SSRN", href: "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252" },
+    { label: "Email", href: "mailto:hello@manikantar.in" },
+    { label: "Resume", href: "https://manikantar.in/resume.pdf" },
+  ];
 
   return (
-    <footer ref={rootRef} className={`mr-footer ${visible ? "is-in" : ""}`}>
-      <div className="mr-footer-canvas" aria-hidden />
-      <div className="mr-footer__inner">
-        <p className="mr-footer__closing">{blurb}</p>
-
-        <div className="mr-footer__grid">
-          <section className="mr-footer__card mr-footer__identity">
-            <div className="mr-footer__card-glow" aria-hidden />
-            <div className="mr-footer__card-body">
-              <div className="mr-footer__name">{name}</div>
-              <div className="mr-footer__line">{role}</div>
-              <div className="mr-footer__line">{location}</div>
-              {socialIcons.length > 0 && (
-                <div className="mr-footer__social" aria-label="Social media">
-                  {socialIcons.map((s: any) => {
-                    const Icon = ICON_MAP[s.icon_name];
-                    if (!Icon) return null;
-                    return (
-                      <a key={s.id || s.platform} href={s.url} aria-label={s.label}
-                        className="mr-footer__social-icon"
-                        {...(s.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
-                        <Icon aria-hidden className="mr-footer__social-svg" />
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </section>
-
-          {quickLinks.length > 0 && (
-            <nav className="mr-footer__card mr-footer__col" aria-label="Quick links">
-              <div className="mr-footer__card-body">
-                <div className="mr-footer__kicker">Quick links</div>
-                <ul className="mr-footer__list">
-                  {quickLinks.map((l: any) => (
-                    <li key={l.id || l.platform}>
-                      <a href={l.url} className="mr-footer__link">{l.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </nav>
-          )}
-
-          {professionalLinks.length > 0 && (
-            <nav className="mr-footer__card mr-footer__col" aria-label="Professional links">
-              <div className="mr-footer__card-body">
-                <div className="mr-footer__kicker">Elsewhere</div>
-                <ul className="mr-footer__list">
-                  {professionalLinks.map((l: any) => (
-                    <li key={l.id || l.platform}>
-                      <a href={l.url} className="mr-footer__link mr-footer__link--ext"
-                        target="_blank" rel="noopener noreferrer">
-                        <span>{l.label}</span>
-                        <ArrowUpRight aria-hidden className="mr-footer__ext-icon" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </nav>
-          )}
-        </div>
-
-        <div className="mr-footer__bottom">
-          <div className="mr-footer__copy">{copyright} · <FooterClock /> · replies within 24h</div>
-          <div className="mr-footer__craft">{tagline}</div>
-          <button type="button" onClick={onTop} className="mr-footer__top">
-            <ArrowUp aria-hidden className="mr-footer__top-icon" />
-            <span>Back to top</span>
-          </button>
-        </div>
+    <footer className="relative bg-[#F7F4EC] text-[#1E1E1E] overflow-hidden border-t border-[#1E1E1E]/6">
+      {/* MR Watermark */}
+      <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center">
+        <span className="font-display italic text-[clamp(300px,45vw,600px)] leading-none text-[#1E1E1E]/[0.02]">MR</span>
       </div>
 
-      <style>{css}</style>
+      {/* Radial light */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_50%_30%,_rgba(217,120,46,0.03)_0%,_transparent_70%)]" />
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 sm:px-8">
+        {/* TOP — Closing Statement */}
+        <motion.div className="py-16 sm:py-20 text-center"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+          <h2 className="font-display italic leading-[0.94] tracking-[-0.02em] mb-4" style={{ fontSize: "clamp(2.8rem,6vw,5rem)" }}>
+            Every project begins with <span className="text-[#D9782E]">curiosity</span><br />and ends with measurable impact.
+          </h2>
+          <p className="text-[clamp(1rem,1.4vw,1.3rem)] text-[#8A8578] max-w-[48ch] mx-auto leading-relaxed">
+            Thank you for exploring my work. Whether you&apos;re hiring, collaborating, publishing research or simply exchanging ideas — I&apos;d love to hear from you.
+          </p>
+        </motion.div>
+
+        {/* MIDDLE — Three Column Editorial */}
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 py-10 border-t border-[#1E1E1E]/6"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15, duration: 0.5 }}>
+
+          {/* Column 1 — Profile */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-[#F0EAD9]">
+                <img src={portrait} alt={name} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <div className="font-display text-[1.1rem] leading-tight">{name}</div>
+                <div className="text-[0.75rem] text-[#8A8578]">MBA · HR &amp; Business Analytics</div>
+              </div>
+            </div>
+            <div className="text-[0.8rem] text-[#8A8578] space-y-1">
+              <div>📍 {location}</div>
+              <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Available</div>
+              <div>⏱ Response &lt; 24h</div>
+            </div>
+          </div>
+
+          {/* Column 2 — Navigation */}
+          <div>
+            <div className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-[#1E1E1E]/35 font-semibold mb-3">Navigate</div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+              {navLinks.map((l) => (
+                <a key={l} href={`#${l.toLowerCase()}`} className="text-[0.85rem] text-[#8A8578] hover:text-[#D9782E] transition-colors duration-200 border-b border-transparent hover:border-[#D9782E]/30 pb-0.5">{l}</a>
+              ))}
+            </div>
+          </div>
+
+          {/* Column 3 — Profiles */}
+          <div>
+            <div className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-[#1E1E1E]/35 font-semibold mb-3">Profiles</div>
+            <div className="flex flex-col gap-1.5">
+              {profiles.map((p) => (
+                <a key={p.label} href={p.href} target="_blank" rel="noreferrer" className="text-[0.85rem] text-[#8A8578] hover:text-[#D9782E] transition-colors duration-200 border-b border-transparent hover:border-[#D9782E]/30 pb-0.5 inline-flex items-center gap-1.5 w-fit group">
+                  {p.label} <span className="text-[0.6rem] opacity-0 group-hover:opacity-50 transition-opacity">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* BOTTOM — Info Bar */}
+        <motion.div className="flex flex-wrap justify-center gap-x-5 gap-y-2 py-8 border-t border-[#1E1E1E]/6 text-[0.72rem] font-mono text-[#1E1E1E]/30"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+          <span>&copy; 2026 {name}</span><span className="text-[#1E1E1E]/15">·</span>
+          <span>manikantar.in</span><span className="text-[#1E1E1E]/15">·</span>
+          <span>{location}</span><span className="text-[#1E1E1E]/15">·</span>
+          <span><FooterClock /></span><span className="text-[#1E1E1E]/15">·</span>
+          <span>Response &lt;24h</span>
+        </motion.div>
+
+        {/* FINAL CTA */}
+        <motion.div className="text-center py-10 border-t border-[#1E1E1E]/6"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
+          <p className="font-display italic text-[clamp(1.1rem,1.5vw,1.3rem)] text-[#1E1E1E] mb-4">Still reading? Let&apos;s build something meaningful.</p>
+          <a href="#linkedin" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#D9782E] text-white font-mono text-[0.85rem] tracking-[0.04em] hover:bg-[#c06820] hover:shadow-lg hover:shadow-[#D9782E]/20 transition-all duration-200">
+            Start a Conversation →
+          </a>
+        </motion.div>
+      </div>
     </footer>
   );
 }
-
-const css = `
-.mr-footer {
-  position: relative;
-  margin-top: 120px;
-  padding: 0;
-  background: color-mix(in oklab, var(--bone) 96%, var(--ink) 4%);
-  color: var(--ink);
-  font-family: var(--font-sans, system-ui, sans-serif);
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1);
-  overflow: hidden;
-}
-.mr-footer.is-in { opacity: 1; transform: translateY(0); }
-
-.dark .mr-footer {
-  background: #0a0a0c;
-}
-
-/* Animated canvas gradient */
-.mr-footer-canvas {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(110% 70% at 20% 10%, rgba(212,106,46,0.05), transparent 60%),
-    radial-gradient(80% 60% at 90% 80%, rgba(212,106,46,0.03), transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.mr-footer__inner {
-  position: relative;
-  z-index: 1;
-  max-width: 1480px;
-  margin: 0 auto;
-  padding: clamp(72px, 10vw, 128px) clamp(16px, 3vw, 40px) clamp(32px, 4vw, 48px);
-}
-
-.mr-footer__closing {
-  margin: 0 0 clamp(48px, 6vw, 72px);
-  max-width: 30ch;
-  font-family: var(--font-serif, "Instrument Serif", Georgia, serif);
-  font-weight: 400;
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  line-height: 1.06;
-  letter-spacing: -0.018em;
-  color: var(--ink);
-  background: linear-gradient(135deg, var(--ink) 50%, color-mix(in oklab, var(--vermilion) 70%, var(--ink) 30%));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.mr-footer__grid {
-  display: grid;
-  grid-template-columns: 1.3fr 0.85fr 0.85fr;
-  gap: clamp(20px, 3vw, 40px);
-  padding: 0;
-}
-
-@media (max-width: 960px) {
-  .mr-footer__grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px) {
-  .mr-footer__grid { grid-template-columns: 1fr; gap: 20px; }
-}
-
-/* Glass card */
-.mr-footer__card {
-  position: relative;
-  border-radius: 16px;
-  background: color-mix(in oklab, var(--bone) 55%, transparent);
-  border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
-  backdrop-filter: blur(12px);
-  overflow: hidden;
-  transition: border-color .4s ease, box-shadow .4s ease;
-}
-.mr-footer__card:hover {
-  border-color: color-mix(in oklab, var(--vermilion) 20%, transparent);
-  box-shadow: 0 8px 32px -12px rgba(212,106,46,0.15);
-}
-
-.dark .mr-footer__card {
-  background: color-mix(in oklab, white 4%, transparent);
-  border-color: color-mix(in oklab, white 6%, transparent);
-}
-.dark .mr-footer__card:hover {
-  border-color: color-mix(in oklab, var(--vermilion) 25%, transparent);
-  box-shadow: 0 8px 32px -12px rgba(212,106,46,0.2);
-}
-
-.mr-footer__card-glow {
-  position: absolute;
-  top: -50%;
-  right: -30%;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(212,106,46,0.08), transparent);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .6s ease;
-}
-.mr-footer__card:hover .mr-footer__card-glow { opacity: 1; }
-
-.mr-footer__card-body {
-  position: relative;
-  padding: clamp(22px, 2.4vw, 30px);
-}
-
-.mr-footer__name {
-  font-family: var(--font-serif, "Instrument Serif", Georgia, serif);
-  font-size: clamp(1.4rem, 2vw, 1.7rem);
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-  margin-bottom: 12px;
-  color: var(--ink);
-}
-.mr-footer__line {
-  font-size: 0.88rem;
-  line-height: 1.55;
-  color: color-mix(in oklab, var(--ink) 65%, transparent);
-}
-.mr-footer__status {
-  display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 16px;
-  padding: 6px 13px;
-  border-radius: 999px;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink);
-  background: color-mix(in oklab, var(--vermilion) 8%, transparent);
-  border: 1px solid color-mix(in oklab, var(--vermilion) 22%, transparent);
-}
-.mr-footer__dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #2bb673;
-  box-shadow: 0 0 8px rgba(43,182,115,.6);
-  animation: mr-footer-pulse 2.4s ease-in-out infinite;
-}
-@keyframes mr-footer-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: .55; transform: scale(1.25); }
-}
-
-.mr-footer__social {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
-.mr-footer__social-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid color-mix(in oklab, var(--ink) 16%, transparent);
-  color: color-mix(in oklab, var(--ink) 65%, transparent);
-  transition: color .25s ease, border-color .25s ease, background .25s ease, transform .25s ease, box-shadow .25s ease;
-}
-.mr-footer__social-icon:hover {
-  color: var(--vermilion);
-  border-color: color-mix(in oklab, var(--vermilion) 55%, transparent);
-  background: color-mix(in oklab, var(--vermilion) 8%, transparent);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px -8px rgba(212,106,46,0.25);
-}
-.mr-footer__social-icon:focus-visible {
-  outline: 2px solid var(--vermilion);
-  outline-offset: 3px;
-}
-.mr-footer__social-svg { width: 15px; height: 15px; }
-
-.mr-footer__kicker {
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink) 50%, transparent);
-  margin-bottom: 18px;
-}
-
-.mr-footer__list {
-  list-style: none; padding: 0; margin: 0;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.mr-footer__link {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 0.92rem;
-  line-height: 1.4;
-  color: color-mix(in oklab, var(--ink) 75%, transparent);
-  text-decoration: none;
-  transition: color .25s ease, transform .25s ease;
-  position: relative;
-}
-.mr-footer__link::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 0;
-  height: 1px;
-  background: var(--vermilion);
-  transition: width .35s cubic-bezier(.2,.8,.2,1);
-}
-.mr-footer__link:hover { color: var(--vermilion); transform: translateX(4px); }
-.mr-footer__link:hover::before { width: 100%; }
-.mr-footer__link:focus-visible {
-  outline: 2px solid var(--vermilion);
-  outline-offset: 4px;
-  border-radius: 4px;
-}
-.mr-footer__ext-icon {
-  width: 12px; height: 12px;
-  opacity: 0; transform: translate(-2px, 2px);
-  transition: opacity .25s ease, transform .25s ease;
-}
-.mr-footer__link--ext:hover .mr-footer__ext-icon {
-  opacity: .9; transform: translate(0, 0);
-}
-
-.mr-footer__bottom {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: clamp(16px, 3vw, 32px);
-  margin-top: clamp(40px, 5vw, 56px);
-  padding-top: clamp(24px, 3vw, 32px);
-  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink) 50%, transparent);
-}
-@media (max-width: 720px) {
-  .mr-footer__bottom { grid-template-columns: 1fr; text-align: left; gap: 14px; }
-}
-.mr-footer__craft {
-  text-transform: none; letter-spacing: 0.02em;
-  font-family: var(--font-sans, system-ui, sans-serif);
-  font-size: 0.8rem;
-  color: color-mix(in oklab, var(--ink) 45%, transparent);
-}
-
-.mr-footer__top {
-  display: inline-flex; align-items: center; gap: 8px;
-  appearance: none;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--ink) 6%, transparent);
-  color: color-mix(in oklab, var(--ink) 70%, transparent);
-  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
-  cursor: pointer;
-  transition: color .25s ease, border-color .25s ease, transform .25s ease, background .25s ease, box-shadow .25s ease;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.mr-footer__top:hover {
-  color: var(--vermilion);
-  border-color: color-mix(in oklab, var(--vermilion) 50%, transparent);
-  background: color-mix(in oklab, var(--vermilion) 6%, transparent);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px -8px rgba(212,106,46,0.2);
-}
-.mr-footer__top:focus-visible { outline: 2px solid var(--vermilion); outline-offset: 3px; }
-.mr-footer__top-icon { width: 12px; height: 12px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .mr-footer, .mr-footer__link, .mr-footer__top, .mr-footer__dot, .mr-footer__social-icon,
-  .mr-footer__card, .mr-footer__card-glow { transition: none; animation: none; }
-  .mr-footer__link::before { display: none; }
-}
-`;
