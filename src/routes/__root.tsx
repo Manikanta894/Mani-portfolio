@@ -145,35 +145,22 @@ function RootShell({ children }: { children: ReactNode }) {
                 "@context": "https://schema.org",
                 "@type": "Person",
                 name: "Manikanta R",
-                givenName: "Manikanta",
-                familyName: "R",
                 url: "https://manikantar.in",
-                image: "https://manikantar.in/og-image.jpg",
                 jobTitle: "MBA Candidate — HR & Business Analytics",
                 description: "MBA candidate specializing in Business Analytics, AI Research, and Human Resources",
-                address: { "@type": "PostalAddress", addressLocality: "Bengaluru", addressCountry: "IN" },
-                alumniOf: { "@type": "Organization", name: "Nagarjuna Degree College" },
                 sameAs: [
                   "https://www.linkedin.com/in/manikanta894/",
                   "https://github.com/manikantar",
                   "https://orcid.org/0009-0005-2576-8731",
-                  "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252",
                 ],
-                knowsAbout: ["Business Analytics", "HR Analytics", "AI Research", "People Analytics", "Data Analytics", "SQL", "Power BI", "Python"],
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
                 name: "Manikanta R Portfolio",
                 url: "https://manikantar.in",
-                description: "Official portfolio of Manikanta R — MBA candidate in HR & Business Analytics",
-                potentialAction: {
-                  "@type": "SearchAction",
-                  target: "https://manikantar.in/search?q={search_term_string}",
-                  "query-input": "required name=search_term_string",
-                },
               },
-            ]).replace(/</g, "\\u003c"),
+            ]),
           }}
         />
         {/* Google Analytics */}
