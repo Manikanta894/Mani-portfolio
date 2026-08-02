@@ -8,7 +8,6 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -180,21 +179,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-function useAnalytics() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const gtag = (window as any).gtag;
-    if (gtag) {
-      gtag("event", "page_view", { page_path: pathname, page_location: window.location.href });
-    }
-  }, [pathname]);
-}
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  useAnalytics();
 
   return (
     <QueryClientProvider client={queryClient}>
