@@ -98,36 +98,30 @@ export const Route = createRootRouteWithContext<{
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
-      },
-      {
-        title: "Manikanta R",
-      },
-      {
-        name: "description",
-        content: "Portfolio of Manikanta R",
-      },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: "Manikanta R | MBA Candidate | Business Analytics | AI Research | Portfolio" },
+      { name: "description", content: "Official portfolio of Manikanta R, MBA candidate specializing in Business Analytics, AI Research, Human Resources, Research Publications, Projects, Certifications and Data Analytics. Based in Bengaluru, India." },
+      { name: "keywords", content: "Manikanta R, Manikanta, Manikanta Portfolio, Business Analytics, HR Analytics, AI Research, MBA Bangalore, Research Papers, Data Analytics, SQL, Power BI, Python, Excel, Research Publications, AI in HR, People Analytics" },
+      { name: "author", content: "Manikanta R" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      // OpenGraph
+      { property: "og:title", content: "Manikanta R | MBA · Business Analytics · AI Research · Portfolio" },
+      { property: "og:description", content: "Official portfolio of Manikanta R — MBA candidate in HR & Business Analytics. Research publications, projects, certifications, and professional journey." },
+      { property: "og:type", content: "profile" },
+      { property: "og:url", content: "https://manikantar.in" },
+      { property: "og:site_name", content: "Manikanta R Portfolio" },
+      { property: "og:locale", content: "en_IN" },
+      // Twitter
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Manikanta R | MBA · Business Analytics · AI Research" },
+      { name: "twitter:description", content: "Official portfolio. MBA candidate in HR & Business Analytics. Research publications, projects, and certifications." },
+      { name: "twitter:creator", content: "@manikanta" },
     ],
-
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      {
-        rel: "icon",
-        type: "image/svg+xml",
-        href: faviconDark,
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        rel: "icon",
-        type: "image/svg+xml",
-        href: faviconLight,
-        media: "(prefers-color-scheme: dark)",
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: faviconDark, media: "(prefers-color-scheme: light)" },
+      { rel: "icon", type: "image/svg+xml", href: faviconLight, media: "(prefers-color-scheme: dark)" },
+      { rel: "canonical", href: "https://manikantar.in" },
     ],
   }),
 
@@ -142,6 +136,46 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Person",
+                name: "Manikanta R",
+                givenName: "Manikanta",
+                familyName: "R",
+                url: "https://manikantar.in",
+                image: "https://manikantar.in/og-image.jpg",
+                jobTitle: "MBA Candidate — HR & Business Analytics",
+                description: "MBA candidate specializing in Business Analytics, AI Research, and Human Resources",
+                address: { "@type": "PostalAddress", addressLocality: "Bengaluru", addressCountry: "IN" },
+                alumniOf: { "@type": "Organization", name: "Nagarjuna Degree College" },
+                sameAs: [
+                  "https://www.linkedin.com/in/manikanta894/",
+                  "https://github.com/manikantar",
+                  "https://orcid.org/0009-0005-2576-8731",
+                  "https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=9646252",
+                ],
+                knowsAbout: ["Business Analytics", "HR Analytics", "AI Research", "People Analytics", "Data Analytics", "SQL", "Power BI", "Python"],
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Manikanta R Portfolio",
+                url: "https://manikantar.in",
+                description: "Official portfolio of Manikanta R — MBA candidate in HR & Business Analytics",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: "https://manikantar.in/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string",
+                },
+              },
+            ]).replace(/</g, "\\u003c"),
+          }}
+        />
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-BLJJFPF9F7" />
         <script
