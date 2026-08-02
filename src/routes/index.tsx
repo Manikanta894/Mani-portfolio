@@ -19,8 +19,6 @@ import { Ch06Work } from "@/components/chapters/Ch06Work";
 import { Ch07Ecosystem } from "@/components/chapters/Ch07Ecosystem";
 import { Ch08Credentials } from "@/components/chapters/Ch08Credentials";
 import Ch09LinkedIn from "@/components/chapters/Ch09LinkedIn";
-import { Ch10Journal } from "@/components/chapters/Ch10Journal";
-import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
 import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { RecruiterView } from "@/components/chrome/RecruiterView";
@@ -163,7 +161,6 @@ function Index() {
       <Ch08Credentials />
       <Ch11Philosophy />
       <Ch09LinkedIn />
-      <Ch10Journal />
       <Ch14BeyondNotes />
 
       <SiteFooter />
