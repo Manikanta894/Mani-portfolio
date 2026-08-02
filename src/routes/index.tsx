@@ -18,6 +18,7 @@ import { Ch05Research } from "@/components/chapters/Ch05Research";
 import { Ch06Work } from "@/components/chapters/Ch06Work";
 import { Ch07Ecosystem } from "@/components/chapters/Ch07Ecosystem";
 import { Ch08Credentials } from "@/components/chapters/Ch08Credentials";
+import { Ch11Philosophy } from "@/components/chapters/Ch11Philosophy";
 import Ch09LinkedIn from "@/components/chapters/Ch09LinkedIn";
 import { Ch14BeyondNotes } from "@/components/chapters/Ch14BeyondNotes";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
