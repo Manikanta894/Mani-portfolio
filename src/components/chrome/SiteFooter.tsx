@@ -95,7 +95,7 @@ export function SiteFooter() {
         </motion.div>
 
         {/* Resources */}
-        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10 text-left max-w-2xl mx-auto py-8 border-t border-[#111]/6"
+        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 max-w-4xl mx-auto py-8 border-t border-[#111]/6 text-left" style={{ alignItems: "start" }}
           initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 }}>
           <div>
             <div className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-3">Explore</div>
