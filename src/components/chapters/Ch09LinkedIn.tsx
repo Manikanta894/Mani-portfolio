@@ -12,7 +12,8 @@ function MailIcon() { return (<svg width="18" height="18" viewBox="0 0 24 24" fi
 function OrcidSvg() { return (<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 7h2.5c2 0 3.5 1 3.5 3s-1.5 3-3.5 3H8V7zm2.5 4.5c1.2 0 2-.6 2-1.5s-.8-1.5-2-1.5H9.5v3h1zM8 15.5h3l2 3h1.8l-2.2-3.2c1-.3 1.8-1.2 1.8-2.3 0-1.8-1.2-3-3.2-3H8v8.5z"/></svg>); }
 
 export default function Ch09LinkedIn() {
-  const { profile } = usePortfolio();
+  const { profile, linkedInFeed } = usePortfolio();
+  const li = linkedInFeed || {};
   const p = { name: profile?.name || "Manikanta R", location: profile?.location || "Bengaluru, India", email: "hello@manikantar.in" };
   const [form, setForm] = useState<Record<string, string>>({});
   const [topic, setTopic] = useState("");
@@ -167,8 +168,43 @@ export default function Ch09LinkedIn() {
                         <div><span className="block text-[0.6rem] uppercase tracking-[0.1em] text-black/25 font-semibold">Response</span>&lt; 24h</div>
                         <div><span className="block text-[0.6rem] uppercase tracking-[0.1em] text-black/25 font-semibold">Available</span>Mon–Sat</div>
                         <div><span className="block text-[0.6rem] uppercase tracking-[0.1em] text-black/25 font-semibold">Timezone</span>GMT +5:30</div>
-                      </div>
+              </div>
+
+              {/* LinkedIn Live Metrics */}
+              {li.followers && (
+                <motion.div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                  {[
+                    { label: "Followers", value: li.followers, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
+                    { label: "Connections", value: li.connections || 300, fmt: (v: number) => `${v}+` },
+                    { label: "Impressions", value: li.impressions, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
+                    { label: "Engagements", value: li.engagements, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
+                  ].map((m) => (
+                    <div key={m.label} className="rounded-xl border border-black/6 bg-white/30 p-3 text-center hover:border-[#0077B5]/20 transition-colors">
+                      <div className="font-display text-[1.2rem] leading-none text-[#0077B5]">{m.fmt(m.value || 0)}</div>
+                      <div className="text-[0.65rem] font-mono uppercase tracking-[0.08em] text-black/40 mt-1">{m.label}</div>
                     </div>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Featured LinkedIn Posts */}
+              {(li.featured || li.editors_pick) && (
+                <div className="mt-4 space-y-2">
+                  {[li.featured, li.editors_pick].filter(Boolean).map((post: any, i: number) => (
+                    <a key={i} href={post.url} target="_blank" rel="noreferrer"
+                      className="block rounded-xl border border-black/6 bg-white/30 p-3.5 hover:border-[#0077B5]/25 hover:bg-white/50 transition-all duration-200 group">
+                      <div className="text-[0.65rem] font-mono uppercase tracking-[0.1em] text-[#0077B5] font-semibold mb-1">{i === 0 ? "Top Post" : "Editor's Pick"}</div>
+                      <div className="text-[0.85rem] font-medium leading-snug text-[#111] group-hover:text-[#0077B5] transition-colors">{post.title}</div>
+                      <div className="flex items-center gap-3 mt-2 text-[0.7rem] font-mono text-black/35">
+                        {post.metrics?.likes && <span>{post.metrics.likes} likes</span>}
+                        {post.metrics?.comments && <span>{post.metrics.comments} comments</span>}
+                        <span className="ml-auto text-[#0077B5]/50 group-hover:translate-x-0.5 transition-transform">View →</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
                   </div>
                 )}
               </div>
