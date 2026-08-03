@@ -28,8 +28,8 @@ export function SiteFooter() {
       <div className="mx-auto px-8 sm:px-10 py-12 sm:py-14" style={{ maxWidth: "1400px" }}>
         {/* TOP — Closing Statement */}
         <motion.div className="mb-10" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
-          <h2 className="font-display italic leading-[0.92] tracking-[-0.03em] font-medium text-[#111]" style={{ fontSize: "clamp(2.8rem,5.5vw,4.4rem)" }}>
-            Every project begins with <span className="text-[#D9782E]">curiosity.</span><br />And ends with measurable impact.
+          <h2 className="font-display italic leading-[1.06] tracking-[-0.025em] font-medium text-[#111] whitespace-nowrap" style={{ fontSize: "clamp(2.2rem,4.5vw,4rem)" }}>
+            Every project begins with <span className="text-[#D9782E]">curiosity</span> and ends with measurable impact.
           </h2>
           <p className="mt-4 text-[#555] font-medium max-w-[58ch]" style={{ fontSize: "clamp(1rem,1.4vw,1.5rem)", lineHeight: 1.6 }}>
             Thank you for exploring my work. Let&apos;s build something meaningful together.
