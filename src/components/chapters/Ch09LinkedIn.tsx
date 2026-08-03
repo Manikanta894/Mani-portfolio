@@ -175,7 +175,7 @@ export default function Ch09LinkedIn() {
                 <motion.div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                   {[
                     { label: "Followers", value: li.followers, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
-                    { label: "Connections", value: li.connections || 300, fmt: (v: number) => `${v}+` },
+                    { label: "Connections", value: li.connections || 300, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : `${v}+` },
                     { label: "Impressions", value: li.impressions, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
                     { label: "Engagements", value: li.engagements, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
                   ].map((m) => (
