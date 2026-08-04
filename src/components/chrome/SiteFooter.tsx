@@ -130,7 +130,7 @@ export function SiteFooter() {
           <span>&copy; 2026 {name}</span><span className="text-[#111]/10">·</span>
           <span>manikantar.in</span><span className="text-[#111]/10">·</span>
           <span>{location}</span><span className="text-[#111]/10">·</span>
-          <span>Built with Intention</span><span className="text-[#111]/10">·</span>
+          <span>Built with Intention · Updated</span><span className="text-[#111]/10">·</span>
           <span>Always Improving</span>
         </motion.div>
       </div>
