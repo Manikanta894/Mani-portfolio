@@ -257,16 +257,46 @@ export function Ch00Cover() {
     window.dispatchEvent(new CustomEvent("mr-hero-entered"));
   }, [entered]);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      el.style.setProperty("--mx", `${e.clientX}px`);
+      el.style.setProperty("--my", `${e.clientY}px`);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
   const metrics = heroMeta;
 
   return (
     <section
+      ref={sectionRef}
       id="cover"
       data-chapter="00"
       className="hero-stage relative min-h-screen w-full overflow-hidden"
     >
       <HeroGridBg />
       <div className="hero-bg" aria-hidden />
+
+      {/* Animated background layers */}
+      <div className="hero-mesh" aria-hidden />
+      <div className="hero-orbs" aria-hidden>
+        {[0,1,2,3,4,5,6,7].map((n) => (
+          <div key={n} className="hero-orb" style={{ animationDelay: `${n * 2.5}s`, left: `${10 + n * 11}%`, width: `${120 + n * 30}px`, height: `${120 + n * 30}px` }} />
+        ))}
+      </div>
+      <svg className="hero-grain" aria-hidden="true" width="100%" height="100%">
+        <filter id="grain-filter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain-filter)" opacity="0.025" />
+      </svg>
+      <div className="hero-vignette" aria-hidden />
+      <div className="hero-cursor-glow" aria-hidden style={{ '--mx': '50%', '--my': '50%' } as React.CSSProperties} />
 
       {/* Status bar */}
       <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
@@ -426,6 +456,60 @@ const css = `
     radial-gradient(700px 500px at 88% 80%, rgba(20,17,15,0.04), transparent 70%);
   pointer-events: none;
   z-index: 1;
+}
+
+/* ── Animated mesh gradient ── */
+.hero-mesh {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(40vw 30vw at 20% 30%, rgba(212,106,46,0.05) 0%, transparent 60%),
+    radial-gradient(35vw 25vw at 80% 70%, rgba(212,106,46,0.03) 0%, transparent 60%),
+    radial-gradient(30vw 35vw at 50% 20%, rgba(245,230,210,0.06) 0%, transparent 60%),
+    radial-gradient(45vw 30vw at 70% 50%, rgba(255,245,235,0.04) 0%, transparent 60%);
+  animation: hero-mesh-drift 20s ease-in-out infinite alternate;
+}
+@keyframes hero-mesh-drift {
+  0% { transform: scale(1) translate(0,0); }
+  50% { transform: scale(1.08) translate(2%,1%); }
+  100% { transform: scale(1.02) translate(-1%,-1%); }
+}
+
+/* ── Floating orbs ── */
+.hero-orbs { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.hero-orb {
+  position: absolute; bottom: -150px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,106,46,0.08) 0%, transparent 70%);
+  animation: hero-orb-float 18s ease-in-out infinite;
+  opacity: 0.6;
+}
+@keyframes hero-orb-float {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-110vh) translateX(40px) scale(0.6); opacity: 0; }
+}
+
+/* ── Film grain ── */
+.hero-grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: multiply; }
+
+/* ── Breathing vignette ── */
+.hero-vignette {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(20,17,15,0.06) 100%);
+  animation: hero-vignette-breathe 8s ease-in-out infinite alternate;
+}
+@keyframes hero-vignette-breathe {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* ── Cursor glow ── */
+.hero-cursor-glow {
+  position: absolute; z-index: 1; pointer-events: none;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,106,46,0.04) 0%, transparent 60%);
+  left: calc(var(--mx) - 250px); top: calc(var(--my) - 250px);
+  transition: left 0.8s ease-out, top 0.8s ease-out;
 }
 
 /* Status bar */
