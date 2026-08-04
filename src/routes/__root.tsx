@@ -107,8 +107,13 @@ export const Route = createRootRouteWithContext<{
       { property: "og:description", content: "Official portfolio of Manikanta R — MBA candidate in HR & Business Analytics. Research, projects, certifications." },
       { property: "og:type", content: "profile" },
       { property: "og:url", content: "https://manikantar.in" },
+      { property: "og:image", content: "https://manikantar.in/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Manikanta R | MBA · Business Analytics · AI Research" },
+      { name: "twitter:description", content: "Official portfolio. MBA candidate in HR & Business Analytics. Research, projects, certifications." },
+      { name: "twitter:image", content: "https://manikantar.in/og-image.jpg" },
       { name: "twitter:description", content: "Official portfolio. MBA candidate in HR & Business Analytics." },
     ],
     links: [
@@ -130,6 +135,7 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([{ "@context":"https://schema.org","@type":"Person","name":"Manikanta R","url":"https://manikantar.in","jobTitle":"MBA Candidate - HR & Business Analytics","knowsAbout":["HR Analytics","Business Analytics","AI Research","People Analytics","Data Analytics","SQL","Power BI","Python"],"sameAs":["https://www.linkedin.com/in/manikanta894/","https://github.com/manikantar","https://orcid.org/0009-0005-2576-8731"]},{ "@context":"https://schema.org","@type":"WebSite","name":"Manikanta R Portfolio","url":"https://manikantar.in" }]) }} />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-BLJJFPF9F7" />
         <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BLJJFPF9F7');` }} />
       </head>
