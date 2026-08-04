@@ -282,6 +282,8 @@ export function Ch00Cover() {
           <div aria-hidden className="hero-watermark is-awake">MR</div>
           <div className="hero-halo" aria-hidden />
           <div ref={portraitWrapRef} className="hero-portrait-wrap">
+            {/* Rotating gradient ring */}
+            <div className="hero-portrait-ring" aria-hidden />
             <div className="hero-portrait-glow" aria-hidden />
             <div className="hero-portrait is-awake">
               <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
@@ -556,6 +558,19 @@ const css = `
   z-index: 0;
 }
 @keyframes hero-glow-spin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-portrait-ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, rgba(212,106,46,0.15), transparent, rgba(212,106,46,0.1), transparent);
+  animation: hero-ring-rotate 8s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes hero-ring-rotate {
   to { transform: rotate(360deg); }
 }
 
