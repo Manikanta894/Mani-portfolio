@@ -358,6 +358,11 @@ export function Ch00Cover() {
 
           <MultilingualGreeting entered={entered} />
 
+          {/* Desired role */}
+          <div className="hero-seeking" style={{ marginTop: "14px" }}>
+            <span className="hero-seeking__text">Seeking <strong>HR Analyst</strong> · <strong>People Analytics</strong> · <strong>Business Intelligence</strong> roles</span>
+          </div>
+
           {/* Role carousel */}
           <div className="hero-role-row" style={{ transitionDelay: entered ? "260ms" : "0ms" }}>
             <span className="hero-role-label">Specializing in </span>
@@ -830,6 +835,20 @@ const css = `
 }
 .hero-welcome-text { transition: opacity 0.35s ease, filter 0.35s ease; }
 .hero-welcome em { color: var(--hero-ink); font-style: italic; }
+
+/* Seeking statement */
+.hero-seeking { margin-top: 12px; }
+.hero-seeking__text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--hero-ink) 55%, transparent);
+}
+.hero-seeking__text strong {
+  color: var(--hero-accent);
+  font-weight: 600;
+}
 
 /* Role carousel */
 .hero-role-row {
