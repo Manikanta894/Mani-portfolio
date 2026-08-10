@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "motion/react";
+import { Caveat } from "next/font/google";
 import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
 import {
@@ -7,10 +8,15 @@ import {
   GraduationCap,
   Target,
   ArrowRight,
+  ArrowUpRight,
   Sparkles,
   Plus,
   Grid3x3,
 } from "lucide-react";
+
+// Real handwriting/script font for the signature — swap for any other
+// script font (Homemade Apple, Dancing Script, Sacramento, etc.) if you'd like.
+const signature = Caveat({ subsets: ["latin"], weight: ["600", "700"] });
 
 function LiIcon() {
   return (
@@ -94,29 +100,24 @@ export function SiteFooter() {
               <span className="italic text-[#D97732]">meaningful.</span>
             </h2>
             <span className="block w-10 h-[2px] bg-[#D97732] mb-6" />
-            <p className="text-[#555] font-medium max-w-[38ch] leading-relaxed mb-8" style={{ fontSize: "1.05rem" }}>
+            <p className="text-[#555] font-medium max-w-[38ch] leading-relaxed" style={{ fontSize: "1.05rem" }}>
               I&rsquo;m always open to discussing new ideas, collaborations, and opportunities that create real impact.
             </p>
-            <div className="italic text-[#111]" style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem" }}>
-              {name}.
-            </div>
           </motion.div>
 
-          {/* Right: MR monogram with portrait masked into the M */}
+          {/* Right: MR monogram + a compact contact panel filling the extra space */}
           <motion.div
-            className="relative flex justify-center md:justify-end"
+            className="flex flex-col sm:flex-row items-center sm:items-end justify-center md:justify-end gap-6 sm:gap-10"
             initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
           >
-            <div className="relative w-full" style={{ maxWidth: 620 }}>
+            {/* Monogram */}
+            <div className="relative w-full sm:w-auto" style={{ maxWidth: 480 }}>
               <svg viewBox="0 0 900 420" className="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <mask id="mLetterMask">
                     <rect width="900" height="420" fill="black" />
                     <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="white">M</text>
                   </mask>
-                  <clipPath id="mClip">
-                    <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440">M</text>
-                  </clipPath>
                 </defs>
 
                 {/* faint full M outline (shows where photo doesn't cover) */}
@@ -132,12 +133,35 @@ export function SiteFooter() {
               </svg>
 
               <Sparkles className="absolute -top-1 right-0 text-[#D97732]" size={22} strokeWidth={1.5} />
+
+              {/* the one and only signature, in a real script font */}
               <div
-                className="absolute bottom-6 right-2 italic text-[#D97732]"
-                style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem", transform: "rotate(-6deg)" }}
+                className={`${signature.className} absolute bottom-6 right-2 text-[#D97732]`}
+                style={{ fontSize: "1.9rem", transform: "rotate(-6deg)" }}
               >
                 {name}.
               </div>
+            </div>
+
+            {/* Useful content for the empty space: availability + quick contact */}
+            <div className="flex flex-col items-center sm:items-start gap-4 sm:pb-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#111]/8 bg-white/50 px-3 py-1.5 text-xs font-medium text-[#444]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                </span>
+                Open to new opportunities
+              </span>
+              <p className="text-sm text-[#777] max-w-[26ch] text-center sm:text-left leading-relaxed">
+                Currently based in {location}, exploring roles at the intersection of HR and analytics.
+              </p>
+              <a
+                href={`mailto:${email}`}
+                className="group inline-flex items-center gap-1.5 text-sm font-semibold text-[#111] hover:text-[#D97732] transition-colors duration-200"
+              >
+                Say hello
+                <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
             </div>
           </motion.div>
         </div>
