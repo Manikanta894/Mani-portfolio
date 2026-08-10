@@ -21,7 +21,7 @@ export default function Ch09LinkedIn() {
   const [sent, setSent] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const submit = async (e: React.FormEvent) => { e.preventDefault(); setSending(true); try { await fetch(`${API}/contact`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, subject: topic }) }); setSent(true); } catch {} finally { setSending(false); } };
+  const submit = async (e: React.FormEvent) => { e.preventDefault(); setSending(true); try { const res = await fetch(`${API}/contact`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, subject: topic }) }); const data = await res.json(); if (data.success) { setSent(true); setForm({}); setTopic(""); } else { alert(`Failed to send: ${data.error || "Unknown error"}`); } } catch (err) { alert(`Network error: ${err}`); } finally { setSending(false); } };
   const copyEmail = () => { navigator.clipboard?.writeText(p.email); setCopied(true); setTimeout(() => setCopied(false), 2000); };
 
   return (

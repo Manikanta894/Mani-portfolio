@@ -26,8 +26,13 @@ export const Route = createFileRoute("/api/public/contact")({
             return Response.json({ success: false, error: "Missing required fields" }, { status: 400 });
           }
 
+          if (!SMTP_USER || !SMTP_PASS) {
+            console.error("SMTP credentials not configured");
+            return Response.json({ success: false, error: "Server configuration error" }, { status: 500 });
+          }
+
           const mailOptions = {
-            from: `"${name}" <${SMTP_USER}>`,
+            from: `"Portfolio Contact" <${SMTP_USER}>`,
             to: TO_EMAIL,
             replyTo: email,
             subject: subject ? `Portfolio: ${subject}` : "New message from your portfolio",
@@ -35,12 +40,13 @@ export const Route = createFileRoute("/api/public/contact")({
             html: `<p><strong>From:</strong> ${name} (${email})</p>${subject ? `<p><strong>Subject:</strong> ${subject}</p>` : ""}<p>${message.replace(/\n/g, "<br>")}</p>`,
           };
 
-          await transporter.sendMail(mailOptions);
+          const info = await transporter.sendMail(mailOptions);
+          console.log("Email sent:", info.messageId);
 
           return Response.json({ success: true });
         } catch (error) {
           console.error("Contact form error:", error);
-          return Response.json({ success: false, error: "Failed to send message" }, { status: 500 });
+          return Response.json({ success: false, error: String(error) }, { status: 500 });
         }
       },
     },
