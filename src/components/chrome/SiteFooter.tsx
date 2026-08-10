@@ -1,6 +1,5 @@
 "use client";
 import { motion } from "motion/react";
-import { Caveat } from "next/font/google";
 import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
 import {
@@ -13,10 +12,6 @@ import {
   Plus,
   Grid3x3,
 } from "lucide-react";
-
-// Real handwriting/script font for the signature — swap for any other
-// script font (Homemade Apple, Dancing Script, Sacramento, etc.) if you'd like.
-const signature = Caveat({ subsets: ["latin"], weight: ["600", "700"] });
 
 function LiIcon() {
   return (
@@ -134,10 +129,9 @@ export function SiteFooter() {
 
               <Sparkles className="absolute -top-1 right-0 text-[#D97732]" size={22} strokeWidth={1.5} />
 
-              {/* the one and only signature, in a real script font */}
               <div
-                className={`${signature.className} absolute bottom-6 right-2 text-[#D97732]`}
-                style={{ fontSize: "1.9rem", transform: "rotate(-6deg)" }}
+                className="absolute bottom-6 right-2 text-[#D97732] italic"
+                style={{ fontFamily: "var(--font-display)", fontSize: "1.9rem", transform: "rotate(-6deg)" }}
               >
                 {name}.
               </div>
