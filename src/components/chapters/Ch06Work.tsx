@@ -26,7 +26,7 @@ export function Ch06Work() {
   const filtered = filter === "All" ? all : all.filter((p) => p.category?.includes(filter));
 
   return (
-    <section id="work" className="relative bg-[#F7F4EC] text-[#1E1E1E] chapter-pad">
+    <section id="work" className="relative bg-[#F7F4EC] text-[#1E1E1E] chapter-pad section-reveal">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         {/* Header — compressed */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-8">

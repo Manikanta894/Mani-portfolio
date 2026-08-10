@@ -474,3 +474,54 @@ img {
 @utility glow-pulse {
   animation: glow-pulse 2.4s ease-in-out infinite;
 }
+
+/* ── Section transitions ── */
+@keyframes section-reveal {
+  from { opacity: 0; clip-path: inset(8% 0 0 0); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+
+@keyframes section-slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes section-slide-left {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@utility section-reveal {
+  animation: section-reveal 0.7s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+/* ── Micro-interactions ── */
+@utility hover-lift {
+  transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,.12);
+}
+
+@utility hover-underline {
+  position: relative;
+}
+.hover-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--vermilion);
+  transition: width .3s cubic-bezier(.22,1,.36,1);
+}
+.hover-underline:hover::after { width: 100%; }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
