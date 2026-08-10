@@ -25,7 +25,7 @@ export function Ch05Research() {
   const years = [...new Set(papers.map((p: any) => p.year).filter(Boolean))].sort((a: string, b: string) => Number(b) - Number(a));
 
   return (
-    <section id="research" className="relative bg-[#0C0B0A] text-[#D6D1C9] chapter-pad">
+    <section id="research" className="relative bg-[#0C0B0A] text-[#D6D1C9] chapter-pad section-reveal">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           {/* LEFT SIDEBAR — Editorial Identity Panel */}
