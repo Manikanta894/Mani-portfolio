@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useScroll, useTransform } from "motion/react";
 import portraitCutout from "@/assets/portrait-cutout.png";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -49,36 +50,19 @@ function MultilingualGreeting({ entered }: { entered: boolean }) {
 }
 
 function RoleCarousel({ roles }: { roles: string[] }) {
-  const [index, setIndex] = useState(0);
-  const [char, setChar] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-
+  const [i, setI] = useState(0);
+  const [fade, setFade] = useState(false);
+  const [word, setWord] = useState(roles[0]);
   useEffect(() => {
-    const current = roles[index % roles.length];
-    const timer = setInterval(() => {
-      if (!deleting) {
-        if (char < current.length) {
-          setChar((c) => c + 1);
-        } else {
-          setTimeout(() => setDeleting(true), 1500);
-        }
-      } else {
-        if (char > 0) {
-          setChar((c) => c - 1);
-        } else {
-          setDeleting(false);
-          setIndex((i) => (i + 1) % roles.length);
-        }
-      }
-    }, deleting ? 35 : 60);
-    return () => clearInterval(timer);
-  }, [char, deleting, index, roles]);
-
+    const t = setInterval(() => {
+      setFade(true);
+      setTimeout(() => { setI((n) => (n + 1) % roles.length); setFade(false); }, 380);
+    }, 2800);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => { if (!fade) setWord(roles[i % roles.length]); }, [i, fade, roles]);
   return (
-    <span className="hero-role">
-      {roles[index % roles.length].slice(0, char)}
-      <span className="hero-role-caret">|</span>
-    </span>
+    <span className="hero-role" style={{ opacity: fade ? 0 : 1, transform: fade ? "translateY(6px)" : "translateY(0)", filter: fade ? "blur(1.5px)" : "blur(0px)", transition: "opacity .32s cubic-bezier(.22,1,.36,1), transform .32s cubic-bezier(.22,1,.36,1), filter .32s cubic-bezier(.22,1,.36,1)" }}>{word}</span>
   );
 }
 
@@ -204,8 +188,18 @@ function HeroGridBg() {
 export function Ch00Cover() {
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const portraitWrapRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
 
   const { profile } = usePortfolio();
+
+  // Scroll-driven compression
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 40]);
 
   const skills = (profile?.hero_skills as string[]) || [
     "HR Analytics", "Business Analytics", "AI Strategy", "Research", "Power BI", "People Analytics",
@@ -261,12 +255,22 @@ export function Ch00Cover() {
 
   return (
     <section
+      ref={heroRef}
       id="cover"
       data-chapter="00"
       className="hero-stage relative min-h-screen w-full overflow-hidden"
+      style={{ scale, opacity, y }}
     >
       <HeroGridBg />
       <div className="hero-bg" aria-hidden />
+      <div className="hero-mesh" aria-hidden />
+      <svg className="hero-grain" aria-hidden="true" width="100%" height="100%">
+        <filter id="hero-grain-filter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#hero-grain-filter)" opacity="0.018" />
+      </svg>
 
       {/* Status bar */}
       <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
@@ -525,7 +529,12 @@ const css = `
   user-select: none;
   pointer-events: none;
   mix-blend-mode: multiply;
-  z-index: 0;
+  animation: hero-watermark-drift 25s ease-in-out infinite alternate;
+}
+@keyframes hero-watermark-drift {
+  0% { transform: translateY(8px) rotate(-2deg); }
+  50% { transform: translateY(-4px) rotate(1deg); }
+  100% { transform: translateY(4px) rotate(-1deg); }
 }
 .hero-watermark.is-awake { opacity: 0.022; transform: translateY(0); }
 
@@ -784,15 +793,22 @@ const css = `
   color: var(--hero-accent);
   font-weight: 500;
 }
-.hero-role-caret {
-  display: inline-block;
-  color: var(--hero-accent);
-  animation: hero-caret 0.8s steps(1) infinite;
+
+/* Hero background layers */
+.hero-mesh {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(40vw 30vw at 20% 30%, rgba(217,119,50,0.04) 0%, transparent 60%),
+    radial-gradient(35vw 25vw at 80% 70%, rgba(217,119,50,0.025) 0%, transparent 60%),
+    radial-gradient(30vw 35vw at 50% 20%, rgba(245,230,210,0.05) 0%, transparent 60%);
+  animation: hero-mesh-drift 22s ease-in-out infinite alternate;
 }
-@keyframes hero-caret {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+@keyframes hero-mesh-drift {
+  0% { transform: scale(1) translate(0,0); }
+  50% { transform: scale(1.06) translate(1.5%,1%); }
+  100% { transform: scale(1.02) translate(-1%,-0.5%); }
 }
+.hero-grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: multiply; }
 
 .hero-rule {
   margin-top: 22px;
