@@ -34,104 +34,85 @@ export function SiteFooter() {
       </div>
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_50%_45%,rgba(217,119,50,0.015)_0%,transparent_70%)]" />
 
-      <div className="relative z-10 mx-auto px-6 sm:px-8 py-16 sm:py-20 text-center" style={{ maxWidth: "1100px" }}>
-        {/* Hero Quote — single line */}
-        <motion.h2 className="font-display italic leading-[0.94] tracking-[-0.035em] font-medium text-[#111] mb-8"
-          style={{ fontSize: "clamp(2.8rem,5.5vw,5rem)" }}
-          initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          Every great decision begins with <span className="text-[#D97732]">curiosity</span>.
-        </motion.h2>
-
-        {/* Divider */}
-        <motion.div className="flex items-center justify-center gap-3 mb-8 text-[#111]/10"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}>
-          <span className="h-px w-12 bg-[#111]/10" />
-          <span className="text-[#D97732]/40 text-sm">✦</span>
-          <span className="h-px w-12 bg-[#111]/10" />
+      <div className="relative z-10 mx-auto px-6 sm:px-10 py-20 sm:py-28 text-center" style={{ maxWidth: "1200px" }}>
+        {/* Closing statement */}
+        <motion.div className="mb-14" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+          <h2 className="font-display italic leading-[0.92] tracking-[-0.03em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(3.2rem,6.5vw,5.5rem)" }}>
+            Every great decision begins with <span className="text-[#D97732]">curiosity</span>.
+          </h2>
+          <div className="flex items-center justify-center gap-4 mb-6 text-[#111]/15">
+            <span className="h-px w-16 bg-[#111]/15" />
+            <span className="text-[#D97732]/50 text-lg">✦</span>
+            <span className="h-px w-16 bg-[#111]/15" />
+          </div>
+          <p className="text-[#444] font-medium max-w-[52ch] mx-auto leading-relaxed" style={{ fontSize: "clamp(1.1rem,1.5vw,1.4rem)" }}>
+            Thank you for exploring my work. Whether you're hiring, collaborating, or simply exchanging ideas — I'd love to hear from you.
+          </p>
         </motion.div>
 
-        {/* Thank you */}
-        <motion.p className="text-[#555] font-medium max-w-[48ch] mx-auto mb-12 leading-relaxed"
-          style={{ fontSize: "clamp(1rem,1.4vw,1.5rem)" }}
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.25, duration: 0.5 }}>
-          Thank you for exploring my work. Let&apos;s build something meaningful together.
-        </motion.p>
-
-        {/* Profile Block */}
-        <motion.div className="inline-flex flex-col items-center gap-3 mb-8"
-          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.35 }}>
-          <motion.div className="w-[88px] h-[88px] rounded-full overflow-hidden border-[3px] border-[#F0EAD9] shadow-md"
-            whileHover={{ scale: 1.04, rotate: 2 }}>
-            <img src={portrait} alt={name} className="w-full h-full object-cover" />
-          </motion.div>
-          <div>
-            <div className="font-display" style={{ fontSize: "clamp(1.6rem,2vw,2rem)" }}>{name}</div>
-            <div className="text-[#555] font-medium" style={{ fontSize: "clamp(0.95rem,1.1vw,1.15rem)" }}>MBA · HR &amp; Business Analytics</div>
-            <div className="text-[#555]/70 font-medium mt-1" style={{ fontSize: "clamp(0.85rem,1vw,1rem)" }}>
-              {location} &nbsp;·&nbsp; <span className="inline-flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500" /> Available</span> &nbsp;·&nbsp; Replies &lt;24h
+        {/* Profile + Social row */}
+        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-14"
+          initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15, duration: 0.5 }}>
+          <motion.div className="flex items-center gap-4" whileHover={{ scale: 1.02 }}>
+            <div className="w-16 h-16 rounded-full overflow-hidden border-[3px] border-[#F0EAD9] shadow-md">
+              <img src={portrait} alt={name} className="w-full h-full object-cover" />
             </div>
+            <div className="text-left">
+              <div className="font-display text-xl">{name}</div>
+              <div className="text-sm text-[#555] font-medium">MBA · HR &amp; Business Analytics</div>
+              <div className="text-xs text-[#777] mt-0.5">{location} · <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Available</span></div>
+            </div>
+          </motion.div>
+
+          <div className="flex gap-3">
+            {socials.map((s) => (
+              <motion.a key={s.label} href={s.href} target="_blank" rel="noreferrer"
+                className="w-12 h-12 rounded-full border border-[#111]/8 flex items-center justify-center text-[#111]/35 hover:text-[#D97732] hover:border-[#D97732]/30 hover:bg-[#D97732]/5 hover:shadow-sm hover:shadow-[#D97732]/5 transition-all duration-200"
+                whileHover={{ y: -3, scale: 1.1 }} title={s.label}>{s.icon}</motion.a>
+            ))}
           </div>
         </motion.div>
 
-        {/* Social Icons */}
-        <motion.div className="flex justify-center gap-3.5 mb-10"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.45 }}>
-          {socials.map((s) => (
-            <motion.a key={s.label} href={s.href} target="_blank" rel="noreferrer"
-              className="w-11 h-11 rounded-full border border-[#111]/8 flex items-center justify-center text-[#111]/35 hover:text-[#D97732] hover:border-[#D97732]/30 hover:bg-[#D97732]/5 hover:shadow-sm hover:shadow-[#D97732]/5 transition-all duration-200"
-              whileHover={{ y: -2, scale: 1.08 }} title={s.label}>{s.icon}</motion.a>
-          ))}
-        </motion.div>
-
         {/* CTA Buttons */}
-        <motion.div className="flex flex-wrap justify-center gap-3 mb-12"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.55 }}>
-          <a href="#linkedin" className="inline-flex items-center gap-2 rounded-full bg-[#D97732] text-white font-medium hover:bg-[#c06820] hover:shadow-lg hover:shadow-[#D97732]/20 transition-all duration-200" style={{ padding: "14px 30px", fontSize: "1.05rem" }}>
-            Let&apos;s Connect →
+        <motion.div className="flex flex-wrap justify-center gap-4 mb-16"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+          <a href="#linkedin" className="inline-flex items-center gap-2 rounded-full bg-[#D97732] text-white font-medium hover:bg-[#c06820] hover:shadow-lg hover:shadow-[#D97732]/20 transition-all duration-200" style={{ padding: "16px 36px", fontSize: "1.1rem" }}>
+            Let's Connect →
           </a>
-          <a href="https://manikantar.in/resume.pdf" className="inline-flex items-center gap-2 rounded-full border-2 border-[#111]/8 text-[#555] font-medium hover:border-[#D97732]/25 hover:text-[#D97732] transition-all duration-200" style={{ padding: "14px 30px", fontSize: "1.05rem" }}>
+          <a href="https://manikantar.in/resume.pdf" className="inline-flex items-center gap-2 rounded-full border-2 border-[#111]/10 text-[#444] font-medium hover:border-[#D97732]/25 hover:text-[#D97732] transition-all duration-200" style={{ padding: "16px 36px", fontSize: "1.1rem" }}>
             Download Resume
           </a>
         </motion.div>
 
-        {/* Resources */}
-        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 max-w-4xl mx-auto py-8 border-t border-[#111]/6 text-left" style={{ alignItems: "start" }}
-          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 }}>
+        {/* Explore + Resources */}
+        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 max-w-3xl mx-auto py-10 border-t border-[#111]/6 text-left"
+          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
           <div>
-            <div className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-3">Explore</div>
-            <div className="flex flex-col gap-1.5">
+            <div className="font-mono text-sm uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-4">Explore</div>
+            <div className="flex flex-col gap-2">
               {explore.map((l) => (
-                <a key={l} href={`#${l.toLowerCase()}`} className="text-[0.9rem] text-[#555] hover:text-[#D97732] transition-colors duration-200 font-medium border-b border-transparent hover:border-[#D97732]/30 pb-0.5">{l}</a>
+                <a key={l} href={`#${l.toLowerCase()}`} className="text-[1rem] text-[#444] hover:text-[#D97732] transition-colors duration-200 font-medium border-b border-transparent hover:border-[#D97732]/30 pb-1">{l}</a>
               ))}
             </div>
           </div>
           <div>
-            <div className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-3">Resources</div>
-            <div className="flex flex-col gap-1.5">
-              {resources.map((l) => (
-                <a key={l} href={l === "Sitemap" ? "/sitemap.xml" : "#"} className="text-[0.9rem] text-[#555] hover:text-[#D97732] transition-colors duration-200 font-medium border-b border-transparent hover:border-[#D97732]/30 pb-0.5">{l}</a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-3">Stay Connected</div>
-            <div className="flex flex-col gap-1.5">
-              {connectLinks.map((l) => (
-                <span key={l} className="text-[0.9rem] text-[#555] font-medium">{l}</span>
+            <div className="font-mono text-sm uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-4">Resources</div>
+            <div className="flex flex-col gap-2">
+              {[...resources, ...connectLinks].map((l) => (
+                <span key={l} className="text-[1rem] text-[#444] font-medium">{l}</span>
               ))}
             </div>
           </div>
         </motion.div>
 
-        {/* Bottom Bar */}
-        <motion.div className="flex flex-wrap justify-center gap-x-4 gap-y-1 pt-8 border-t border-[#111]/6 text-[#111]/25 font-medium"
-          style={{ fontSize: "clamp(0.8rem,1vw,0.9rem)" }}
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7 }}>
+        {/* Bottom bar */}
+        <motion.div className="flex flex-wrap justify-center gap-x-5 gap-y-2 pt-10 border-t border-[#111]/6 text-[#111]/30 font-medium" style={{ fontSize: "0.95rem" }}
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }}>
           <span>&copy; 2026 {name}</span><span className="text-[#111]/10">·</span>
           <span>manikantar.in</span><span className="text-[#111]/10">·</span>
           <span>{location}</span><span className="text-[#111]/10">·</span>
-          <span>Built with Intention</span><span className="text-[#111]/10">·</span>
-          <span>Always Improving</span>
+          <span>Built with intention</span><span className="text-[#111]/10">·</span>
+          <span>Always improving</span>
         </motion.div>
       </div>
     </footer>
