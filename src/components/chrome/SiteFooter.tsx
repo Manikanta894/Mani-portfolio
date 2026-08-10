@@ -75,19 +75,24 @@ export function SiteFooter() {
 
         {/* Eyebrow */}
         <motion.div
-          className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-10"
+          className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-8"
           initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-[#111]/25">—</span>
           <span className="text-[#D97732] font-semibold">09</span>
           <span>Connect</span>
         </motion.div>
 
-        {/* Hero row */}
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-20">
-          {/* Left: heading */}
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <h2 className="font-display leading-[0.96] tracking-[-0.02em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(2.6rem,5vw,4.2rem)" }}>
+        {/* Hero row — balanced 3-part composition: 45% / 25% / 30% */}
+        <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-center min-h-[70vh]">
+          {/* LEFT — primary message (~45%) */}
+          <motion.div
+            className="md:col-span-5"
+            initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="font-display leading-[0.96] tracking-[-0.02em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(3rem, 5.5vw, 5rem)" }}>
               Let&rsquo;s build
               <br />
               something
@@ -100,13 +105,13 @@ export function SiteFooter() {
             </p>
           </motion.div>
 
-          {/* Right: MR monogram + a compact contact panel filling the extra space */}
+          {/* CENTER — identity visual (~25%) */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center sm:items-end justify-center md:justify-end gap-6 sm:gap-10"
-            initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
+            className="md:col-span-3 flex justify-center"
+            initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Monogram */}
-            <div className="relative w-full sm:w-auto" style={{ maxWidth: 480 }}>
+            <div className="relative" style={{ maxWidth: 280 }}>
               <svg viewBox="0 0 900 420" className="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <mask id="mLetterMask">
@@ -114,49 +119,45 @@ export function SiteFooter() {
                     <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="white">M</text>
                   </mask>
                 </defs>
-
-                {/* faint full M outline (shows where photo doesn't cover) */}
                 <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.06">M</text>
-
-                {/* portrait clipped into the M glyph */}
                 <g mask="url(#mLetterMask)">
                   <image href={portrait?.src || portrait} x="30" y="-30" width="480" height="480" preserveAspectRatio="xMidYMid slice" />
                 </g>
-
-                {/* outlined R */}
                 <text x="430" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.12" strokeWidth="1.5">R</text>
               </svg>
-
               <Sparkles className="absolute -top-1 right-0 text-[#D97732]" size={22} strokeWidth={1.5} />
-
               <div
-                className="absolute bottom-6 right-2 text-[#D97732] italic"
+                className="absolute bottom-4 right-0 text-[#D97732] italic"
                 style={{ fontFamily: "var(--font-display)", fontSize: "1.9rem", transform: "rotate(-6deg)" }}
               >
                 {name}.
               </div>
             </div>
+          </motion.div>
 
-            {/* Useful content for the empty space: availability + quick contact */}
-            <div className="flex flex-col items-center sm:items-start gap-4 sm:pb-4">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#111]/8 bg-white/50 px-3 py-1.5 text-xs font-medium text-[#444]">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-                </span>
-                Open to new opportunities
+          {/* RIGHT — contact / opportunity (~30%) */}
+          <motion.div
+            className="md:col-span-4 flex flex-col items-start gap-5 md:pl-4"
+            initial={{ opacity: 0, x: 12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#111]/8 bg-white/50 px-3 py-1.5 text-xs font-medium text-[#444]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
               </span>
-              <p className="text-sm text-[#777] max-w-[26ch] text-center sm:text-left leading-relaxed">
-                Currently based in {location}, exploring roles at the intersection of HR and analytics.
-              </p>
-              <a
-                href={`mailto:${email}`}
-                className="group inline-flex items-center gap-1.5 text-sm font-semibold text-[#111] hover:text-[#D97732] transition-colors duration-200"
-              >
-                Say hello
-                <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-            </div>
+              Open to new opportunities
+            </span>
+            <p className="text-sm text-[#777] max-w-[28ch] leading-relaxed">
+              Currently based in {location}, exploring roles at the intersection of HR and analytics.
+            </p>
+            <a
+              href={`mailto:${email}`}
+              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-[#111] hover:text-[#D97732] transition-colors duration-200"
+            >
+              Say hello
+              <ArrowUpRight size={15} className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200" />
+            </a>
           </motion.div>
         </div>
 
