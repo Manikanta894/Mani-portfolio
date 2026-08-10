@@ -2,11 +2,46 @@
 import { motion } from "motion/react";
 import usePortfolio from "@/hooks/usePortfolio";
 import portrait from "@/assets/portrait.jpg";
+import {
+  MapPin,
+  GraduationCap,
+  Target,
+  ArrowRight,
+  Sparkles,
+  Plus,
+  Grid3x3,
+} from "lucide-react";
 
-function LiIcon() { return (<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>); }
-function GhIcon() { return (<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>); }
-function OrcidIcon() { return (<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path d="M8 7h2.5c2 0 3.5 1 3.5 3s-1.5 3-3.5 3H8V7zm2.5 4.5c1.2 0 2-.6 2-1.5s-.8-1.5-2-1.5H9.5v3h1zM8 15.5h3l2 3h1.8l-2.2-3.2c1-.3 1.8-1.2 1.8-2.3 0-1.8-1.2-3-3.2-3H8v8.5z"/></svg>); }
-function MailIcon() { return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>); }
+function LiIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
+function GhIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    </svg>
+  );
+}
+function MailIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="M2 6l10 7 10-7" />
+    </svg>
+  );
+}
+function ResumeIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+    </svg>
+  );
+}
 
 export function SiteFooter() {
   const { profile } = usePortfolio();
@@ -14,105 +49,192 @@ export function SiteFooter() {
   const location = profile?.location || "Bengaluru, India";
   const email = "hello@manikantar.in";
 
-  const socials = [
+  const explore = [
+    { label: "About", href: "#about" },
+    { label: "Experience", href: "#experience" },
+    { label: "Projects", href: "#projects" },
+    { label: "Research", href: "#research" },
+  ];
+  const work = [
+    { label: "Skills", href: "#skills" },
+    { label: "Certifications", href: "#credentials" },
+    { label: "Publications", href: "#research" },
+    { label: "Resume", href: "https://manikantar.in/resume.pdf" },
+  ];
+  const connect = [
     { label: "LinkedIn", href: "https://linkedin.com/in/manikanta894", icon: <LiIcon /> },
     { label: "GitHub", href: "https://github.com/manikantar", icon: <GhIcon /> },
     { label: "Email", href: `mailto:${email}`, icon: <MailIcon /> },
-    { label: "ORCID", href: "https://orcid.org/0009-0005-2576-8731", icon: <OrcidIcon /> },
-    { label: "Resume", href: "https://manikantar.in/resume.pdf", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+    { label: "Download Resume", href: "https://manikantar.in/resume.pdf", icon: <ResumeIcon /> },
   ];
-
-  const explore = ["Journey", "Education", "Experience", "Projects", "Research", "Skills", "Credentials", "Manifesto", "Connect"];
-  const resources = ["Privacy Policy", "Terms", "Sitemap", "Accessibility"];
-  const connectLinks = ["Email", "LinkedIn", "GitHub", "ORCID", "SSRN", "Resume"];
 
   return (
     <footer className="relative bg-[#F8F5EF] text-[#111] overflow-hidden" style={{ fontFamily: "var(--font-sans)" }}>
-      {/* MR watermark */}
-      <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center">
-        <span className="font-display italic text-[clamp(350px,45vw,600px)] leading-none text-[#111]/[0.04]">MR</span>
-      </div>
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_40%_at_50%_45%,rgba(217,119,50,0.015)_0%,transparent_70%)]" />
+      <div className="relative z-10 mx-auto px-6 sm:px-10 py-16 sm:py-24" style={{ maxWidth: "1200px" }}>
 
-      <div className="relative z-10 mx-auto px-6 sm:px-10 py-20 sm:py-28 text-center" style={{ maxWidth: "1200px" }}>
-        {/* Closing statement */}
-        <motion.div className="mb-14" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <h2 className="font-display italic leading-[0.92] tracking-[-0.03em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(3.2rem,6.5vw,5.5rem)" }}>
-            Every great decision begins with <span className="text-[#D97732]">curiosity</span>.
-          </h2>
-          <div className="flex items-center justify-center gap-4 mb-6 text-[#111]/15">
-            <span className="h-px w-16 bg-[#111]/15" />
-            <span className="text-[#D97732]/50 text-lg">✦</span>
-            <span className="h-px w-16 bg-[#111]/15" />
-          </div>
-          <p className="text-[#444] font-medium max-w-[52ch] mx-auto leading-relaxed" style={{ fontSize: "clamp(1.1rem,1.5vw,1.4rem)" }}>
-            Thank you for exploring my work. Whether you're hiring, collaborating, or simply exchanging ideas — I'd love to hear from you.
-          </p>
+        {/* Eyebrow */}
+        <motion.div
+          className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-10"
+          initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        >
+          <span className="text-[#111]/25">—</span>
+          <span className="text-[#D97732] font-semibold">09</span>
+          <span>Connect</span>
         </motion.div>
 
-        {/* Profile + Social row */}
-        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-14"
-          initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15, duration: 0.5 }}>
-          <motion.div className="flex items-center gap-4" whileHover={{ scale: 1.02 }}>
-            <div className="w-16 h-16 rounded-full overflow-hidden border-[3px] border-[#F0EAD9] shadow-md">
-              <img src={portrait} alt={name} className="w-full h-full object-cover" />
-            </div>
-            <div className="text-left">
-              <div className="font-display text-xl">{name}</div>
-              <div className="text-sm text-[#555] font-medium">MBA · HR &amp; Business Analytics</div>
-              <div className="text-xs text-[#777] mt-0.5">{location} · <span className="inline-flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Available</span></div>
+        {/* Hero row */}
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-20">
+          {/* Left: heading */}
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <h2 className="font-display leading-[0.96] tracking-[-0.02em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(2.6rem,5vw,4.2rem)" }}>
+              Let&rsquo;s build
+              <br />
+              something
+              <br />
+              <span className="italic text-[#D97732]">meaningful.</span>
+            </h2>
+            <span className="block w-10 h-[2px] bg-[#D97732] mb-6" />
+            <p className="text-[#555] font-medium max-w-[38ch] leading-relaxed mb-8" style={{ fontSize: "1.05rem" }}>
+              I&rsquo;m always open to discussing new ideas, collaborations, and opportunities that create real impact.
+            </p>
+            <div className="italic text-[#111]" style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem" }}>
+              {name}.
             </div>
           </motion.div>
 
-          <div className="flex gap-3">
-            {socials.map((s) => (
-              <motion.a key={s.label} href={s.href} target="_blank" rel="noreferrer"
-                className="w-12 h-12 rounded-full border border-[#111]/8 flex items-center justify-center text-[#111]/35 hover:text-[#D97732] hover:border-[#D97732]/30 hover:bg-[#D97732]/5 hover:shadow-sm hover:shadow-[#D97732]/5 transition-all duration-200"
-                whileHover={{ y: -3, scale: 1.1 }} title={s.label}>{s.icon}</motion.a>
-            ))}
+          {/* Right: MR monogram with portrait masked into the M */}
+          <motion.div
+            className="relative flex justify-center md:justify-end"
+            initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
+          >
+            <div className="relative w-full" style={{ maxWidth: 620 }}>
+              <svg viewBox="0 0 900 420" className="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <mask id="mLetterMask">
+                    <rect width="900" height="420" fill="black" />
+                    <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="white">M</text>
+                  </mask>
+                  <clipPath id="mClip">
+                    <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440">M</text>
+                  </clipPath>
+                </defs>
+
+                {/* faint full M outline (shows where photo doesn't cover) */}
+                <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.06">M</text>
+
+                {/* portrait clipped into the M glyph */}
+                <g mask="url(#mLetterMask)">
+                  <image href={portrait?.src || portrait} x="30" y="-30" width="480" height="480" preserveAspectRatio="xMidYMid slice" />
+                </g>
+
+                {/* outlined R */}
+                <text x="430" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.12" strokeWidth="1.5">R</text>
+              </svg>
+
+              <Sparkles className="absolute -top-1 right-0 text-[#D97732]" size={22} strokeWidth={1.5} />
+              <div
+                className="absolute bottom-6 right-2 italic text-[#D97732]"
+                style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem", transform: "rotate(-6deg)" }}
+              >
+                {name}.
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="border-t border-[#111]/8" />
+
+        {/* Link columns */}
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 py-14"
+          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+        >
+          {/* Profile summary */}
+          <div className="col-span-2 md:col-span-1">
+            <div className="font-display text-2xl mb-1">
+              {name} <span className="text-[#D97732]">.</span>
+            </div>
+            <div className="text-xs font-mono uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-2">
+              MBA · HR &amp; Business Analytics
+            </div>
+            <div className="text-[#777] text-sm mb-4">People x Data x Better Decisions</div>
+            <div className="flex flex-col gap-2 text-sm text-[#444]">
+              <span className="flex items-center gap-2"><MapPin size={15} className="text-[#111]/40" /> {location}</span>
+              <span className="flex items-center gap-2"><GraduationCap size={15} className="text-[#111]/40" /> MBA · 2027</span>
+              <span className="flex items-center gap-2"><Target size={15} className="text-[#111]/40" /> HR &amp; Business Analytics</span>
+            </div>
           </div>
-        </motion.div>
 
-        {/* CTA Buttons */}
-        <motion.div className="flex flex-wrap justify-center gap-4 mb-16"
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-          <a href="#linkedin" className="inline-flex items-center gap-2 rounded-full bg-[#D97732] text-white font-medium hover:bg-[#c06820] hover:shadow-lg hover:shadow-[#D97732]/20 transition-all duration-200" style={{ padding: "16px 36px", fontSize: "1.1rem" }}>
-            Let's Connect →
-          </a>
-          <a href="https://manikantar.in/resume.pdf" className="inline-flex items-center gap-2 rounded-full border-2 border-[#111]/10 text-[#444] font-medium hover:border-[#D97732]/25 hover:text-[#D97732] transition-all duration-200" style={{ padding: "16px 36px", fontSize: "1.1rem" }}>
-            Download Resume
-          </a>
-        </motion.div>
-
-        {/* Explore + Resources */}
-        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 max-w-3xl mx-auto py-10 border-t border-[#111]/6 text-left"
-          initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
+          {/* Explore */}
           <div>
-            <div className="font-mono text-sm uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-4">Explore</div>
-            <div className="flex flex-col gap-2">
-              {explore.map((l) => (
-                <a key={l} href={`#${l.toLowerCase()}`} className="text-[1rem] text-[#444] hover:text-[#D97732] transition-colors duration-200 font-medium border-b border-transparent hover:border-[#D97732]/30 pb-1">{l}</a>
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#111]/40 mb-4">
+              <span className="text-[#111]/25">—</span> Explore
+            </div>
+            <div className="flex flex-col gap-3">
+              {explore.map((l, i) => (
+                <a key={l.label} href={l.href} className="group flex items-center justify-between text-[#333] hover:text-[#D97732] transition-colors duration-200">
+                  <span className="flex items-center gap-3">
+                    <span className="text-xs text-[#111]/25 font-mono">{String(i + 1).padStart(2, "0")}</span>
+                    {l.label}
+                  </span>
+                  <ArrowRight size={15} className="text-[#D97732] opacity-70 group-hover:translate-x-0.5 transition-transform" />
+                </a>
               ))}
             </div>
           </div>
+
+          {/* Work */}
           <div>
-            <div className="font-mono text-sm uppercase tracking-[0.12em] text-[#D97732] font-semibold mb-4">Resources</div>
-            <div className="flex flex-col gap-2">
-              {[...resources, ...connectLinks].map((l) => (
-                <span key={l} className="text-[1rem] text-[#444] font-medium">{l}</span>
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#111]/40 mb-4">
+              <span className="text-[#111]/25">—</span> Work
+            </div>
+            <div className="flex flex-col gap-3">
+              {work.map((l, i) => (
+                <a key={l.label} href={l.href} className="group flex items-center justify-between text-[#333] hover:text-[#D97732] transition-colors duration-200">
+                  <span className="flex items-center gap-3">
+                    <span className="text-xs text-[#111]/25 font-mono">{String(i + 1).padStart(2, "0")}</span>
+                    {l.label}
+                  </span>
+                  <ArrowRight size={15} className="text-[#D97732] opacity-70 group-hover:translate-x-0.5 transition-transform" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Connect */}
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.15em] text-[#111]/40 mb-4">
+              <span className="text-[#111]/25">—</span> Connect
+            </div>
+            <div className="flex flex-col gap-3">
+              {connect.map((l) => (
+                <a key={l.label} href={l.href} target="_blank" rel="noreferrer" className="group flex items-center justify-between text-[#333] hover:text-[#D97732] transition-colors duration-200">
+                  <span className="flex items-center gap-3">
+                    <span className="w-6 h-6 rounded-md bg-[#111] text-white flex items-center justify-center">{l.icon}</span>
+                    {l.label}
+                  </span>
+                  <ArrowRight size={15} className="text-[#D97732] opacity-70 group-hover:translate-x-0.5 transition-transform" />
+                </a>
               ))}
             </div>
           </div>
         </motion.div>
+
+        <div className="border-t border-[#111]/8" />
 
         {/* Bottom bar */}
-        <motion.div className="flex flex-wrap justify-center gap-x-5 gap-y-2 pt-10 border-t border-[#111]/6 text-[#111]/30 font-medium" style={{ fontSize: "0.95rem" }}
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }}>
-          <span>&copy; 2026 {name}</span><span className="text-[#111]/10">·</span>
-          <span>manikantar.in</span><span className="text-[#111]/10">·</span>
-          <span>{location}</span><span className="text-[#111]/10">·</span>
-          <span>Built with intention</span><span className="text-[#111]/10">·</span>
-          <span>Always improving</span>
+        <motion.div
+          className="flex flex-wrap items-center justify-between gap-4 pt-8 text-[#111]/35 font-medium text-sm"
+          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+        >
+          <span>&copy; 2026 {name}</span>
+          <span className="flex items-center gap-2">
+            <Sparkles size={14} className="text-[#D97732]" /> {location}
+          </span>
+          <a href="#sitemap" className="flex items-center gap-2 hover:text-[#D97732] transition-colors">
+            Sitemap <Plus size={14} />
+            <Grid3x3 size={16} />
+          </a>
         </motion.div>
       </div>
     </footer>
