@@ -73,17 +73,27 @@ export function SiteFooter() {
     <footer className="relative bg-[#F8F5EF] text-[#111] overflow-hidden" style={{ fontFamily: "var(--font-sans)" }}>
 
       {/* ===== CONNECT SECTION — AREA A ===== */}
-      <section className="relative overflow-hidden">
-        {/* Subtle MR watermark behind entire Connect section */}
+      <section className="relative overflow-hidden" style={{ minHeight: "650px", maxHeight: "760px" }}>
+        {/* HUGE MANIKANTA R. background wordmark */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-          <span className="absolute top-1/2 right-[5%] -translate-y-1/2 font-display italic text-[clamp(300px,35vw,450px)] leading-none text-[#111]/[0.03]">MR</span>
+          <motion.span
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display font-normal whitespace-nowrap"
+            style={{ fontSize: "clamp(180px, 22vw, 240px)", letterSpacing: "-0.04em", lineHeight: "0.8", color: "#111", opacity: 0.045 }}
+            initial={{ opacity: 0 }} whileInView={{ opacity: 0.045 }} viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            MANIKANTA R.
+          </motion.span>
         </div>
 
-        <div className="relative z-10 mx-auto px-6 sm:px-10 py-16 sm:py-20" style={{ maxWidth: "1250px", minHeight: "650px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        {/* Subtle radial warm glow behind center */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 52% 50%, rgba(217,119,50,0.08), transparent 32%)" }} />
+
+        <div className="relative z-10 mx-auto px-6 sm:px-10 h-full flex flex-col justify-center" style={{ maxWidth: "1250px", minHeight: "650px", maxHeight: "760px" }}>
 
           {/* Eyebrow */}
           <motion.div
-            className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-10"
+            className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-8"
             initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
@@ -92,64 +102,57 @@ export function SiteFooter() {
             <span>Connect</span>
           </motion.div>
 
-          {/* 3-Column Composition: 1.25fr / 0.9fr / 0.9fr */}
-          <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-[1.25fr_0.9fr_0.9fr] gap-8 lg:gap-14 items-center">
+          {/* 3-Column Composition: 1.2fr / 0.8fr / 0.85fr */}
+          <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr_0.85fr] gap-8 lg:gap-14 items-center flex-1">
 
-            {/* LEFT — Message */}
+            {/* LEFT — Message (42%) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h2 className="font-display leading-[0.95] tracking-[-0.02em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(2.8rem, 5vw, 4.5rem)" }}>
+              <h2 className="font-display leading-[0.94] tracking-[-0.02em] font-medium text-[#111] mb-5" style={{ fontSize: "clamp(2.75rem, 4.8vw, 4.5rem)" }}>
                 Let&rsquo;s build
                 <br />
                 something
                 <br />
                 <span className="italic text-[#D97732]">meaningful.</span>
               </h2>
-              <span className="block w-12 h-[2px] bg-[#D97732] mb-7" />
-              <p className="text-[#555] font-medium max-w-[42ch] leading-[1.65]" style={{ fontSize: "1.125rem" }}>
+              <span className="block w-10 h-[2px] bg-[#D97732] mb-6" />
+              <p className="text-[#555] font-medium max-w-[44ch] leading-[1.6]" style={{ fontSize: "1.125rem" }}>
                 I&rsquo;m always open to discussing new ideas, collaborations, and opportunities that create real impact.
               </p>
             </motion.div>
 
-            {/* CENTER — Identity Visual (280-320px) */}
+            {/* CENTER — Identity Visual (28%) */}
             <motion.div
-              className="flex justify-center"
+              className="flex flex-col items-center text-center"
               initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="relative" style={{ width: "100%", maxWidth: 310 }}>
-                {/* Subtle warm glow */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#D97732]/8 to-[#F8F5EF] blur-2xl scale-[0.85]" />
-                <svg viewBox="0 0 900 420" className="w-full h-auto select-none relative" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <mask id="mLetterMask">
-                      <rect width="900" height="420" fill="black" />
-                      <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="white">M</text>
-                    </mask>
-                  </defs>
-                  {/* Faint MR watermark behind portrait */}
-                  <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.04">M</text>
-                  <g mask="url(#mLetterMask)">
-                    <image href={portrait?.src || portrait} x="30" y="-30" width="480" height="480" preserveAspectRatio="xMidYMid slice" />
-                  </g>
-                  <text x="430" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.08" strokeWidth="1.5">R</text>
-                </svg>
-                <Sparkles className="absolute -top-1 right-0 text-[#D97732]" size={20} strokeWidth={1.5} />
-                <div
-                  className="absolute bottom-3 right-0 text-[#D97732] italic"
-                  style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", transform: "rotate(-6deg)" }}
-                >
-                  {name}.
+              <div className="relative" style={{ width: "100%", maxWidth: 250 }}>
+                {/* Subtle warm glow behind portrait */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#D97732]/10 to-[#F8F5EF] blur-2xl scale-[0.8]" />
+                <img
+                  src={portrait?.src || portrait}
+                  alt="Manikanta R"
+                  className="w-full h-auto rounded-2xl object-cover relative"
+                  style={{ aspectRatio: "3/4" }}
+                />
+              </div>
+              {/* Name under portrait */}
+              <div className="mt-5">
+                <div className="font-display italic text-[#D97732] text-[1.4rem] mb-1.5">{name}.</div>
+                <div className="text-[0.72rem] font-mono uppercase tracking-[0.14em] text-[#D97732] font-semibold mb-2">HR &amp; Business Analytics</div>
+                <div className="text-[0.68rem] font-mono uppercase tracking-[0.12em] text-black/40">
+                  AI Research &middot; People Analytics &middot; Strategy
                 </div>
               </div>
             </motion.div>
 
-            {/* RIGHT — Opportunity (~260-300px) */}
+            {/* RIGHT — Opportunity (30%) */}
             <motion.div
-              className="flex flex-col items-start gap-5 md:pl-2"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="flex flex-col items-start gap-5 md:pl-4"
+              initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-[#111]/10 bg-white/60 px-4 py-2 text-[0.8rem] font-medium text-[#444]">
@@ -159,7 +162,7 @@ export function SiteFooter() {
                 </span>
                 Open to new opportunities
               </span>
-              <p className="text-[#555] max-w-[32ch] leading-[1.7]" style={{ fontSize: "1.0625rem" }}>
+              <p className="text-[#555] max-w-[34ch] leading-[1.7]" style={{ fontSize: "1.0625rem" }}>
                 Currently based in {location}, exploring roles at the intersection of HR and analytics.
               </p>
               <a
