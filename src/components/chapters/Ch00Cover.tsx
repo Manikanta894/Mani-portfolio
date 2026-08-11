@@ -295,7 +295,6 @@ export function Ch00Cover() {
       <HeroGridBg />
       <div className="hero-bg" aria-hidden />
       <div className="hero-mesh" aria-hidden />
-      <div className="hero-atmosphere" aria-hidden />
       <svg className="hero-grain" aria-hidden="true" width="100%" height="100%">
         <filter id="hero-grain-filter">
           <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
@@ -303,16 +302,6 @@ export function Ch00Cover() {
         </filter>
         <rect width="100%" height="100%" filter="url(#hero-grain-filter)" opacity="0.018" />
       </svg>
-
-      {/* Cursor-following glow (hidden on touch) */}
-      {!isTouch.current && (
-        <div
-          ref={cursorRef}
-          className="hero-cursor-glow"
-          aria-hidden
-          style={{ x: glowX, y: glowY }}
-        />
-      )}
 
       {/* Status bar */}
       <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
@@ -863,32 +852,18 @@ const css = `
 }
 .hero-grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: multiply; }
 
-/* Atmospheric warm light fields */
-.hero-atmosphere {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background:
-    radial-gradient(60vw 50vw at 25% 35%, rgba(217,119,50,0.07), transparent 35%),
-    radial-gradient(50vw 40vw at 70% 55%, rgba(217,119,50,0.045), transparent 40%),
-    radial-gradient(40vw 45vw at 50% 80%, rgba(245,230,210,0.06), transparent 35%);
-  animation: hero-atmosphere-drift 22s ease-in-out infinite alternate;
-}
-@keyframes hero-atmosphere-drift {
-  0% { transform: scale(1) translate(0, 0); opacity: 0.9; }
-  50% { transform: scale(1.04) translate(1%, 0.5%); opacity: 1; }
-  100% { transform: scale(1.02) translate(-0.5%, -0.5%); opacity: 0.85; }
-}
-
-/* Cursor-following glow */
+/* Cursor-following glow — subtle, doesn't block clicks */
 .hero-cursor-glow {
   position: fixed;
-  width: 600px;
-  height: 600px;
+  width: 500px;
+  height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(217,119,50,0.035), transparent 70%);
+  background: radial-gradient(circle, rgba(217,119,50,0.02), transparent 70%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
   will-change: transform;
   transform: translate(-50%, -50%);
+  opacity: 0.5;
 }
 
 .hero-rule {
@@ -1162,7 +1137,6 @@ const css = `
 
  /* Reduced motion */
  @media (prefers-reduced-motion: reduce) {
-   .hero-atmosphere,
    .hero-mesh,
    .hero-watermark,
    .hero-portrait-ring,
