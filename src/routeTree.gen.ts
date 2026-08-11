@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicLinkedinFeedRouteImport } from './routes/api/public/linkedin-feed'
+import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const ApiPublicLinkedinFeedRoute = ApiPublicLinkedinFeedRouteImport.update({
   path: '/api/public/linkedin-feed',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
+  id: '/api/public/contact',
+  path: '/api/public/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/linkedin-feed': typeof ApiPublicLinkedinFeedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/linkedin-feed': typeof ApiPublicLinkedinFeedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/linkedin-feed': typeof ApiPublicLinkedinFeedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/linkedin-feed'
+  fullPaths: '/' | '/api/public/contact' | '/api/public/linkedin-feed'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/linkedin-feed'
-  id: '__root__' | '/' | '/api/public/linkedin-feed'
+  to: '/' | '/api/public/contact' | '/api/public/linkedin-feed'
+  id: '__root__' | '/' | '/api/public/contact' | '/api/public/linkedin-feed'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicContactRoute: typeof ApiPublicContactRoute
   ApiPublicLinkedinFeedRoute: typeof ApiPublicLinkedinFeedRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLinkedinFeedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/contact': {
+      id: '/api/public/contact'
+      path: '/api/public/contact'
+      fullPath: '/api/public/contact'
+      preLoaderRoute: typeof ApiPublicContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicContactRoute: ApiPublicContactRoute,
   ApiPublicLinkedinFeedRoute: ApiPublicLinkedinFeedRoute,
 }
 export const routeTree = rootRouteImport
