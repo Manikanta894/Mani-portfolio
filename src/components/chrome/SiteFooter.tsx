@@ -71,11 +71,11 @@ export function SiteFooter() {
 
   return (
     <footer className="relative bg-[#F8F5EF] text-[#111] overflow-hidden" style={{ fontFamily: "var(--font-sans)" }}>
-      <div className="relative z-10 mx-auto px-6 sm:px-10 py-16 sm:py-24" style={{ maxWidth: "1200px" }}>
+      <div className="relative z-10 mx-auto px-6 sm:px-10" style={{ maxWidth: "1280px", minHeight: "80vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
 
         {/* Eyebrow */}
         <motion.div
-          className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-8"
+          className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-[#111]/40 mb-10"
           initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -84,46 +84,48 @@ export function SiteFooter() {
           <span>Connect</span>
         </motion.div>
 
-        {/* Hero row — balanced 3-part composition: 45% / 25% / 30% */}
-        <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-center min-h-[70vh]">
-          {/* LEFT — primary message (~45%) */}
+        {/* Hero row — balanced 3-part composition: 42% / 28% / 30% */}
+        <div className="grid md:grid-cols-12 gap-8 lg:gap-12 items-center flex-1">
+          {/* LEFT — primary message (~42%) */}
           <motion.div
             className="md:col-span-5"
-            initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h2 className="font-display leading-[0.96] tracking-[-0.02em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(3rem, 5.5vw, 5rem)" }}>
+            <h2 className="font-display leading-[0.94] tracking-[-0.02em] font-medium text-[#111] mb-6" style={{ fontSize: "clamp(3rem, 5.5vw, 4.75rem)" }}>
               Let&rsquo;s build
               <br />
               something
               <br />
               <span className="italic text-[#D97732]">meaningful.</span>
             </h2>
-            <span className="block w-10 h-[2px] bg-[#D97732] mb-6" />
-            <p className="text-[#555] font-medium max-w-[38ch] leading-relaxed" style={{ fontSize: "1.05rem" }}>
+            <span className="block w-12 h-[2px] bg-[#D97732] mb-7" />
+            <p className="text-[#555] font-medium max-w-[40ch] leading-[1.7]" style={{ fontSize: "1.125rem" }}>
               I&rsquo;m always open to discussing new ideas, collaborations, and opportunities that create real impact.
             </p>
           </motion.div>
 
-          {/* CENTER — identity visual (~25%) */}
+          {/* CENTER — identity visual (~28%) */}
           <motion.div
             className="md:col-span-3 flex justify-center"
-            initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="relative" style={{ maxWidth: 280 }}>
-              <svg viewBox="0 0 900 420" className="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+            <div className="relative" style={{ width: "100%", maxWidth: 320 }}>
+              {/* Subtle glow behind portrait */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#D97732]/5 to-[#F8F5EF] blur-2xl scale-90" />
+              <svg viewBox="0 0 900 420" className="w-full h-auto select-none relative" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <mask id="mLetterMask">
                     <rect width="900" height="420" fill="black" />
                     <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="white">M</text>
                   </mask>
                 </defs>
-                <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.06">M</text>
+                <text x="-10" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.05">M</text>
                 <g mask="url(#mLetterMask)">
                   <image href={portrait?.src || portrait} x="30" y="-30" width="480" height="480" preserveAspectRatio="xMidYMid slice" />
                 </g>
-                <text x="430" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.12" strokeWidth="1.5">R</text>
+                <text x="430" y="360" fontFamily="var(--font-display)" fontWeight="600" fontSize="440" fill="none" stroke="#111" strokeOpacity="0.1" strokeWidth="1.5">R</text>
               </svg>
               <Sparkles className="absolute -top-1 right-0 text-[#D97732]" size={22} strokeWidth={1.5} />
               <div
@@ -138,8 +140,8 @@ export function SiteFooter() {
           {/* RIGHT — contact / opportunity (~30%) */}
           <motion.div
             className="md:col-span-4 flex flex-col items-start gap-5 md:pl-4"
-            initial={{ opacity: 0, x: 12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-[#111]/8 bg-white/50 px-3 py-1.5 text-xs font-medium text-[#444]">
               <span className="relative flex h-2 w-2">
@@ -148,15 +150,15 @@ export function SiteFooter() {
               </span>
               Open to new opportunities
             </span>
-            <p className="text-sm text-[#777] max-w-[28ch] leading-relaxed">
+            <p className="text-[0.95rem] text-[#666] max-w-[30ch] leading-[1.7]">
               Currently based in {location}, exploring roles at the intersection of HR and analytics.
             </p>
             <a
               href={`mailto:${email}`}
-              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-[#111] hover:text-[#D97732] transition-colors duration-200"
+              className="group inline-flex items-center gap-2 text-[0.95rem] font-semibold text-[#111] hover:text-[#D97732] transition-all duration-200 border-b border-transparent hover:border-[#D97732] pb-0.5"
             >
               Say hello
-              <ArrowUpRight size={15} className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200" />
+              <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200" />
             </a>
           </motion.div>
         </div>
