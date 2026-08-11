@@ -35,34 +35,34 @@ export default function Ch09LinkedIn() {
         <div className="w-full mx-auto px-8 sm:px-12 py-14 sm:py-16" style={{ maxWidth: "1440px" }}>
           <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "clamp(40px,6vw,64px)" }}>
             {/* LEFT — 46% */}
-            <div className="lg:col-span-5">
-              <div className="font-mono text-[0.85rem] uppercase tracking-[0.14em] text-black/40 mb-3">
+            <motion.div className="lg:col-span-5" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+              <div className="font-mono text-[0.85rem] uppercase tracking-[0.14em] text-black/40 mb-4">
                 <span className="text-[#D96D22] font-bold mr-2">09</span>Connect
               </div>
 
-              <h1 className="font-display italic leading-[0.88] tracking-[-0.045em] text-[#111] mb-3 whitespace-nowrap font-medium" style={{ fontSize: "clamp(5.5rem,8vw,7.5rem)" }}>
+              <h1 className="font-display italic leading-[0.88] tracking-[-0.045em] text-[#111] mb-4 whitespace-nowrap font-medium" style={{ fontSize: "clamp(5.5rem,8vw,7.5rem)" }}>
                 {p.name.split(" ")[0]} <span className="text-[#D96D22]">{p.name.split(" ").slice(1).join(" ")}.</span>
               </h1>
 
-              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[0.9rem] font-mono uppercase tracking-[0.2em] text-black/[0.52] font-medium mb-3">
+              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[0.9rem] font-mono uppercase tracking-[0.2em] text-black/[0.52] font-medium mb-4">
                 <span>MBA Candidate</span><span className="text-black/15">·</span>
                 <span>HR &amp; BA</span><span className="text-black/15">·</span>
                 <span>AI Research</span><span className="text-black/15">·</span>
                 <span>Strategy</span>
               </div>
 
-              <p className="font-display italic leading-[0.96] tracking-[-0.03em] text-[#111] mb-3 font-medium" style={{ fontSize: "clamp(2rem,3.2vw,3.2rem)" }}>
+              <p className="font-display italic leading-[0.96] tracking-[-0.03em] text-[#111] mb-4 font-medium" style={{ fontSize: "clamp(2rem,3.2vw,3.2rem)" }}>
                 Let&apos;s Build Something Meaningful.
               </p>
 
-              <p className="text-[clamp(1rem,1.15vw,1.2rem)] leading-[1.7] text-black/[0.82] max-w-[560px] mb-3">
+              <p className="text-[clamp(1rem,1.15vw,1.2rem)] leading-[1.7] text-black/[0.82] max-w-[560px] mb-4">
                 I enjoy solving real-world business problems through AI, analytics, research and strategy. Whether you&apos;re hiring, collaborating, or simply exchanging ideas — I&apos;d love to hear from you.
               </p>
-              <p className="text-[0.95rem] text-black/50 italic mb-5">
+              <p className="text-[0.95rem] text-black/50 italic mb-6">
                 Currently building AI-powered HR research, analytics dashboards and business strategy projects from {p.location}. <span className="font-display text-[#D96D22]">— Manikanta R.</span>
               </p>
 
-              <div className="space-y-0 mb-4">
+              <div className="space-y-0 mb-6">
                 {[
                   { icon: "📧", label: "EMAIL", value: p.email, action: true },
                   { icon: "📍", label: "LOCATION", value: p.location, action: false },
@@ -82,7 +82,7 @@ export default function Ch09LinkedIn() {
               <div className="flex flex-wrap gap-2.5">
                 {[
                   { label: "LinkedIn", href: "https://www.linkedin.com/in/manikanta894/", icon: <LiIcon /> },
-                  { label: "GitHub", href: "https://github.com/manikantar", icon: <GhIcon /> },
+                  { label: "GitHub", href: "https://github.com/Manikanta894/Manikanta894", icon: <GhIcon /> },
                   { label: "Email", href: `mailto:${p.email}`, icon: <MailIcon /> },
                   { label: "ORCID", href: "https://orcid.org/0009-0005-2576-8731", icon: <OrcidSvg /> },
                   { label: "Resume", href: "https://manikantar.in/resume.pdf" },
@@ -96,59 +96,54 @@ export default function Ch09LinkedIn() {
                   </motion.a>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* RIGHT — 54% */}
             <div className="lg:col-span-7">
               <div className="lg:sticky lg:top-16">
                 {sent ? (
-                  <motion.div className="rounded-3xl border border-black/8 bg-[#111] text-[#F7F4EC] px-10 py-12 text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <div className="w-14 h-14 rounded-full bg-[#D96D22]/20 flex items-center justify-center mx-auto mb-3">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D96D22" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" strokeLinecap="round"/></svg>
+                  <motion.div className="rounded-3xl border border-black/8 bg-[#111] text-[#F7F4EC] px-10 py-14 text-center" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+                    <div className="w-16 h-16 rounded-full bg-[#D96D22]/20 flex items-center justify-center mx-auto mb-4">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D96D22" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5" strokeLinecap="round"/></svg>
                     </div>
-                    <h3 className="font-display text-[1.8rem] mb-1">Message Sent.</h3>
-                    <p className="text-white/45 mb-3 text-base">I&apos;ll reply within 24 hours.</p>
-                    <button onClick={() => { setSent(false); setForm({}); setTopic(""); }} className="text-[0.85rem] font-mono text-[#D96D22] underline hover:no-underline">Send another</button>
+                    <h3 className="font-display text-[2rem] mb-2">Message Sent!</h3>
+                    <p className="text-white/45 mb-5 text-base">Thank you for reaching out. I&apos;ll reply within 24 hours.</p>
+                    <button onClick={() => { setSent(false); setForm({}); setTopic(""); }} className="text-[0.85rem] font-mono text-[#D96D22] border border-[#D96D22]/30 rounded-full px-5 py-2 hover:bg-[#D96D22]/10 transition-all">Send another</button>
                   </motion.div>
                 ) : (
-                  <div className="rounded-3xl border border-black/8 bg-white/30 backdrop-blur-sm px-8 sm:px-10 py-8 sm:py-9 shadow-sm">
-                    <h3 className="font-display leading-[0.94] text-[#111] mb-1" style={{ fontSize: "clamp(1.8rem,2.8vw,2.8rem)" }}>Start a Conversation.</h3>
-                    <p className="text-[clamp(0.95rem,1.1vw,1.1rem)] text-black/50 mb-5">Every meaningful collaboration begins with a simple message.</p>
+                  <div className="rounded-3xl border border-black/8 bg-white/40 backdrop-blur-sm px-8 sm:px-10 py-8 sm:py-10 shadow-sm">
+                    <h3 className="font-display leading-[0.94] text-[#111] mb-1" style={{ fontSize: "clamp(1.8rem,2.8vw,2.8rem)" }}>Start a Conversation</h3>
+                    <p className="text-[clamp(0.95rem,1.1vw,1.1rem)] text-black/50 mb-6">Every meaningful collaboration begins with a simple message.</p>
 
-                    <div className="flex flex-wrap gap-2 mb-5">
+                    <div className="flex flex-wrap gap-2 mb-6">
                       {TOPICS.map((t) => (
-                        <button key={t} onClick={() => setTopic(t === topic ? "" : t)}
-                          className={`px-4 py-2.5 rounded-full text-[0.85rem] font-mono tracking-[0.04em] transition-all duration-200
-                            ${topic === t ? "bg-[#111] text-[#F7F4EC]" : "border border-black/10 text-black/50 hover:border-[#D96D22]/25 hover:text-[#D96D22]"}`}>
+                        <button key={t} type="button" onClick={() => setTopic(t === topic ? "" : t)}
+                          className={`px-4 py-2 rounded-full text-[0.82rem] font-mono tracking-[0.04em] transition-all duration-200
+                            ${topic === t ? "bg-[#D96D22] text-white shadow-sm shadow-[#D96D22]/20" : "border border-black/10 text-black/50 hover:border-[#D96D22]/30 hover:text-[#D96D22]"}`}>
                           {t}
                         </button>
                       ))}
                     </div>
 
-                    <form onSubmit={submit} className="space-y-4">
-                      {[
-                        { name: "name", placeholder: "Your name", required: true },
-                        { name: "email", placeholder: "you@company.com", required: true, type: "email" },
-                        { name: "message", placeholder: "Tell me about your project or opportunity...", required: true, area: true },
-                      ].map((f) => (
-                        <div key={f.name}>
-                          {f.area ? (
-                            <textarea required={f.required} value={form[f.name] || ""} onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
-                              placeholder={f.placeholder} rows={3}
-                              className="w-full bg-transparent border-b-2 border-black/8 py-3.5 text-[1rem] text-[#111] placeholder:text-black/30 outline-none transition-all duration-200 focus:border-[#D96D22] focus:border-b-[3px] resize-none" style={{ minHeight: "140px" }} />
-                          ) : (
-                            <input type={f.type || "text"} required={f.required} value={form[f.name] || ""} onChange={(e) => setForm((p) => ({ ...p, [f.name]: e.target.value }))}
-                              placeholder={f.placeholder}
-                              className="w-full bg-transparent border-b-2 border-black/8 py-3.5 text-[1rem] text-[#111] placeholder:text-black/30 outline-none transition-all duration-200 focus:border-[#D96D22] focus:border-b-[3px]" style={{ height: "52px" }} />
-                          )}
-                        </div>
-                      ))}
+                    <form onSubmit={submit} className="space-y-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" required value={form.name || ""} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                          placeholder="Your name"
+                          className="w-full bg-transparent border-b-2 border-black/10 py-3 text-[0.95rem] text-[#111] placeholder:text-black/25 outline-none transition-all duration-200 focus:border-[#D96D22]" />
+                        <input type="email" required value={form.email || ""} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                          placeholder="you@company.com"
+                          className="w-full bg-transparent border-b-2 border-black/10 py-3 text-[0.95rem] text-[#111] placeholder:text-black/25 outline-none transition-all duration-200 focus:border-[#D96D22]" />
+                      </div>
+                      <textarea required value={form.message || ""} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
+                        placeholder="Tell me about your project or opportunity..." rows={4}
+                        className="w-full bg-transparent border-b-2 border-black/10 py-3 text-[0.95rem] text-[#111] placeholder:text-black/25 outline-none transition-all duration-200 focus:border-[#D96D22] resize-none" />
 
-                      <div className="flex justify-center pt-2">
+                      <div className="flex items-center justify-between pt-2">
+                        <p className="text-[0.72rem] text-black/30 font-mono">Typical reply: &lt; 24h</p>
                         <motion.button type="submit" disabled={sending}
-                          className="flex items-center justify-center gap-2 rounded-full text-white font-mono tracking-[0.06em] uppercase transition-all duration-200 disabled:opacity-50"
-                          style={{ height: "52px", width: "280px", fontSize: "0.9rem", background: "linear-gradient(135deg, #D96D22, #C45D18)", boxShadow: "0 4px 18px -6px rgba(217,109,34,0.3)" }}
-                          whileHover={{ y: -2, boxShadow: "0 6px 22px -6px rgba(217,109,34,0.45)" }} whileTap={{ scale: 0.98 }}>
+                          className="flex items-center justify-center gap-2 rounded-full text-white font-mono tracking-[0.04em] uppercase transition-all duration-200 disabled:opacity-50"
+                          style={{ height: "48px", width: "200px", fontSize: "0.82rem", background: "#D96D22", boxShadow: "0 4px 16px -4px rgba(217,109,34,0.35)" }}
+                          whileHover={{ y: -2, boxShadow: "0 8px 24px -6px rgba(217,109,34,0.5)" }} whileTap={{ scale: 0.97 }}>
                           {sending ? "Sending..." : <>Send Message →</>}
                         </motion.button>
                       </div>
@@ -170,19 +165,20 @@ export default function Ch09LinkedIn() {
                         <div><span className="block text-[0.6rem] uppercase tracking-[0.1em] text-black/25 font-semibold">Timezone</span>GMT +5:30</div>
               </div>
 
-              {/* LinkedIn Live Metrics */}
+               {/* LinkedIn Live Metrics */}
               {li.followers && (
-                <motion.div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                <motion.div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2.5" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                   {[
                     { label: "Followers", value: li.followers, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
                     { label: "Connections", value: li.connections || 300, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : `${v}+` },
                     { label: "Impressions", value: li.impressions, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
                     { label: "Engagements", value: li.engagements, fmt: (v: number) => v >= 1000 ? `${(v/1000).toFixed(1)}K` : String(v) },
-                  ].map((m) => (
-                    <div key={m.label} className="rounded-xl border border-black/6 bg-white/30 p-3 text-center hover:border-[#0077B5]/20 transition-colors">
-                      <div className="font-display text-[1.2rem] leading-none text-[#0077B5]">{m.fmt(m.value || 0)}</div>
+                  ].map((m, i) => (
+                    <motion.div key={m.label} className="rounded-xl border border-black/6 bg-white/40 p-3.5 text-center hover:border-[#0077B5]/30 transition-colors"
+                      initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.4 }}>
+                      <div className="font-display text-[1.3rem] leading-none text-[#0077B5]">{m.fmt(m.value || 0)}</div>
                       <div className="text-[0.65rem] font-mono uppercase tracking-[0.08em] text-black/40 mt-1">{m.label}</div>
-                    </div>
+                    </motion.div>
                   ))}
                 </motion.div>
               )}
@@ -232,10 +228,6 @@ export default function Ch09LinkedIn() {
 
                 {/* Quick Connect */}
                 <div className="flex flex-wrap gap-2">
-                  <a href="https://calendly.com/manikantar" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-black/6 bg-white/30 text-[0.75rem] font-mono text-black/50 hover:text-[#D96D22] hover:border-[#D96D22]/25 transition-all">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    Schedule Call
-                  </a>
                   <a href="https://www.linkedin.com/in/manikanta894/" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-black/6 bg-white/30 text-[0.75rem] font-mono text-black/50 hover:text-[#D96D22] hover:border-[#D96D22]/25 transition-all">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                     Message

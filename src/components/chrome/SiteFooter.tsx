@@ -64,7 +64,7 @@ export function SiteFooter() {
   ];
   const connect = [
     { label: "LinkedIn", href: "https://linkedin.com/in/manikanta894", icon: <LiIcon /> },
-    { label: "GitHub", href: "https://github.com/manikantar", icon: <GhIcon /> },
+    { label: "GitHub", href: "https://github.com/Manikanta894/Manikanta894", icon: <GhIcon /> },
     { label: "Email", href: `mailto:${email}`, icon: <MailIcon /> },
     { label: "Download Resume", href: "https://manikantar.in/resume.pdf", icon: <ResumeIcon /> },
   ];

@@ -88,7 +88,7 @@ function Index() {
         address: { "@type": "PostalAddress", addressLocality: profile?.location || "Bengaluru", addressCountry: "IN" },
         sameAs: [
           "https://www.linkedin.com/in/manikanta-r",
-          "https://github.com/manikantar",
+          "https://github.com/Manikanta894/Manikanta894",
           "https://orcid.org/0009-0005-2576-8731",
         ],
       };
