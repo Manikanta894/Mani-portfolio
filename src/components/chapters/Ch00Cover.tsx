@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useScroll, useTransform, useMotionValue, useSpring } from "motion/react";
 import portraitCutout from "@/assets/portrait-cutout.png";
 import usePortfolio from "@/hooks/usePortfolio";
 
@@ -223,7 +223,38 @@ export function Ch00Cover() {
 
   const [entered] = useState(true);
 
-  // Parallax
+  // Mouse-following glow + portrait parallax
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const glowX = useSpring(mouseX, { stiffness: 50, damping: 30, mass: 0.5 });
+  const glowY = useSpring(mouseY, { stiffness: 50, damping: 30, mass: 0.5 });
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const isTouch = useRef(false);
+
+  useEffect(() => {
+    isTouch.current = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    if (isTouch.current) return;
+
+    const handleMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+
+      // Portrait mouse parallax (max 8px)
+      if (portraitWrapRef.current) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const moveX = ((e.clientX - centerX) / centerX) * 6;
+        const moveY = ((e.clientY - centerY) / centerY) * 6;
+        portraitWrapRef.current.style.setProperty("--mouse-x", `${moveX}px`);
+        portraitWrapRef.current.style.setProperty("--mouse-y", `${moveY}px`);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMove);
+  }, [mouseX, mouseY]);
+
+  // Scroll parallax for portrait
   useEffect(() => {
     if (!portraitWrapRef.current) return;
     const el = portraitWrapRef.current;
@@ -264,6 +295,7 @@ export function Ch00Cover() {
       <HeroGridBg />
       <div className="hero-bg" aria-hidden />
       <div className="hero-mesh" aria-hidden />
+      <div className="hero-atmosphere" aria-hidden />
       <svg className="hero-grain" aria-hidden="true" width="100%" height="100%">
         <filter id="hero-grain-filter">
           <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
@@ -271,6 +303,16 @@ export function Ch00Cover() {
         </filter>
         <rect width="100%" height="100%" filter="url(#hero-grain-filter)" opacity="0.018" />
       </svg>
+
+      {/* Cursor-following glow (hidden on touch) */}
+      {!isTouch.current && (
+        <div
+          ref={cursorRef}
+          className="hero-cursor-glow"
+          aria-hidden
+          style={{ x: glowX, y: glowY }}
+        />
+      )}
 
       {/* Status bar */}
       <div className="hero-status-bar" style={{ transitionDelay: entered ? "140ms" : "0ms" }}>
@@ -285,10 +327,10 @@ export function Ch00Cover() {
         <div className="col-span-12 lg:col-span-5 relative flex items-center justify-center flex-col hero-left is-awake">
           <div aria-hidden className="hero-watermark is-awake">MR</div>
           <div className="hero-halo" aria-hidden />
-          <div ref={portraitWrapRef} className="hero-portrait-wrap">
-            {/* Rotating gradient ring */}
-            <div className="hero-portrait-ring" aria-hidden />
-            <div className="hero-portrait-glow" aria-hidden />
+           <div ref={portraitWrapRef} className="hero-portrait-wrap" style={{ transform: "translate3d(var(--mouse-x, 0px), calc(var(--parallax-y, 0px) + var(--mouse-y, 0px)), 0)" }}>
+             {/* Rotating gradient ring */}
+             <div className="hero-portrait-ring" aria-hidden />
+             <div className="hero-portrait-glow" aria-hidden />
             <div className="hero-portrait is-awake">
               <img src={portraitCutout} alt="Portrait of Manikanta R" draggable={false} />
             </div>
@@ -491,19 +533,26 @@ const css = `
 .hero-right .hero-welcome,
 .hero-right .hero-role-row,
 .hero-right .hero-rule,
-.hero-right .hero-skills li,
 .hero-right .hero-tagline,
 .hero-right .hero-ctas,
 .hero-right .hero-trust {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
+  transform: translateY(18px);
+  transition: opacity 600ms cubic-bezier(.22,1,.36,1), transform 600ms cubic-bezier(.22,1,.36,1);
 }
+.hero-right .hero-eyebrow { transition-delay: 120ms; }
+.hero-right .hero-welcome { transition-delay: 200ms; }
+.hero-right .hero-role-row { transition-delay: 280ms; }
+.hero-right .hero-rule { transition-delay: 360ms; }
+.hero-right .hero-skills-line { transition-delay: 420ms; }
+.hero-right .hero-tagline { transition-delay: 500ms; }
+.hero-right .hero-ctas { transition-delay: 600ms; }
+.hero-right .hero-trust { transition-delay: 720ms; }
 .hero-right.is-entered .hero-eyebrow,
 .hero-right.is-entered .hero-welcome,
 .hero-right.is-entered .hero-role-row,
 .hero-right.is-entered .hero-rule,
-.hero-right.is-entered .hero-skills li,
+.hero-right.is-entered .hero-skills-line,
 .hero-right.is-entered .hero-tagline,
 .hero-right.is-entered .hero-ctas,
 .hero-right.is-entered .hero-trust {
@@ -644,7 +693,7 @@ const css = `
 
 @keyframes hero-float {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(calc(0% - 10px)); }
+  50%      { transform: translateY(-6px); }
 }
 
 /* Metrics strip below portrait */
@@ -747,7 +796,11 @@ const css = `
   white-space: nowrap;
   display: inline;
 }
-.hero-name-period { color: var(--hero-accent); font-style: italic; }
+.hero-name-period { color: var(--hero-accent); font-style: italic; animation: hero-period-pulse 2.8s ease-in-out infinite; display: inline-block; }
+@keyframes hero-period-pulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
 
 .hero-welcome {
   margin: 28px 0 0;
@@ -809,6 +862,34 @@ const css = `
   100% { transform: scale(1.02) translate(-1%,-0.5%); }
 }
 .hero-grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: multiply; }
+
+/* Atmospheric warm light fields */
+.hero-atmosphere {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(60vw 50vw at 25% 35%, rgba(217,119,50,0.07), transparent 35%),
+    radial-gradient(50vw 40vw at 70% 55%, rgba(217,119,50,0.045), transparent 40%),
+    radial-gradient(40vw 45vw at 50% 80%, rgba(245,230,210,0.06), transparent 35%);
+  animation: hero-atmosphere-drift 22s ease-in-out infinite alternate;
+}
+@keyframes hero-atmosphere-drift {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.9; }
+  50% { transform: scale(1.04) translate(1%, 0.5%); opacity: 1; }
+  100% { transform: scale(1.02) translate(-0.5%, -0.5%); opacity: 0.85; }
+}
+
+/* Cursor-following glow */
+.hero-cursor-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217,119,50,0.035), transparent 70%);
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform;
+  transform: translate(-50%, -50%);
+}
 
 .hero-rule {
   margin-top: 22px;
@@ -1070,12 +1151,35 @@ const css = `
   .hero-trust { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 @media (max-width: 640px) {
-  .hero-name { font-size: clamp(46px, 14vw, 80px); }
-  .hero-tagline { font-size: 17px; }
-  .hero-welcome { font-size: 19px; }
-  .hero-status-bar { font-size: 9px; padding: 6px 14px 6px 12px; top: 16px; gap: 8px; }
-  .hero-metrics-strip { gap: 4px; }
-  .hero-metric { min-width: 68px; padding: 8px 10px; }
-  .hero-trust { margin-top: 22px; }
-}
+   .hero-name { font-size: clamp(46px, 14vw, 80px); }
+   .hero-tagline { font-size: 17px; }
+   .hero-welcome { font-size: 19px; }
+   .hero-status-bar { font-size: 9px; padding: 6px 14px 6px 12px; top: 16px; gap: 8px; }
+   .hero-metrics-strip { gap: 4px; }
+   .hero-metric { min-width: 68px; padding: 8px 10px; }
+   .hero-trust { margin-top: 22px; }
+ }
+
+ /* Reduced motion */
+ @media (prefers-reduced-motion: reduce) {
+   .hero-atmosphere,
+   .hero-mesh,
+   .hero-watermark,
+   .hero-portrait-ring,
+   .hero-portrait-glow,
+   .hero-portrait,
+   .hero-status-dot,
+   .hero-scroll-chevron,
+   .hero-name-period,
+   .hero-cursor-glow { animation: none !important; }
+   .hero-right .hero-eyebrow,
+   .hero-right .hero-welcome,
+   .hero-right .hero-role-row,
+   .hero-right .hero-rule,
+   .hero-right .hero-skills-line,
+   .hero-right .hero-tagline,
+   .hero-right .hero-ctas,
+   .hero-right .hero-trust { transition: opacity 0.3s ease; transform: none; }
+   .hero-portrait-wrap { transform: none !important; }
+ }
 `;
