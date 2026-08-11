@@ -378,11 +378,6 @@ export function Ch00Cover() {
 
           <div className="hero-rule" style={{ transitionDelay: entered ? "320ms" : "0ms" }} />
 
-          <div className="hero-skills-line" style={{ transitionDelay: entered ? "380ms" : "0ms" }}>
-            SPECIALIZING IN<br />
-            {skills.join(" • ")}
-          </div>
-
           <p ref={taglineRef} className="hero-tagline" style={{ transitionDelay: entered ? "560ms" : "0ms" }}
             dangerouslySetInnerHTML={{ __html: tagline }}
           />
@@ -533,7 +528,6 @@ const css = `
 .hero-right .hero-welcome { transition-delay: 200ms; }
 .hero-right .hero-role-row { transition-delay: 280ms; }
 .hero-right .hero-rule { transition-delay: 360ms; }
-.hero-right .hero-skills-line { transition-delay: 420ms; }
 .hero-right .hero-tagline { transition-delay: 500ms; }
 .hero-right .hero-ctas { transition-delay: 600ms; }
 .hero-right .hero-trust { transition-delay: 720ms; }
@@ -541,7 +535,6 @@ const css = `
 .hero-right.is-entered .hero-welcome,
 .hero-right.is-entered .hero-role-row,
 .hero-right.is-entered .hero-rule,
-.hero-right.is-entered .hero-skills-line,
 .hero-right.is-entered .hero-tagline,
 .hero-right.is-entered .hero-ctas,
 .hero-right.is-entered .hero-trust {
@@ -872,15 +865,6 @@ const css = `
   background: linear-gradient(90deg, var(--hero-accent) 0%, var(--hero-accent) 60px, var(--hero-rule) 60px, var(--hero-rule) 100%);
 }
 
-.hero-skills-line {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--hero-ink) 55%, transparent);
-  line-height: 1.9;
-  margin-top: 22px;
-}
 .hero-skills { display: flex; flex-wrap: wrap; gap: 10px 12px; margin: 22px 0 0; padding: 0; list-style: none; }
 .hero-skills li {
   font-family: var(--font-mono);
@@ -1150,7 +1134,6 @@ const css = `
    .hero-right .hero-welcome,
    .hero-right .hero-role-row,
    .hero-right .hero-rule,
-   .hero-right .hero-skills-line,
    .hero-right .hero-tagline,
    .hero-right .hero-ctas,
    .hero-right .hero-trust { transition: opacity 0.3s ease; transform: none; }
