@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 INSERT INTO site_settings (key, value, description) VALUES
   ('favicon_dark', '{"url": "/mr-logo-dark.svg", "type": "image/svg+xml"}', 'Favicon for dark mode'),
   ('favicon_light', '{"url": "/mr-logo-light.svg", "type": "image/svg+xml"}', 'Favicon for light mode'),
-  ('site_url', '{"url": "https://manikantar.in"}', 'Canonical site URL'),
+  ('site_url', '{"url": "https://www.manikantar.in"}', 'Canonical site URL'),
   ('footer_blurb', '{"text": "Building the future of work — one model, one paper, one decision at a time."}', 'Footer blurb text'),
   ('footer_signature', '{"text": "Built with intention · Bengaluru, IN"}', 'Footer signature'),
   ('availability_text', '{"text": "Available for opportunities"}', 'Availability pill text'),
@@ -132,7 +132,7 @@ INSERT INTO social_links (platform, label, url, icon_name, sort_order, category)
   ('orcid', 'ORCID', 'https://orcid.org/0009-0005-2576-8731', null, 5, 'professional'),
   ('ssrn', 'SSRN', 'https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=7670815', null, 6, 'professional'),
   ('blog', 'Blog', 'https://blog.manikantar.in', null, 7, 'professional'),
-  ('resume', 'Resume', 'https://manikantar.in/resume.pdf', null, 8, 'professional'),
+  ('resume', 'Resume', 'https://www.manikantar.in/resume.pdf', null, 8, 'professional'),
   ('home', 'Home', '#cover', null, 0, 'quick'),
   ('research', 'Research', '#research', null, 1, 'quick'),
   ('projects', 'Projects', '#work', null, 2, 'quick'),

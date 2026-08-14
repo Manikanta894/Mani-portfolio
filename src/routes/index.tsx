@@ -58,7 +58,7 @@ function Index() {
   const totalExp = profile?.total_experience || "6+";
   const targetRoles = profile?.target_roles?.join(" · ") || "HR Analytics · People Analytics · AI Strategy";
 
-  const SITE_URL = "https://manikantar.in";
+  const SITE_URL = "https://www.manikantar.in";
 
   // Dynamic SEO — page_seo table first, fall back to profile
   const pageSeoData = (pageSeo || []).find((p: any) => p.page_slug === "/");

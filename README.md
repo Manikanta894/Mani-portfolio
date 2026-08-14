@@ -2,7 +2,7 @@
 
 Personal portfolio site for **Manikanta R** (MBA candidate — HR & Business Analytics, AI research).
 
-Live at **[https://manikantar.in](https://manikantar.in)**
+Live at **[https://www.manikantar.in](https://www.manikantar.in)**
 
 ## Tech Stack
 
@@ -98,6 +98,6 @@ React Query, so a failing endpoint never blanks the whole page.
 
 ## Deployment
 
-Push to `main` and Vercel auto-deploys to `https://manikantar.in`.
+Push to `main` and Vercel auto-deploys to `https://www.manikantar.in`.
 
 > Note: this repo is connected to Lovable. Don't rewrite published git history.
