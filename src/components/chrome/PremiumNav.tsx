@@ -14,6 +14,7 @@ const ITEMS = [
   { id: "philosophy", label: "Manifesto", n: "08" },
   { id: "linkedin", label: "Connect", n: "09" },
   { id: "beyond-notes", label: "Beyond", n: "10" },
+  { id: "voices", label: "Voices", n: "11" },
 ];
 
 export function PremiumNav({ onRecruiterToggle }: { onRecruiterToggle?: () => void }) {
